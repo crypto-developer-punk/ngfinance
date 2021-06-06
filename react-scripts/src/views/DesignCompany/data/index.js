@@ -109,10 +109,6 @@ export const partners = [
     logo: Coinmarketcap,
   },
   {
-    name: 'Instagram',
-    logo: Instagram,
-  },
-  {
     name: 'Twitter',
     logo: Twitter,
   },

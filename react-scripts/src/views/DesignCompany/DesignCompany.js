@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
     backgroundImage: `linear-gradient(180deg, ${theme.palette.alternate.main} 100%, ${theme.palette.background.paper} 0%)`,
     [theme.breakpoints.up('md')]: {
       backgroundImage: `linear-gradient(180deg, ${theme.palette.alternate.main} 50%, ${theme.palette.background.paper} 0%)`,
-    },
+    }
   },
   backerSection: {
     background: theme.palette.primary.main,

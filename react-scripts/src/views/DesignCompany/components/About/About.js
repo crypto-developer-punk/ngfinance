@@ -24,6 +24,14 @@ const useStyles = makeStyles(theme => ({
       height: 80,
     },
   },
+    cardBase: {
+        width: '75%',
+        height: '75%',
+        [theme.breakpoints.down('sm')]: {
+            width: '100%',
+            height: '100%',
+        }
+    }
 }));
 
 const About = props => {
@@ -31,7 +39,7 @@ const About = props => {
   const classes = useStyles();
 
   return (
-    <div className={className} {...rest}>
+    <div className={className} {...rest} align="center">
       <SectionHeader
         title={
           <span>
@@ -50,8 +58,8 @@ const About = props => {
         ]}
         data-aos="fade-up"
       />
-      <CardBase withShadow liftUp variant="outlined" data-aos="fade-up">
-          <Grid container justify="center" spacing={4}>
+      <CardBase withShadow liftUp variant="outlined" data-aos="fade-up" className={classes.cardBase}>
+          <Grid container justify="center" spacing={2}>
               <Grid item data-aos={'fade-up'}>
                   <Image
                       src={GenesisNFT}
@@ -62,9 +70,9 @@ const About = props => {
                       data-aos-duration="2000"
                   />
               </Grid>
-              <Grid item xs={12} sm={6} data-aos={'fade-up'}>
+              <Grid item xs={6} data-aos={'fade-up'}>
                   <Typography
-                      variant="h5"
+                      variant="h6"
                       color="textPrimary"
                       className={classes.blogTitle}
                       align="left"
@@ -72,19 +80,17 @@ const About = props => {
                       <i>NG Finance - Genesis NFT</i>
                   </Typography>
               </Grid>
-              <Grid item xs={12} sm={6} data-aos={'fade-up'} align="right">
-
+              <Grid item xs={6} data-aos={'fade-up'} align="right">
                       <Typography
-                          variant="h5"
+                          variant="h6"
                           color="textSecondary"
                           className={classes.tag}
-
                       >
                       <b>0.9 BNB</b>
                       {' '}
                       <Image
                           src={Bnb}
-                          style={{height:'20px', width: '20px'}}
+                          style={{height:'18px', width: '18px'}}
                       />
                       </Typography>
               </Grid>

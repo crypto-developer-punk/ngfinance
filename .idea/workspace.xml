@@ -2,30 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3b9ddc1f-3db0-4470-86df-e436065b9260" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/react-scripts/src/assets/images/main/endHeroBackground.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/react-scripts/src/assets/images/main/evergreen.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/react-scripts/src/assets/images/main/partner1.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/react-scripts/src/assets/images/main/partner2.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/react-scripts/src/assets/images/main/partner3.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/react-scripts/src/assets/images/main/partner4.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/components/Backer/Backer.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/components/Backer/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/components/EndHero/EndHero.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/components/EndHero/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/react-scripts/src/assets/images/main/logo.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gatsbyjs/src/layouts/DocsLayout/components/Navbar/data/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/gatsbyjs/src/layouts/DocsLayout/components/Navbar/data/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nextjs/src/layouts/DocsLayout/components/Navbar/data/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/nextjs/src/layouts/DocsLayout/components/Navbar/data/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gatsbyjs/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/gatsbyjs/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react-scripts/.eslintcache" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/.eslintcache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-scripts/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/public/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-scripts/src/layouts/DocsLayout/components/Navbar/data/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/src/layouts/DocsLayout/components/Navbar/data/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-scripts/src/layouts/Main/components/Footer/Footer.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/src/layouts/Main/components/Footer/Footer.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react-scripts/src/layouts/Main/components/Topbar/Topbar.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/src/layouts/Main/components/Topbar/Topbar.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/DesignCompany.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/DesignCompany.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/components/About/About.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/components/About/About.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/components/Roadmap/Roadmap.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/components/Roadmap/Roadmap.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/data/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/data/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-scripts/src/views/NftApp/NftApp.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/src/views/NftApp/NftApp.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-scripts/src/views/NftApp/components/Hero/Hero.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/src/views/NftApp/components/Hero/Hero.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,7 +65,8 @@
       <workItem from="1622359400844" duration="9209000" />
       <workItem from="1622388693711" duration="7362000" />
       <workItem from="1622467549381" duration="15810000" />
-      <workItem from="1622544073502" duration="17606000" />
+      <workItem from="1622544073502" duration="18206000" />
+      <workItem from="1622994740353" duration="3499000" />
     </task>
     <servers />
   </component>
@@ -92,30 +78,34 @@
       <screen x="0" y="25" width="2560" height="1344" />
     </state>
     <state x="1018" y="448" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/2560.-654.1440.2535/0.25.2560.1344@0.25.2560.1344" timestamp="1622473883414" />
-    <state width="2539" height="364" key="GridCell.Tab.0.bottom" timestamp="1622457249131">
-      <screen x="0" y="25" width="2560" height="1347" />
+    <state width="2539" height="171" key="GridCell.Tab.0.bottom" timestamp="1622996420007">
+      <screen x="0" y="25" width="2560" height="1344" />
     </state>
+    <state width="2539" height="171" key="GridCell.Tab.0.bottom/2560.-654.1440.2535/0.25.2560.1344@0.25.2560.1344" timestamp="1622996420007" />
     <state width="2539" height="364" key="GridCell.Tab.0.bottom/2560.-654.1440.2535/0.25.2560.1347@0.25.2560.1347" timestamp="1622457249131" />
     <state width="2539" height="364" key="GridCell.Tab.0.bottom/2560.-654.1440.2535/0.25.2560.1348@0.25.2560.1348" timestamp="1622456990184" />
-    <state width="2539" height="364" key="GridCell.Tab.0.center" timestamp="1622457249130">
-      <screen x="0" y="25" width="2560" height="1347" />
+    <state width="2539" height="171" key="GridCell.Tab.0.center" timestamp="1622996420004">
+      <screen x="0" y="25" width="2560" height="1344" />
     </state>
+    <state width="2539" height="171" key="GridCell.Tab.0.center/2560.-654.1440.2535/0.25.2560.1344@0.25.2560.1344" timestamp="1622996420004" />
     <state width="2539" height="364" key="GridCell.Tab.0.center/2560.-654.1440.2535/0.25.2560.1347@0.25.2560.1347" timestamp="1622457249130" />
     <state width="2539" height="364" key="GridCell.Tab.0.center/2560.-654.1440.2535/0.25.2560.1348@0.25.2560.1348" timestamp="1622456990183" />
-    <state width="2539" height="364" key="GridCell.Tab.0.left" timestamp="1622457249130">
-      <screen x="0" y="25" width="2560" height="1347" />
+    <state width="2539" height="171" key="GridCell.Tab.0.left" timestamp="1622996420003">
+      <screen x="0" y="25" width="2560" height="1344" />
     </state>
+    <state width="2539" height="171" key="GridCell.Tab.0.left/2560.-654.1440.2535/0.25.2560.1344@0.25.2560.1344" timestamp="1622996420003" />
     <state width="2539" height="364" key="GridCell.Tab.0.left/2560.-654.1440.2535/0.25.2560.1347@0.25.2560.1347" timestamp="1622457249130" />
     <state width="2539" height="364" key="GridCell.Tab.0.left/2560.-654.1440.2535/0.25.2560.1348@0.25.2560.1348" timestamp="1622456990183" />
-    <state width="2539" height="364" key="GridCell.Tab.0.right" timestamp="1622457249131">
-      <screen x="0" y="25" width="2560" height="1347" />
+    <state width="2539" height="171" key="GridCell.Tab.0.right" timestamp="1622996420007">
+      <screen x="0" y="25" width="2560" height="1344" />
     </state>
+    <state width="2539" height="171" key="GridCell.Tab.0.right/2560.-654.1440.2535/0.25.2560.1344@0.25.2560.1344" timestamp="1622996420007" />
     <state width="2539" height="364" key="GridCell.Tab.0.right/2560.-654.1440.2535/0.25.2560.1347@0.25.2560.1347" timestamp="1622457249131" />
     <state width="2539" height="364" key="GridCell.Tab.0.right/2560.-654.1440.2535/0.25.2560.1348@0.25.2560.1348" timestamp="1622456990184" />
-    <state x="646" y="226" width="1418" height="879" key="find.popup" timestamp="1622657850316">
-      <screen x="0" y="25" width="2560" height="1349" />
+    <state x="1043" y="237" width="1010" height="808" key="find.popup" timestamp="1622998886396">
+      <screen x="0" y="25" width="2560" height="1344" />
     </state>
-    <state x="875" y="225" width="1010" height="808" key="find.popup/2560.-654.1440.2535/0.25.2560.1344@0.25.2560.1344" timestamp="1622474352434" />
+    <state x="1043" y="237" width="1010" height="808" key="find.popup/2560.-654.1440.2535/0.25.2560.1344@0.25.2560.1344" timestamp="1622998886396" />
     <state x="875" y="225" width="1010" height="809" key="find.popup/2560.-654.1440.2535/0.25.2560.1345@0.25.2560.1345" timestamp="1622569129576" />
     <state x="742" y="257" width="1414" height="949" key="find.popup/2560.-654.1440.2535/0.25.2560.1346@0.25.2560.1346" timestamp="1622480658745" />
     <state x="933" y="451" width="694" height="519" key="find.popup/2560.-654.1440.2535/0.25.2560.1347@0.25.2560.1347" timestamp="1622538867527" />

@@ -15,6 +15,7 @@ import InstagramIcon from '@material-ui/icons/Instagram';
 import PinterestIcon from '@material-ui/icons/Pinterest';
 
 import { Image } from 'components/atoms';
+import Logo from '../../../../assets/images/main/logo.png';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -198,7 +199,7 @@ const Footer = props => {
                   <a href="/" title="thefront">
                     <Image
                       className={classes.logoImage}
-                      src="https://assets.maccarianagency.com/the-front/logos/logo-negative.svg"
+                      src={Logo}
                       alt="thefront"
                       lazy={false}
                     />
