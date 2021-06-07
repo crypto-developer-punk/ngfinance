@@ -1,25 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import {
-  useMediaQuery,
-  Grid,
-  Button,
-  Typography,
-  colors,
-  FormControl,
-  OutlinedInput,
-  InputAdornment
-} from '@material-ui/core';
-import { Image, Icon } from 'components/atoms';
-import { SectionHeader } from 'components/molecules';
+import {makeStyles, useTheme} from '@material-ui/core/styles';
+import {Button, colors, FormControl, Grid, Typography, useMediaQuery} from '@material-ui/core';
+import {Image} from 'components/atoms';
+import {SectionHeader} from 'components/molecules';
 import GenesisNFT from '../../../../assets/images/main/genesis_nft.jpg';
-import {CardBase, DescriptionListIcon} from "../../../../components/organisms";
-import InputLabel from '@material-ui/core/InputLabel';
+import {CardBase} from "../../../../components/organisms";
 import TextField from '@material-ui/core/TextField';
 import Bnb from "../../../../assets/images/main/bnb.svg";
-
-import { render } from 'react-dom';
 import Form from 'react-bootstrap/Form';
 import Dropdown from 'react-bootstrap/Dropdown';
 import FlagIcon from './FlagIcon.js';

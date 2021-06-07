@@ -1,19 +1,8 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { colors, Divider } from '@material-ui/core';
-import { Section, SectionAlternate } from 'components/organisms';
-import {
-  Customization,
-  Download,
-  Hero,
-  Hub,
-  Partners,
-  Pricings,
-  Reviews,
-  Support,
-} from './components';
-
-import { reviews, support, integrations } from './data';
+import {makeStyles} from '@material-ui/core/styles';
+import {colors} from '@material-ui/core';
+import {Section} from 'components/organisms';
+import {Hero,} from './components';
 import EndHero from "../DesignCompany/components/EndHero";
 
 const useStyles = makeStyles(theme => ({

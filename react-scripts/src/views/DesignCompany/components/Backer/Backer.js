@@ -1,17 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {fade, makeStyles, useTheme} from '@material-ui/core/styles';
-import {
-  useMediaQuery,
-  Grid,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Avatar, colors,
-} from '@material-ui/core';
-import { SectionHeader } from 'components/molecules';
-import { CardBase } from 'components/organisms';
-import { AiFillYoutube } from 'react-icons/ai'
+import {makeStyles, useTheme} from '@material-ui/core/styles';
+import {Avatar, Grid, ListItem, ListItemAvatar, ListItemText, useMediaQuery,} from '@material-ui/core';
+import {SectionHeader} from 'components/molecules';
+import {CardBase} from 'components/organisms';
 
 const useStyles = makeStyles(theme => ({
   cardBase: {
