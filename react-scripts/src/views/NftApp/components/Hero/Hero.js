@@ -26,6 +26,7 @@ import FlagIcon from './FlagIcon.js';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
+import axios from "axios";
 
 const useStyles = makeStyles(theme => ({
   image: {
@@ -49,10 +50,9 @@ const Hero = props => {
   const classes = useStyles();
 
   const PRICE_BNB_PER_NFT = 0.9;
-  const PRICE_ETH_PER_BNB = 0.148317;
+  const [priceOfEthPerNft, setPriceOfEthPerNft] = React.useState(0);
   const [amountOfNft, setAmountNft] = React.useState(1);
   const [summarizedPrice, setSummarizedPrice] = React.useState(PRICE_BNB_PER_NFT);
-  // const [priceBnbByDollar, setPriceBnbByDollar] = React.useState(300);
 
   const [countries] = React.useState([
     { code: 'BNB', title: 'BNB' },
@@ -65,6 +65,23 @@ const Hero = props => {
   const isMd = useMediaQuery(theme.breakpoints.up('md'), {
     defaultMatches: true,
   });
+
+  React.useEffect(() => {
+    const getPriceOfEthPerNft = async () => {
+      try {
+        const response = await axios.get('https://api.binance.com/api/v3/ticker/price?symbol=BNBETH');
+        let priceOfBnbEth = response.data.price;
+        let summarizedPrice = priceOfBnbEth * PRICE_BNB_PER_NFT;
+
+        console.log("summarizedPrice > " + summarizedPrice);
+        setPriceOfEthPerNft(summarizedPrice);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+
+    getPriceOfEthPerNft();
+  }, []);
 
   const handleChange = event => {
     setAmountNft(event.target.value);
@@ -88,7 +105,7 @@ const Hero = props => {
 
   const calcSummarizedPrice = (currencyType, nftAmount) => {
     let priceOfBnb = PRICE_BNB_PER_NFT * nftAmount;
-    let priceOfEth = PRICE_ETH_PER_BNB * PRICE_BNB_PER_NFT * nftAmount;
+    let priceOfEth = priceOfEthPerNft * nftAmount;
 
     if (currencyType === "ETH") {
       return priceOfEth;
@@ -170,7 +187,7 @@ const Hero = props => {
                     subtitle={
                       <>
                         <Typography variant="body1" color="textSecondary">
-                          (={calcSummarizedPrice("ETH", 1)} ETH)
+                          (={priceOfEthPerNft} ETH)
                         </Typography>
                       </>
                     }
