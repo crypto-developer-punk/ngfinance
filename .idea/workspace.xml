@@ -3,12 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="3b9ddc1f-3db0-4470-86df-e436065b9260" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-scripts/.eslintcache" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/.eslintcache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-scripts/src/views/AboutSideCover/components/Team/Team.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/src/views/AboutSideCover/components/Team/Team.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/components/About/About.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/components/About/About.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/components/EndHero/EndHero.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/components/EndHero/EndHero.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/components/Hero/Hero.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/components/Hero/Hero.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/components/Roadmap/Roadmap.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/components/Roadmap/Roadmap.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react-scripts/src/views/NftApp/components/Hero/Hero.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/src/views/NftApp/components/Hero/Hero.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -16,8 +10,22 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+        <option value="CSS File" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="JsFlowSettings">
+    <service-enabled>true</service-enabled>
+    <exe-path />
+    <other-services-enabled>true</other-services-enabled>
+    <auto-save>true</auto-save>
   </component>
   <component name="ProjectId" id="1tFHnJeVebpLcIzsSodweZ3qWo8" />
   <component name="ProjectLevelVcsManager">
@@ -33,6 +41,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/react-scripts/src/assets/images/main" />
+    <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -65,7 +74,7 @@
       <workItem from="1622388693711" duration="7362000" />
       <workItem from="1622467549381" duration="15810000" />
       <workItem from="1622544073502" duration="18206000" />
-      <workItem from="1622994740353" duration="7194000" />
+      <workItem from="1622994740353" duration="16911000" />
     </task>
     <servers />
   </component>
@@ -101,11 +110,11 @@
     <state width="2539" height="171" key="GridCell.Tab.0.right/2560.-654.1440.2535/0.25.2560.1344@0.25.2560.1344" timestamp="1622996420007" />
     <state width="2539" height="364" key="GridCell.Tab.0.right/2560.-654.1440.2535/0.25.2560.1347@0.25.2560.1347" timestamp="1622457249131" />
     <state width="2539" height="364" key="GridCell.Tab.0.right/2560.-654.1440.2535/0.25.2560.1348@0.25.2560.1348" timestamp="1622456990184" />
-    <state x="1043" y="237" width="1010" height="808" key="find.popup" timestamp="1623057995789">
-      <screen x="0" y="25" width="2560" height="1344" />
+    <state x="875" y="225" width="1010" height="809" key="find.popup" timestamp="1623079964616">
+      <screen x="0" y="25" width="2560" height="1345" />
     </state>
-    <state x="1043" y="237" width="1010" height="808" key="find.popup/2560.-654.1440.2535/0.25.2560.1344@0.25.2560.1344" timestamp="1623057995789" />
-    <state x="875" y="225" width="1010" height="809" key="find.popup/2560.-654.1440.2535/0.25.2560.1345@0.25.2560.1345" timestamp="1622569129576" />
+    <state x="1043" y="237" width="1010" height="808" key="find.popup/2560.-654.1440.2535/0.25.2560.1344@0.25.2560.1344" timestamp="1623070974891" />
+    <state x="875" y="225" width="1010" height="809" key="find.popup/2560.-654.1440.2535/0.25.2560.1345@0.25.2560.1345" timestamp="1623079964616" />
     <state x="742" y="257" width="1414" height="949" key="find.popup/2560.-654.1440.2535/0.25.2560.1346@0.25.2560.1346" timestamp="1622480658745" />
     <state x="933" y="451" width="694" height="519" key="find.popup/2560.-654.1440.2535/0.25.2560.1347@0.25.2560.1347" timestamp="1622538867527" />
     <state x="933" y="451" width="790" height="520" key="find.popup/2560.-654.1440.2535/0.25.2560.1348@0.25.2560.1348" timestamp="1622652781930" />

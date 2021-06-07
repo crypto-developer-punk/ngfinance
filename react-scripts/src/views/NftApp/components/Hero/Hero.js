@@ -73,7 +73,6 @@ const Hero = props => {
         let priceOfBnbEth = response.data.price;
         let summarizedPrice = priceOfBnbEth * PRICE_BNB_PER_NFT;
 
-        console.log("summarizedPrice > " + summarizedPrice);
         setPriceOfEthPerNft(summarizedPrice);
       } catch (e) {
         console.error(e);
