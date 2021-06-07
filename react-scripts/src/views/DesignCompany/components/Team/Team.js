@@ -11,7 +11,6 @@ import {
 } from '@material-ui/core';
 import { SectionHeader } from 'components/molecules';
 import { CardBase } from 'components/organisms';
-import { AiFillYoutube } from 'react-icons/ai'
 
 const useStyles = makeStyles(theme => ({
   cardBase: {
