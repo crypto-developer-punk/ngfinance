@@ -167,6 +167,13 @@ const Hero = props => {
                         </Typography>
                       </span>
                     }
+                    subtitle={
+                      <>
+                        <Typography variant="body1" color="textSecondary">
+                          (={calcSummarizedPrice("ETH", 1)} ETH)
+                        </Typography>
+                      </>
+                    }
                     align="left"
                     disableGutter
                     titleVariant="h3"
