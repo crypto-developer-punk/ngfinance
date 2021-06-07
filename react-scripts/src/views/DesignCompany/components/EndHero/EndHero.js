@@ -75,16 +75,18 @@ const EndHero = ({ themeMode = 'light', className, ...rest }) => {
 
   const title = (
     <Typography variant="h2" component="span" className={classes.fontWeight900}>
-      Coming Soon
+      Coming next NFT
       <br />
       <TypedText
         component="span"
-        variant="h2"
+        variant="h3"
         color="secondary"
         className={classes.fontWeight900}
         typedProps={{
           strings: [
-            'Next NFT.',
+            'With Physical Art',
+            'Artist Certification',
+            'Governance Token',
           ],
           typeSpeed: 100,
           loop: true,
@@ -93,12 +95,9 @@ const EndHero = ({ themeMode = 'light', className, ...rest }) => {
     </Typography>
   );
 
-  const subtitle = 'TheFront will make your product look modern and professional while saving you precious time.';
-
   const leftSideContent = (
     <SectionHeader
       title={title}
-      subtitle={subtitle}
       align="left"
       titleProps={{
         variant: 'h2',

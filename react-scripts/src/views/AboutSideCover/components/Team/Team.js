@@ -71,6 +71,7 @@ const Team = props => {
         title="Meet our team"
         subtitle="After 3 days all of your offers will arrive and you will have another 7 days to select your new company."
         align={isMd ? 'center' : 'left'}
+        data-aos="fade-up"
       />
       <Grid container spacing={isMd ? 2 : 1}>
         {data.map((item, index) => (

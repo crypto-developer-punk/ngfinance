@@ -43,14 +43,12 @@ const About = props => {
       <SectionHeader
         title={
           <span>
-            Explore our
-            {' '}
             <Typography component="span" variant="inherit" color="primary">
               Genesis NFT
             </Typography>
           </span>
         }
-        subtitle="Our mission is to help you to grow your design skills, meet and connect with professional dsigners who share your passions."
+        subtitle="The Genesis NFT. Can purchase with ETH or BNB This is only chance to get utility NFT without personal capacity limit."
         ctaGroup={[
           <Button color="primary" variant="contained" size="large" href="../app">
             Register Now
@@ -77,7 +75,7 @@ const About = props => {
                       className={classes.blogTitle}
                       align="left"
                   >
-                      <i>NG Finance - Genesis NFT</i>
+                      <i>Beginning of Nostalgia</i>
                   </Typography>
               </Grid>
               <Grid item xs={6} data-aos={'fade-up'} align="right">

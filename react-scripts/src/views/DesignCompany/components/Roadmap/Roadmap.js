@@ -40,8 +40,8 @@ const Roadmap = props => {
                   data-aos="fade-up">
             <TimelineItem>
                 <TimelineOppositeContent>
-                    <Typography variant="body2">
-                        2021 Q1
+                    <Typography variant="body1">
+                        2021 - Q2
                     </Typography>
                 </TimelineOppositeContent>
                 <TimelineSeparator>
@@ -51,36 +51,16 @@ const Roadmap = props => {
                 </TimelineSeparator>
                 <TimelineContent>
                     <Paper elevation={3} className={classes.paper}>
-                        <Typography variant="h6" component="h1">
-                            Code
+                        <Typography variant="h6" color={"primary"}>
+                            Genesis NFT sale Q2
                         </Typography>
-                        <Typography>Because it&apos;s awesome!</Typography>
+                        <Typography variant="body1">Sale process reveal</Typography>
                     </Paper>
                 </TimelineContent>
             </TimelineItem>
             <TimelineItem>
                 <TimelineOppositeContent>
-                    <Typography variant="body2" color="textSecondary">
-                        Q2
-                    </Typography>
-                </TimelineOppositeContent>
-                <TimelineSeparator>
-                    <TimelineDot>
-                    </TimelineDot>
-                    <TimelineConnector />
-                </TimelineSeparator>
-                <TimelineContent>
-                    <Paper elevation={3} className={classes.paper}>
-                        <Typography variant="h6" component="h1">
-                            Code
-                        </Typography>
-                        <Typography>Because it&apos;s awesome!</Typography>
-                    </Paper>
-                </TimelineContent>
-            </TimelineItem>
-            <TimelineItem>
-                <TimelineOppositeContent>
-                    <Typography variant="body2" color="textSecondary">
+                    <Typography variant="body1" color="textSecondary">
                         Q3
                     </Typography>
                 </TimelineOppositeContent>
@@ -91,16 +71,31 @@ const Roadmap = props => {
                 </TimelineSeparator>
                 <TimelineContent>
                     <Paper elevation={3} className={classes.paper}>
-                        <Typography variant="h6" component="h1">
-                            Code
+                        <Typography variant="h6" color={"primary"}>
+                            Nostalgia finance launch Q3
                         </Typography>
-                        <Typography>Because it&apos;s awesome!</Typography>
+                        <Typography variant="body1">Platform official launch</Typography>
                     </Paper>
+                    <br />
+                    <Paper elevation={3} className={classes.paper}>
+                        <Typography variant="h6" color={"primary"}>
+                            First token drop Q3
+                        </Typography>
+                        <Typography variant="body1">NFT staker got drop</Typography>
+                    </Paper>
+                    <br />
+                    <Paper elevation={3} className={classes.paper}>
+                        <Typography variant="h6" color={"primary"}>
+                            Physical Art auction Q3
+                        </Typography>
+                        <Typography variant="body1">First physical art reveal</Typography>
+                    </Paper>
+                    <br />
                 </TimelineContent>
             </TimelineItem>
             <TimelineItem>
                 <TimelineOppositeContent>
-                    <Typography variant="body2" color="textSecondary">
+                    <Typography variant="body1" color="textSecondary">
                         Q4
                     </Typography>
                 </TimelineOppositeContent>
@@ -111,10 +106,9 @@ const Roadmap = props => {
                 </TimelineSeparator>
                 <TimelineContent>
                     <Paper elevation={3} className={classes.paper}>
-                        <Typography variant="h6" component="h1">
-                            Code
+                        <Typography variant="h6" color={"primary"}>
+                            Coming Soon
                         </Typography>
-                        <Typography>Because it&apos;s awesome!</Typography>
                     </Paper>
                 </TimelineContent>
             </TimelineItem>

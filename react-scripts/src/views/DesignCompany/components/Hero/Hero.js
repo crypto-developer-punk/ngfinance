@@ -82,7 +82,7 @@ const Hero = props => {
 
     const title = (
         <Typography variant="h2" component="span" className={classes.textTitle}>
-            We make
+            We bring you
             <br/>
             <TypedText
                 component="span"
@@ -91,10 +91,10 @@ const Hero = props => {
                 className={classes.textSubTitle}
                 typedProps={{
                     strings: [
-                        'Art',
+                        'Real Art',
                         'NFT',
-                        'Future',
-                        'NG Finance',
+                        'DeFi',
+                        'Nostalgia',
                     ],
                     typeSpeed: 60,
                     loop: true,
@@ -112,7 +112,9 @@ const Hero = props => {
             titleVariant="h3"
             subtitle={
                 <span className={classes.textWhite}>
-                    Simply hold NG Token in your wallet and you will get more. On each transaction the protocol automatically distributes rewards to holders as well as auto-locks liquidity forever.
+                    Nostalgia Finance is NFT Based Defi system that you can simply stake your specific NFT we drop fixed qty of "$PAINT" every week.
+                    <br />
+                    you can easily harvest with connected wallet by single click. anyone can freely enjoy our defi platform without difficult options like LPing, IL
                 </span>
             }
             ctaGroup={[

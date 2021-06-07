@@ -88,10 +88,15 @@ const Hero = props => {
                 <SectionHeader
                     title={
                       <span>
-                        <Typography component="span" variant="h4" color="primary">
-                          <b>Genesis NFT</b>
+                        <Typography component="span" variant="h5" color="primary">
+                          <b>* Genesis NFT</b>
                         </Typography>
                       </span>
+                    }
+                    subtitle={
+                      <Typography component="span" variant="h5" color="textPrimary">
+                        <i>Beginning of Nostalgia</i>
+                      </Typography>
                     }
                     align="left"
                     disableGutter
