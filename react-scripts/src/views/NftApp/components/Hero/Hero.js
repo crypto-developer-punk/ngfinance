@@ -16,7 +16,16 @@ import { SectionHeader } from 'components/molecules';
 import GenesisNFT from '../../../../assets/images/main/genesis_nft.jpg';
 import {CardBase, DescriptionListIcon} from "../../../../components/organisms";
 import InputLabel from '@material-ui/core/InputLabel';
+import TextField from '@material-ui/core/TextField';
 import Bnb from "../../../../assets/images/main/bnb.svg";
+
+import { render } from 'react-dom';
+import Form from 'react-bootstrap/Form';
+import Dropdown from 'react-bootstrap/Dropdown';
+import FlagIcon from './FlagIcon.js';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './style.css';
 
 const useStyles = makeStyles(theme => ({
   image: {
@@ -27,6 +36,12 @@ const useStyles = makeStyles(theme => ({
       maxWidth: 500,
     },
   },
+  root: {
+    '& > *': {
+      margin: theme.spacing(1),
+      width: '25ch',
+    },
+  },
 }));
 
 const Hero = props => {
@@ -34,9 +49,17 @@ const Hero = props => {
   const classes = useStyles();
 
   const PRICE_BNB_PER_NFT = 0.9;
-  const [amountNft, setAmountNft] = React.useState(1);
-  const [summarizedBnb, setSummarizedBnb] = React.useState(PRICE_BNB_PER_NFT);
+  const PRICE_ETH_PER_BNB = 0.148317;
+  const [amountOfNft, setAmountNft] = React.useState(1);
+  const [summarizedPrice, setSummarizedPrice] = React.useState(PRICE_BNB_PER_NFT);
   // const [priceBnbByDollar, setPriceBnbByDollar] = React.useState(300);
+
+  const [countries] = React.useState([
+    { code: 'BNB', title: 'BNB' },
+    { code: 'ETH', title: 'ETHEREUM' }
+  ]);
+  const [toggleContents, setToggleContents] = React.useState('Select Payment Method');
+  const [selectedCurrency, setSelectedCurrency] = React.useState("BNB");
 
   const theme = useTheme();
   const isMd = useMediaQuery(theme.breakpoints.up('md'), {
@@ -45,7 +68,32 @@ const Hero = props => {
 
   const handleChange = event => {
     setAmountNft(event.target.value);
-    setSummarizedBnb(PRICE_BNB_PER_NFT * event.target.value);
+    setSummarizedPrice(calcSummarizedPrice(selectedCurrency, event.target.value));
+  };
+
+  const handleSelect = event => {
+    const { code, title } = countries.find(
+        ({ code }) => event === code
+    );
+
+    setSelectedCurrency(event);
+    setSummarizedPrice(calcSummarizedPrice(event, amountOfNft));
+
+    setToggleContents(
+        <>
+          <FlagIcon code={code} /> {title}
+        </>
+    );
+  };
+
+  const calcSummarizedPrice = (currencyType, nftAmount) => {
+    let priceOfBnb = PRICE_BNB_PER_NFT * nftAmount;
+    let priceOfEth = PRICE_ETH_PER_BNB * PRICE_BNB_PER_NFT * nftAmount;
+
+    if (currencyType === "ETH") {
+      return priceOfEth;
+    }
+    return priceOfBnb;
   };
 
   return (
@@ -125,16 +173,37 @@ const Hero = props => {
                 />
               </Grid>
               <Grid item xs={12}>
+                <div className={classes.inputContainer} >
+                  <Form>
+                    <Dropdown
+                        onSelect={handleSelect}
+                    >
+                      <Dropdown.Toggle
+                          style={{ width: "100%" }}
+                          variant="secondary"
+                          className="text-left"
+                      >
+                        {toggleContents}
+                      </Dropdown.Toggle>
+
+                      <Dropdown.Menu style={{ width: "100%" }}>
+                        {countries.map(({ code, title }) => (
+                            <Dropdown.Item key={code} eventKey={code}>
+                              <FlagIcon code={code} /> {title}
+                            </Dropdown.Item>
+                        ))}
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </Form>
+                </div>
+              </Grid>
+              <Grid item xs={12}>
                 <div className={classes.inputContainer}>
-                  <FormControl fullWidth className={classes.margin} variant="outlined">
-                    <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
-                    <OutlinedInput
-                        id="outlined-adornment-amount"
+                  <FormControl fullWidth className={classes.margin}>
+                    <TextField
+                        id="standard-basic" label="NFT Amount" variant="standard"
                         type="number"
-                        value={amountNft}
                         inputProps={{ min: 0, max: 999999999 }}
-                        // startAdornment={<InputAdornment position="end">BNB</InputAdornment>}
-                        labelWidth={60}
                         onChange={handleChange}
                     />
                   </FormControl>
@@ -142,7 +211,7 @@ const Hero = props => {
               </Grid>
               <Grid item xs={12} align="center">
                 <Typography component="span" variant="inherit" color="textSecondary">
-                  Approx. {amountNft} NFT = {summarizedBnb} BNB
+                  Approx. {amountOfNft} NFT = {summarizedPrice} {selectedCurrency}
                 </Typography>
               </Grid>
               <Grid item xs={12} align="center">
