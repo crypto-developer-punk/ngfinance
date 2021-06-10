@@ -32,7 +32,7 @@ const Partners = props => {
             sm={2}
             key={index}
           >
-              <a href="#">
+              <a href={partner.link}>
             <Image
               src={partner.logo}
               alt={partner.name}

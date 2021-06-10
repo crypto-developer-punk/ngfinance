@@ -103,18 +103,22 @@ export const partners = [
   {
     name: 'Coingecko',
     logo: Coingecko,
+    link: '#'
   },
   {
     name: 'Coinmarketcap',
     logo: Coinmarketcap,
+    link: '#'
   },
   {
     name: 'Twitter',
     logo: Twitter,
+    link: '#'
   },
   {
     name: 'Telegram',
     logo: Telegram,
+    link: 'https://t.me/official_nostalgia'
   },
 ];
 
