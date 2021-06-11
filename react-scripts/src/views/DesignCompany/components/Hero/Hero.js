@@ -5,6 +5,7 @@ import { SectionHeader, TypedText } from 'components/molecules';
 import { Section, HeroSimpleBackground } from 'components/organisms';
 import { makeStyles } from "@material-ui/core/styles";
 import Background from '../../../../assets/images/main/header_background.jpg';
+import {Link} from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
     textWhite: {
@@ -118,11 +119,19 @@ const Hero = props => {
                 </span>
             }
             ctaGroup={[
-                <Button color="primary" variant="contained" size="large" href="../app">
-                    Buy genesis NFT
+                <Button color="primary" variant="contained" size="large"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            window.location.href="app";
+                        }}>
+                    Genesis NFT
                 </Button>,
-                <Button color="default" variant="contained" size="large">
-                    Join the community
+                <Button color="default" variant="contained" size="large"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            window.open("https://t.me/official_nostalgia", '_blank');
+                        }}>
+                    Join community
                 </Button>,
             ]}
             disableGutter

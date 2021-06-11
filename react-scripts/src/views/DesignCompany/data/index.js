@@ -103,17 +103,17 @@ export const partners = [
   {
     name: 'Coingecko',
     logo: Coingecko,
-    link: '#'
+    link: ''
   },
   {
     name: 'Coinmarketcap',
     logo: Coinmarketcap,
-    link: '#'
+    link: ''
   },
   {
     name: 'Twitter',
     logo: Twitter,
-    link: '#'
+    link: ''
   },
   {
     name: 'Telegram',

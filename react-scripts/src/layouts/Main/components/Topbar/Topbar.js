@@ -317,8 +317,11 @@ const Topbar = ({ themeMode, themeToggler, onSidebarOpen, pages, className, ...r
               variant="contained"
               color="primary"
               component="a"
-              href="app"
               className={classes.listItemButton}
+              onClick={(e) => {
+                e.preventDefault();
+                window.location.href="app";
+              }}
             >
               Go to app
             </Button>
@@ -338,8 +341,11 @@ const Topbar = ({ themeMode, themeToggler, onSidebarOpen, pages, className, ...r
             variant="contained"
             color="primary"
             component="a"
-            href="app"
             className={classes.listItemButton}
+            onClick={(e) => {
+              e.preventDefault();
+              window.location.href="app";
+            }}
         >
           Go to app
         </Button>

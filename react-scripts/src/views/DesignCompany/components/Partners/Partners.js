@@ -32,14 +32,14 @@ const Partners = props => {
             sm={2}
             key={index}
           >
-              <a href={partner.link}>
-            <Image
-              src={partner.logo}
-              alt={partner.name}
-              className={classes.logoImg}
-              lazy={false}
-            />
-              </a>
+            <a href={partner.link} target={"_blank"}>
+                <Image
+                  src={partner.logo}
+                  alt={partner.name}
+                  className={classes.logoImg}
+                  lazy={false}
+                />
+            </a>
           </Grid>
         ))}
       </Grid>

@@ -50,8 +50,12 @@ const About = props => {
         }
         subtitle="The Genesis NFT. Can purchase with ETH or BNB This is only chance to get utility NFT without personal capacity limit."
         ctaGroup={[
-          <Button color="primary" variant="contained" size="large" href="../app">
-            Register Now
+          <Button color="primary" variant="contained" size="large"
+                  onClick={(e) => {
+                      e.preventDefault();
+                      window.location.href="app";
+                  }}>
+            Buy Genesis NFT
           </Button>
         ]}
         data-aos="fade-up"
