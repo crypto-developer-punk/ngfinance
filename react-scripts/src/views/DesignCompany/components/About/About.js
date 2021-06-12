@@ -6,7 +6,7 @@ import { Image } from 'components/atoms';
 import { SectionHeader } from 'components/molecules';
 import { CardBase } from 'components/organisms';
 import GenesisNFT from '../../../../assets/images/main/genesis_nft.jpg';
-import Bnb from '../../../../assets/images/main/bnb.svg';
+import Eth from '../../../../assets/images/main/logo_eth.svg';
 
 import { DescriptionCta } from 'components/molecules';
 import { CardProduct } from 'components/organisms';
@@ -88,10 +88,10 @@ const About = props => {
                           color="textSecondary"
                           className={classes.tag}
                       >
-                      <b>0.9 BNB</b>
+                      <b>0.13 ETH</b>
                       {' '}
                       <Image
-                          src={Bnb}
+                          src={Eth}
                           style={{height:'18px', width: '18px'}}
                       />
                       </Typography>

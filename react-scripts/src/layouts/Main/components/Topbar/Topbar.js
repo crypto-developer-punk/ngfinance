@@ -16,7 +16,7 @@ import {
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Image, DarkModeToggler } from 'components/atoms';
-import Logo from '../../../../assets/images/main/logo.png';
+import Logo from '../../../../assets/images/main/logo_topbar.svg';
 
 const useStyles = makeStyles(theme => ({
   flexGrow: {
@@ -242,11 +242,11 @@ const Topbar = ({ themeMode, themeToggler, onSidebarOpen, pages, className, ...r
   return (
     <Toolbar disableGutters className={classes.toolbar} {...rest}>
       <div className={classes.logoContainer}>
-        <a href="/" title="thefront">
+        <a href="/" title="Nostalgia Finance">
           <Image
             className={classes.logoImage}
-            src={themeMode === 'light' ? Logo : 'https://assets.maccarianagency.com/the-front/logos/logo-negative.svg'}
-            alt="thefront"
+            src={Logo}
+            alt="Nostalgia Finance"
             lazy={false}
           />
         </a>
@@ -254,52 +254,52 @@ const Topbar = ({ themeMode, themeToggler, onSidebarOpen, pages, className, ...r
       <div className={classes.flexGrow} />
       <Hidden smDown>
         <List disablePadding className={classes.navigationContainer}>
-          {[landings, supportedPages, account].map((page, i) => (
-            <div key={page.id}>
-              <ListItem
-                aria-describedby={page.id}
-                onClick={e => handleClick(e, page.id)}
-                className={clsx(
-                  classes.listItem,
-                  openedPopoverId === page.id ? classes.listItemActive : '',
-                )}
-              >
-                <Typography
-                  variant="body1"
-                  color="textPrimary"
-                  className={clsx(classes.listItemText, 'menu-item')}
-                >
-                  {page.title}
-                </Typography>
-                <ListItemIcon className={classes.listItemIcon}>
-                  <ExpandMoreIcon
-                    className={
-                      openedPopoverId === page.id ? classes.expandOpen : ''
-                    }
-                    fontSize="small"
-                  />
-                </ListItemIcon>
-              </ListItem>
-              <Popover
-                elevation={1}
-                id={page.id}
-                open={openedPopoverId === page.id}
-                anchorEl={anchorEl}
-                onClose={handleClose}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'center',
-                }}
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'center',
-                }}
-                classes={{ paper: classes.popover }}
-              >
-                <div>{renderPages(page.id)}</div>
-              </Popover>
-            </div>
-          ))}
+          {/*{[landings, supportedPages, account].map((page, i) => (*/}
+          {/*  <div key={page.id}>*/}
+          {/*    <ListItem*/}
+          {/*      aria-describedby={page.id}*/}
+          {/*      onClick={e => handleClick(e, page.id)}*/}
+          {/*      className={clsx(*/}
+          {/*        classes.listItem,*/}
+          {/*        openedPopoverId === page.id ? classes.listItemActive : '',*/}
+          {/*      )}*/}
+          {/*    >*/}
+          {/*      <Typography*/}
+          {/*        variant="body1"*/}
+          {/*        color="textPrimary"*/}
+          {/*        className={clsx(classes.listItemText, 'menu-item')}*/}
+          {/*      >*/}
+          {/*        {page.title}*/}
+          {/*      </Typography>*/}
+          {/*      <ListItemIcon className={classes.listItemIcon}>*/}
+          {/*        <ExpandMoreIcon*/}
+          {/*          className={*/}
+          {/*            openedPopoverId === page.id ? classes.expandOpen : ''*/}
+          {/*          }*/}
+          {/*          fontSize="small"*/}
+          {/*        />*/}
+          {/*      </ListItemIcon>*/}
+          {/*    </ListItem>*/}
+          {/*    <Popover*/}
+          {/*      elevation={1}*/}
+          {/*      id={page.id}*/}
+          {/*      open={openedPopoverId === page.id}*/}
+          {/*      anchorEl={anchorEl}*/}
+          {/*      onClose={handleClose}*/}
+          {/*      anchorOrigin={{*/}
+          {/*        vertical: 'bottom',*/}
+          {/*        horizontal: 'center',*/}
+          {/*      }}*/}
+          {/*      transformOrigin={{*/}
+          {/*        vertical: 'top',*/}
+          {/*        horizontal: 'center',*/}
+          {/*      }}*/}
+          {/*      classes={{ paper: classes.popover }}*/}
+          {/*    >*/}
+          {/*      <div>{renderPages(page.id)}</div>*/}
+          {/*    </Popover>*/}
+          {/*  </div>*/}
+          {/*))}*/}
           {/*<ListItem className={clsx(classes.listItem, 'menu-item--no-dropdown')}>*/}
           {/*  <DarkModeToggler themeMode={themeMode} onClick={() => themeToggler()} />*/}
           {/*</ListItem>*/}

@@ -1,6 +1,5 @@
 import Coingecko from '../../../assets/images/main/coingecko.svg';
 import Coinmarketcap from '../../../assets/images/main/coinmarketcap.png';
-import Instagram from '../../../assets/images/main/instagram.svg';
 import Twitter from '../../../assets/images/main/twitter.png';
 import Telegram from '../../../assets/images/main/telegram.png';
 import Coinbokjisa from '../../../assets/images/main/coinbokjisa.jpeg';

@@ -10,7 +10,6 @@ import { Main as MainLayout, Minimal as MinimalLayout, DocsLayout } from './layo
 
 import {
   Home as HomeView,
-  IndexView,
   Agency as AgencyView,
   CareerListing as CareerListingView,
   CareerListingMinimal as CareerListingMinimalView,

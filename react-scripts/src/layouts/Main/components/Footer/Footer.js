@@ -15,7 +15,7 @@ import InstagramIcon from '@material-ui/icons/Instagram';
 import PinterestIcon from '@material-ui/icons/Pinterest';
 
 import { Image } from 'components/atoms';
-import Logo from '../../../../assets/images/main/logo.png';
+import Logo from '../../../../assets/images/main/logo_footer.svg';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -196,45 +196,45 @@ const Footer = props => {
             <List disablePadding>
               <ListItem disableGutters className={classes.logoContainerItem}>
                 <div className={classes.logoContainer}>
-                  <a href="/" title="thefront">
+                  <a href="/" title="Nostalgia Finance">
                     <Image
                       className={classes.logoImage}
                       src={Logo}
-                      alt="thefront"
+                      alt="Nostalgia Finance"
                       lazy={false}
                     />
                   </a>
                 </div>
               </ListItem>
               <ListItem disableGutters>
-                <IconButton className={classes.socialIcon}>
-                  <FacebookIcon className={classes.icon} />
+                {/*<IconButton className={classes.socialIcon}>*/}
+                {/*  <FacebookIcon className={classes.icon} />*/}
+                {/*</IconButton>*/}
+                {/*<IconButton className={classes.socialIcon}>*/}
+                {/*  <InstagramIcon className={classes.icon} />*/}
+                {/*</IconButton>*/}
+                <IconButton className={classes.socialIcon} href="#">
+                  <TwitterIcon className={classes.icon}/>
                 </IconButton>
-                <IconButton className={classes.socialIcon}>
-                  <InstagramIcon className={classes.icon} />
-                </IconButton>
-                <IconButton className={classes.socialIcon}>
-                  <TwitterIcon className={classes.icon} />
-                </IconButton>
-                <IconButton className={classes.socialIcon}>
-                  <PinterestIcon className={classes.icon} />
-                </IconButton>
+                {/*<IconButton className={classes.socialIcon}>*/}
+                {/*  <PinterestIcon className={classes.icon} />*/}
+                {/*</IconButton>*/}
               </ListItem>
             </List>
           </Grid>
-          <Grid item xs={12} md={10} className={classes.menuListContainer}>
-            <Grid container spacing={0}>
-              <Grid item>
-                <LandingPages />
-              </Grid>
-              <Grid item>
-                <SupportedPages />
-              </Grid>
-              <Grid item>
-                <AccountPages />
-              </Grid>
-            </Grid>
-          </Grid>
+          {/*<Grid item xs={12} md={10} className={classes.menuListContainer}>*/}
+          {/*  <Grid container spacing={0}>*/}
+          {/*    <Grid item>*/}
+          {/*      <LandingPages />*/}
+          {/*    </Grid>*/}
+          {/*    <Grid item>*/}
+          {/*      <SupportedPages />*/}
+          {/*    </Grid>*/}
+          {/*    <Grid item>*/}
+          {/*      <AccountPages />*/}
+          {/*    </Grid>*/}
+          {/*  </Grid>*/}
+          {/*</Grid>*/}
         </Grid>
       </div>
     </div>
