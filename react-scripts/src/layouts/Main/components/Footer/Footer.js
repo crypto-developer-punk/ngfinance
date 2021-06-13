@@ -213,7 +213,7 @@ const Footer = props => {
                 {/*<IconButton className={classes.socialIcon}>*/}
                 {/*  <InstagramIcon className={classes.icon} />*/}
                 {/*</IconButton>*/}
-                <IconButton className={classes.socialIcon} href="#">
+                <IconButton className={classes.socialIcon} href="https://twitter.com/nostalg58397094">
                   <TwitterIcon className={classes.icon}/>
                 </IconButton>
                 {/*<IconButton className={classes.socialIcon}>*/}

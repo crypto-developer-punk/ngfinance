@@ -2,23 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3b9ddc1f-3db0-4470-86df-e436065b9260" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/react-scripts/src/assets/images/main/logo_eth.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/react-scripts/src/assets/images/main/logo_footer.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/react-scripts/src/assets/images/main/logo_topbar.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/react-scripts/yarn.lock" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/react-scripts/src/assets/javascripts/canvasjs.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/react-scripts/src/assets/javascripts/canvasjs.react.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/components/Tokeneconomics/PieChart.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react-scripts/.eslintcache" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/.eslintcache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react-scripts/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-scripts/src/Routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/src/Routes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-scripts/src/assets/images/main/bnb.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-scripts/src/assets/images/main/logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-scripts/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react-scripts/src/layouts/Main/components/Footer/Footer.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/src/layouts/Main/components/Footer/Footer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-scripts/src/layouts/Main/components/Topbar/Topbar.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/src/layouts/Main/components/Topbar/Topbar.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/components/About/About.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/components/About/About.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/DesignCompany.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/DesignCompany.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/components/Partners/Partners.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/components/Partners/Partners.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/components/Tokeneconomics/Tokeneconomics.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/components/Tokeneconomics/Tokeneconomics.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/data/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/data/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-scripts/src/views/NftApp/components/Hero/FlagIcon.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-scripts/src/views/NftApp/components/Hero/Hero.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/src/views/NftApp/components/Hero/Hero.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-scripts/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,7 +51,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/react-scripts/src/assets/images/main" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/components/Tokeneconomics" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
@@ -68,13 +64,15 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/react-scripts/src/assets/javascripts" />
       <recent name="$PROJECT_DIR$/react-scripts/src/assets/images/main" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/react-scripts/src/assets/images/main" />
-      <recent name="$PROJECT_DIR$/react-scripts/src/views/NftApp/components" />
-      <recent name="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/components" />
+      <recent name="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/components/Tokeneconomics" />
       <recent name="$PROJECT_DIR$/react-scripts/src/views" />
+      <recent name="$PROJECT_DIR$/react-scripts/src/assets/javascripts" />
+      <recent name="$PROJECT_DIR$/react-scripts/src/assets" />
+      <recent name="$PROJECT_DIR$/react-scripts/src/assets/images/main" />
     </key>
   </component>
   <component name="SvnConfiguration">
@@ -100,11 +98,11 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="1018" y="470" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1623516003171">
+    <state x="1018" y="470" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1623576735927">
       <screen x="0" y="25" width="2560" height="1415" />
     </state>
     <state x="1018" y="448" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/2560.-654.1440.2535/0.25.2560.1344@0.25.2560.1344" timestamp="1622473883414" />
-    <state x="1018" y="470" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/2560.-654.1440.2535/0.25.2560.1415@0.25.2560.1415" timestamp="1623516003171" />
+    <state x="1018" y="470" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/2560.-654.1440.2535/0.25.2560.1415@0.25.2560.1415" timestamp="1623576735927" />
     <state x="100" y="125" width="2360" height="1215" key="DiffContextDialog" timestamp="1623437061625">
       <screen x="0" y="25" width="2560" height="1415" />
     </state>
@@ -137,7 +135,7 @@
       <screen x="0" y="25" width="2560" height="1415" />
     </state>
     <state x="1066" y="359" key="VCS.ChangeListViewerDialog/2560.-654.1440.2535/0.25.2560.1415@0.25.2560.1415" timestamp="1623437031426" />
-    <state x="933" y="473" width="694" height="518" key="find.popup" timestamp="1623518929578">
+    <state x="933" y="473" width="694" height="518" key="find.popup" timestamp="1623582659347">
       <screen x="0" y="25" width="2560" height="1415" />
     </state>
     <state x="1043" y="237" width="1010" height="808" key="find.popup/2560.-654.1440.2535/0.25.2560.1344@0.25.2560.1344" timestamp="1623070974891" />
@@ -147,8 +145,8 @@
     <state x="933" y="451" width="790" height="520" key="find.popup/2560.-654.1440.2535/0.25.2560.1348@0.25.2560.1348" timestamp="1622652781930" />
     <state x="646" y="226" width="1418" height="879" key="find.popup/2560.-654.1440.2535/0.25.2560.1349@0.25.2560.1349" timestamp="1622657850316" />
     <state x="933" y="451" width="790" height="522" key="find.popup/2560.-654.1440.2535/0.25.2560.1350@0.25.2560.1350" timestamp="1622656884593" />
-    <state x="933" y="473" width="694" height="518" key="find.popup/2560.-654.1440.2535/0.25.2560.1415@0.25.2560.1415" timestamp="1623518929578" />
-    <state x="945" y="380" width="670" height="676" key="search.everywhere.popup" timestamp="1623521077524">
+    <state x="933" y="473" width="694" height="518" key="find.popup/2560.-654.1440.2535/0.25.2560.1415@0.25.2560.1415" timestamp="1623582659347" />
+    <state x="945" y="380" width="670" height="676" key="search.everywhere.popup" timestamp="1623582595919">
       <screen x="0" y="25" width="2560" height="1415" />
     </state>
     <state x="945" y="362" width="670" height="646" key="search.everywhere.popup/2560.-654.1440.2535/0.25.2560.1344@0.25.2560.1344" timestamp="1623057686552" />
@@ -158,6 +156,6 @@
     <state x="945" y="364" width="670" height="646" key="search.everywhere.popup/2560.-654.1440.2535/0.25.2560.1348@0.25.2560.1348" timestamp="1622643066682" />
     <state x="945" y="364" width="670" height="647" key="search.everywhere.popup/2560.-654.1440.2535/0.25.2560.1349@0.25.2560.1349" timestamp="1622655707346" />
     <state x="945" y="364" width="670" height="648" key="search.everywhere.popup/2560.-654.1440.2535/0.25.2560.1350@0.25.2560.1350" timestamp="1622656597921" />
-    <state x="945" y="380" width="670" height="676" key="search.everywhere.popup/2560.-654.1440.2535/0.25.2560.1415@0.25.2560.1415" timestamp="1623521077524" />
+    <state x="945" y="380" width="670" height="676" key="search.everywhere.popup/2560.-654.1440.2535/0.25.2560.1415@0.25.2560.1415" timestamp="1623582595919" />
   </component>
 </project>

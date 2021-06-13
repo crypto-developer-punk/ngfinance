@@ -1,24 +1,14 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { Divider } from '@material-ui/core';
-import { Section, SectionAlternate } from 'components/organisms';
+import {makeStyles} from '@material-ui/core/styles';
+import {Divider} from '@material-ui/core';
+import {Section, SectionAlternate} from 'components/organisms';
 
-import {
-    About,
-    Features,
-    Hero,
-    Integrations,
-    Pricings,
-    Reviews, Roadmap,
-    Subscription, Tokeneconomics, Team
-} from './components';
+import {About, Hero, Roadmap, Team, Tokeneconomics} from './components';
 
-import { integrations, reviews, team, backer } from './data';
+import {backer, team} from './data';
 import {partners} from "../DesignCompany/data";
 import {Partners} from "../DesignCompany/components";
 import Backer from "./components/Backer";
-import Background from "../../assets/images/main/header_background.jpg";
-import {HeroSimpleBackground} from "../../components/organisms";
 import EndHero from "./components/EndHero";
 
 const useStyles = makeStyles(theme => ({
