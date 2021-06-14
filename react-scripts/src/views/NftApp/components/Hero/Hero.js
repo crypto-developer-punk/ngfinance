@@ -1,21 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {makeStyles, withStyles} from '@material-ui/core/styles';
-import {Button, colors, FormControl, Grid, Typography} from '@material-ui/core';
+import {Button, colors, Grid, Typography, Divider, CardHeader} from '@material-ui/core';
 import {Image} from 'components/atoms';
 import {SectionHeader} from 'components/molecules';
 import GenesisNFT from '../../../../assets/images/main/genesis_nft.jpg';
 import {CardBase} from "../../../../components/organisms";
-import TextField from '@material-ui/core/TextField';
 import Eth from "../../../../assets/images/main/logo_eth.svg";
 import Slider from '@material-ui/core/Slider';
+import { TiStarFullOutline } from 'react-icons/ti';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
 
 import {useWeb3} from '@openzeppelin/network/react';
-
-const addressTo = '0xD97F7985e8030AE56551eCA127887CC9f1900039';
+import CustomizedProgressBars from "../../../../components/molecules/CustomizedProgressBars/CustomizedProgressBars";
 
 const useStyles = makeStyles(theme => ({
   image: {
@@ -30,6 +29,16 @@ const useStyles = makeStyles(theme => ({
     '& > *': {
       margin: theme.spacing(1),
       width: '25ch',
+    },
+  },
+  tag: {
+    padding: theme.spacing(1 / 2, 1),
+    borderRadius: theme.spacing(1 / 2),
+    background: theme.palette.secondary.main,
+    color: 'black',
+    margin: theme.spacing(0, 1, 1, 0),
+    [theme.breakpoints.up('md')]: {
+      margin: theme.spacing(0, 1, 1, 0),
     },
   },
 }));
@@ -173,7 +182,8 @@ const Hero = props => {
         <Grid
           item
           container
-          alignItems="center"
+          justify="flex-start"
+          alignItems="flex-start"
           xs={12}
           md={6}
           data-aos={'fade-up'}
@@ -182,18 +192,34 @@ const Hero = props => {
                     style={{ borderTop: `5px solid ${colors.blueGrey[500]}` }}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
+
+
+
                 <SectionHeader
                     title={
                       <span>
-                        <Typography component="span" variant="h5" color="primary">
-                          <b>* Genesis NFT</b>
-                        </Typography>
+                        <CustomizedProgressBars />
+                          {/*<Typography variant="h6" color="primary">*/}
+                          {/*    <b> Genesis NFT </b>*/}
+                          {/*</Typography>*/}
+                        <Divider style={{marginTop: '20px'}} />
                       </span>
                     }
                     subtitle={
-                      <Typography component="span" variant="h5" color="textPrimary">
-                        <i>Beginning of Nostalgia</i>
-                      </Typography>
+                      <span>
+                        <div style={{ marginBottom: "18px" }}>
+                          <Typography variant="caption" className={classes.tag} >
+                            Genesis
+                          </Typography>
+                          <Typography variant="caption" className={classes.tag} >
+                            NFT
+                          </Typography>
+                        </div>
+
+                        <Typography component="span" variant="h5" color="textPrimary" >
+                          Beginning of Nostalgia
+                        </Typography>
+                      </span>
                     }
                     align="left"
                     disableGutter
@@ -202,6 +228,9 @@ const Hero = props => {
                 <SectionHeader
                     title={
                       <span>
+                        <Typography component="span" variant="body1" color="textSecondary">
+                          On sale
+                        </Typography>{' '}
                         <Typography component="span" variant="h4" color="textPrimary">
                           <strong>{PRICE_ETH_PER_NFT}</strong>
                         </Typography>{' '}
@@ -222,9 +251,11 @@ const Hero = props => {
                 />
               </Grid>
               <Grid item xs={12}>
-                <Typography id="discrete-slider-small-steps" gutterBottom>
-                  Amount of NFT: {amountOfNft}
-                </Typography>
+                <span>
+                  <Typography id="discrete-slider-small-steps" gutterBottom>
+                    Amount : {amountOfNft} NFT
+                  </Typography>
+                </span>
                 <PrettoSlider
                     valueLabelDisplay="auto"
                     aria-label="Amount of NFT"
@@ -240,6 +271,7 @@ const Hero = props => {
                 </Typography>
               </Grid>
               <Grid item xs={12} align="center">
+                <br />
                 <Button variant="contained" color="primary" size="large" onClick={requestAccess} fullWidth>
                   {connectButtonText}
                 </Button>
@@ -267,8 +299,6 @@ const Hero = props => {
                 </div>
               </Grid>
             </Grid>
-
-
           </CardBase>
         </Grid>
       </Grid>

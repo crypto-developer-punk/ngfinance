@@ -2,20 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3b9ddc1f-3db0-4470-86df-e436065b9260" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/react-scripts/.env.development" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/react-scripts/.env.production" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/react-scripts/.env.staging" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/components/Tokeneconomics/pieChart.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/react-scripts/src/components/molecules/CustomizedProgressBars/CustomizedProgressBars.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react-scripts/.eslintcache" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/.eslintcache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-scripts/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react-scripts/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-scripts/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-scripts/src/assets/images/main/logo_topbar.svg" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/src/assets/images/main/logo_topbar.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/DesignCompany.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/DesignCompany.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/components/Backer/Backer.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/components/Backer/Backer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/components/Hero/Hero.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/components/Hero/Hero.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/components/Tokeneconomics/PieChart.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/components/Tokeneconomics/PieChart.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/components/About/About.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/src/views/DesignCompany/components/About/About.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react-scripts/src/views/NftApp/components/Hero/Hero.js" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/src/views/NftApp/components/Hero/Hero.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-scripts/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/react-scripts/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,8 +19,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="JavaScript File" />
         <option value="CSS File" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -140,7 +134,7 @@
       <screen x="0" y="25" width="2560" height="1415" />
     </state>
     <state x="1066" y="359" key="VCS.ChangeListViewerDialog/2560.-654.1440.2535/0.25.2560.1415@0.25.2560.1415" timestamp="1623437031426" />
-    <state x="933" y="473" width="763" height="518" key="find.popup" timestamp="1623684856922">
+    <state x="933" y="473" width="763" height="518" key="find.popup" timestamp="1623694436046">
       <screen x="0" y="25" width="2560" height="1415" />
     </state>
     <state x="1043" y="237" width="1010" height="808" key="find.popup/2560.-654.1440.2535/0.25.2560.1344@0.25.2560.1344" timestamp="1623070974891" />
@@ -150,8 +144,8 @@
     <state x="933" y="451" width="790" height="520" key="find.popup/2560.-654.1440.2535/0.25.2560.1348@0.25.2560.1348" timestamp="1622652781930" />
     <state x="646" y="226" width="1418" height="879" key="find.popup/2560.-654.1440.2535/0.25.2560.1349@0.25.2560.1349" timestamp="1622657850316" />
     <state x="933" y="451" width="790" height="522" key="find.popup/2560.-654.1440.2535/0.25.2560.1350@0.25.2560.1350" timestamp="1622656884593" />
-    <state x="933" y="473" width="763" height="518" key="find.popup/2560.-654.1440.2535/0.25.2560.1415@0.25.2560.1415" timestamp="1623684856922" />
-    <state x="945" y="380" width="670" height="676" key="search.everywhere.popup" timestamp="1623684648373">
+    <state x="933" y="473" width="763" height="518" key="find.popup/2560.-654.1440.2535/0.25.2560.1415@0.25.2560.1415" timestamp="1623694436046" />
+    <state x="945" y="380" width="670" height="676" key="search.everywhere.popup" timestamp="1623690283100">
       <screen x="0" y="25" width="2560" height="1415" />
     </state>
     <state x="945" y="362" width="670" height="646" key="search.everywhere.popup/2560.-654.1440.2535/0.25.2560.1344@0.25.2560.1344" timestamp="1623057686552" />
@@ -161,6 +155,6 @@
     <state x="945" y="364" width="670" height="646" key="search.everywhere.popup/2560.-654.1440.2535/0.25.2560.1348@0.25.2560.1348" timestamp="1622643066682" />
     <state x="945" y="364" width="670" height="647" key="search.everywhere.popup/2560.-654.1440.2535/0.25.2560.1349@0.25.2560.1349" timestamp="1622655707346" />
     <state x="945" y="364" width="670" height="648" key="search.everywhere.popup/2560.-654.1440.2535/0.25.2560.1350@0.25.2560.1350" timestamp="1622656597921" />
-    <state x="945" y="380" width="670" height="676" key="search.everywhere.popup/2560.-654.1440.2535/0.25.2560.1415@0.25.2560.1415" timestamp="1623684648373" />
+    <state x="945" y="380" width="670" height="676" key="search.everywhere.popup/2560.-654.1440.2535/0.25.2560.1415@0.25.2560.1415" timestamp="1623690283100" />
   </component>
 </project>

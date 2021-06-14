@@ -10,6 +10,7 @@ import Eth from '../../../../assets/images/main/logo_eth.svg';
 
 import { DescriptionCta } from 'components/molecules';
 import { CardProduct } from 'components/organisms';
+import CustomizedProgressBars from "../../../../components/molecules/CustomizedProgressBars/CustomizedProgressBars";
 
 const useStyles = makeStyles(theme => ({
   playIcon: {
@@ -72,7 +73,7 @@ const About = props => {
                       data-aos-duration="2000"
                   />
               </Grid>
-              <Grid item xs={6} data-aos={'fade-up'}>
+              <Grid item xs={8} data-aos={'fade-up'}>
                   <Typography
                       variant="h6"
                       color="textPrimary"
@@ -82,7 +83,7 @@ const About = props => {
                       <i>Beginning of Nostalgia</i>
                   </Typography>
               </Grid>
-              <Grid item xs={6} data-aos={'fade-up'} align="right">
+              <Grid item xs={4} data-aos={'fade-up'} align="right">
                       <Typography
                           variant="h6"
                           color="textSecondary"
@@ -92,9 +93,13 @@ const About = props => {
                       {' '}
                       <Image
                           src={Eth}
-                          style={{height:'18px', width: '18px'}}
+                          style={{height:'20px', width: '20px'}}
                       />
                       </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                  <br />
+                  <CustomizedProgressBars/>
               </Grid>
           </Grid>
       </CardBase>

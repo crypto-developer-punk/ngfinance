@@ -13977,6 +13977,13 @@
     "uncontrollable" "^7.2.1"
     "warning" "^4.0.3"
 
+"react-countdown@^2.3.2":
+  "integrity" "sha512-Q4SADotHtgOxNWhDdvgupmKVL0pMB9DvoFcxv5AzjsxVhzOVxnttMbAywgqeOdruwEAmnPhOhNv/awAgkwru2w=="
+  "resolved" "https://registry.npmjs.org/react-countdown/-/react-countdown-2.3.2.tgz"
+  "version" "2.3.2"
+  dependencies:
+    "prop-types" "^15.7.2"
+
 "react-countup@^4.3.3":
   "integrity" "sha512-pWnxpwdPNRyJFha/YKKbyc4RLAw8PzmULdgCziGIgw6vxhT1VdccrvQgj38HBSoM2qF/MoLmn4M2klvDWVIdaw=="
   "resolved" "https://registry.npmjs.org/react-countup/-/react-countup-4.3.3.tgz"
@@ -14016,7 +14023,7 @@
     "strip-ansi" "6.0.0"
     "text-table" "0.2.0"
 
-"react-dom@^0.14 || ^15.0 || ^16.0", "react-dom@^16.8.6", "react-dom@>=16.3.0", "react-dom@>=16.8.0":
+"react-dom@^0.14 || ^15.0 || ^16.0", "react-dom@^16.8.6", "react-dom@>= 15", "react-dom@>=16.3.0", "react-dom@>=16.8.0":
   "integrity" "sha512-1gCeQXDLoIqMgqD3IO2Ah9bnf0w9kzhwN5q4FGnHZ67hBm9yePzB5JJAIQCc8x3pFnNlwFq4RidZggNAAkzWWw=="
   "resolved" "https://registry.npmjs.org/react-dom/-/react-dom-16.14.0.tgz"
   "version" "16.14.0"
@@ -14238,7 +14245,7 @@
   dependencies:
     "prop-types" "^15.7.2"
 
-"react@^0.14 || ^15.0 || ^16.0", "react@^16.13.1", "react@>=0.14.0", "react@>=15.0.0", "react@>=16.3.0", "react@>=16.3.2", "react@>=16.8.0":
+"react@^0.14 || ^15.0 || ^16.0", "react@^16.13.1", "react@>= 15", "react@>=0.14.0", "react@>=15.0.0", "react@>=16.3.0", "react@>=16.3.2", "react@>=16.8.0":
   "integrity" "sha512-0X2CImDkJGApiAlcf0ODKIneSwBPhqJawOa5wCtKbu7ZECrmS26NvtSILynQ66cgkT/RJ4LidJOc3bUESwmU8g=="
   "resolved" "https://registry.npmjs.org/react/-/react-16.14.0.tgz"
   "version" "16.14.0"
