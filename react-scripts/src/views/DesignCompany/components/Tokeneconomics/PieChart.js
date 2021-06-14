@@ -1,10 +1,11 @@
 import React from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
+import styles from './pieChart.css'
 
 const pieColors = (function () {
     var colors = [],
-        base = Highcharts.getOptions().colors[0],
+        base = Highcharts.getOptions().colors[10],
         i;
 
     for (i = 0; i < 10; i += 1) {
@@ -83,7 +84,7 @@ const options = {
 
 const PieChart = () => {
     return (
-        <div>
+        <div data-aos="fade-up">
             <HighchartsReact highcharts={Highcharts} options={options} />
         </div>
     );

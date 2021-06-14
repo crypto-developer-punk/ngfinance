@@ -113,7 +113,10 @@ const Hero = props => {
             titleVariant="h3"
             subtitle={
                 <span className={classes.textWhite}>
-                    Nostalgia Finance is NFT Based Defi system that you can simply stake your specific NFT we drop fixed qty of "$PAINT" every week.
+                    Nostalgia Finance is NFT Based Defi system that you can simply stake your specific NFT we drop fixed qty of {' '}
+                    <Typography color="primary" variant="inherit" component="span">$PAINT</Typography>
+                    {' '}
+                    every week.
                     <br />
                     you can easily harvest with connected wallet by single click. anyone can freely enjoy our defi platform without difficult options like LPing, IL
                 </span>

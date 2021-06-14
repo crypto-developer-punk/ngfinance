@@ -5,8 +5,12 @@
   "version": "3.2.2",
   "private": true,
   "scripts": {
-    "start": "react-scripts start",
-    "build": "cross-env GENERATE_SOURCEMAP=false react-scripts build",
+    "start": "sh -ac '. .env.${REACT_APP_ENV}; react-scripts start'",
+    "start:development": "REACT_APP_ENV=development react-scripts start",
+    "start:production": "REACT_APP_ENV=production react-scripts start",
+    "build": "sh -ac '. .env.${REACT_APP_ENV};cross-env GENERATE_SOURCEMAP=false react-scripts build'",
+    "build:staging": "REACT_APP_ENV=staging cross-env GENERATE_SOURCEMAP=false react-scripts build",
+    "build:production": "REACT_APP_ENV=production cross-env GENERATE_SOURCEMAP=false react-scripts build",
     "prettier": "prettier --write '**/*.{js,css,html}'",
     "clear-all": "rimraf ./build ./node_modules"
   },

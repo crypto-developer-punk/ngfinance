@@ -16,7 +16,6 @@ import './style.css';
 import {useWeb3} from '@openzeppelin/network/react';
 
 const addressTo = '0xD97F7985e8030AE56551eCA127887CC9f1900039';
-const infuraProjectId = '21eb3ec799a74ff1b65bb39818d7af45';
 
 const useStyles = makeStyles(theme => ({
   image: {
@@ -66,12 +65,13 @@ const PrettoSlider = withStyles({
 })(Slider);
 
 const Hero = props => {
-  // Ether
-  // const web3Context = useWeb3('http://127.0.0.1:7545');
-  const web3Context = useWeb3(`wss://rinkeby.infura.io/ws/v3/${infuraProjectId}`);
+  const web3Context = useWeb3(process.env.REACT_APP_ETH_NETWORK);
   const { networkId, networkName, accounts, providerName, lib } = web3Context;
 
   const requestAuth = async web3Context => {
+    console.log("node environment: " + process.env.NODE_ENV);
+    console.log(process.env.REACT_APP_ADDRESS_TO);
+    console.log(process.env.REACT_APP_ETH_NETWORK);
     try {
       await web3Context.requestAuth();
     } catch (e) {
@@ -87,7 +87,7 @@ const Hero = props => {
 
     let send = lib.eth.sendTransaction({
       from: accounts[0],
-      to: addressTo,
+      to: process.env.REACT_APP_ADDRESS_TO,
       value: amountToSend
     });
 
@@ -223,7 +223,7 @@ const Hero = props => {
               </Grid>
               <Grid item xs={12}>
                 <Typography id="discrete-slider-small-steps" gutterBottom>
-                  Amount of NFT
+                  Amount of NFT: {amountOfNft}
                 </Typography>
                 <PrettoSlider
                     valueLabelDisplay="auto"

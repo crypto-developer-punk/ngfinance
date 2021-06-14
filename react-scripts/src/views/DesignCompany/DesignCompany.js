@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   backerSection: {
-    background: theme.palette.primary.main,
+    background: '#0c133e',
   },
   sectionSubscription: {
     paddingTop: 0,
