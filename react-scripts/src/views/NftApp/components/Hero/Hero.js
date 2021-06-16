@@ -266,11 +266,11 @@ const Hero = props => {
                     titleVariant="h2"
                 />
               </Grid>
-              <Grid item xs={8}>
+              <Grid item xs={9}>
                 <SectionHeader
                     subtitle={
                       <span>
-                        <div style={{ marginBottom: "18px" }}>
+                        <div>
                           <Typography variant="caption" className={classes.tag} >
                             Genesis
                           </Typography>
@@ -278,7 +278,23 @@ const Hero = props => {
                             NFT
                           </Typography>
                         </div>
-
+                      </span>
+                    }
+                    align="left"
+                    disableGutter
+                    titleVariant="h2"
+                />
+              </Grid>
+              <Grid item xs={3} align="right">
+                <Image
+                    src={Rarible}
+                    style={{ width: '40px', height:'40px' }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <SectionHeader
+                    subtitle={
+                      <span>
                         <Typography component="span" variant="h5" color="textPrimary" >
                           <strong>Beginning of Nostalgia</strong>
                         </Typography>
@@ -287,12 +303,6 @@ const Hero = props => {
                     align="left"
                     disableGutter
                     titleVariant="h2"
-                />
-              </Grid>
-              <Grid item xs={4} align="right">
-                <Image
-                    src={Rarible}
-                    style={{ width: '40px', height:'40px' }}
                 />
               </Grid>
               <Grid item xs={12}>
