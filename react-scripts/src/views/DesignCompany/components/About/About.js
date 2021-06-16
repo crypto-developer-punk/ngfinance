@@ -73,7 +73,7 @@ const About = props => {
                       data-aos-duration="2000"
                   />
               </Grid>
-              <Grid item xs={8} data-aos={'fade-up'}>
+              <Grid item xs={7} md={8} data-aos={'fade-up'}>
                   <Typography
                       variant="h6"
                       color="textPrimary"
@@ -83,7 +83,7 @@ const About = props => {
                       <i>Beginning of Nostalgia</i>
                   </Typography>
               </Grid>
-              <Grid item xs={4} data-aos={'fade-up'} align="right">
+              <Grid item xs={5} md={4} data-aos={'fade-up'} align="right">
                       <Typography
                           variant="h6"
                           color="textSecondary"

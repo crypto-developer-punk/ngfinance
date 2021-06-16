@@ -8,7 +8,7 @@ const getTheme = mode => responsiveFontSizes(
       contentWidth: 1236,
     },
     typography: {
-      fontFamily: 'Lato',
+        fontFamily: 'Roboto'
     },
     zIndex: {
       appBar: 1200,

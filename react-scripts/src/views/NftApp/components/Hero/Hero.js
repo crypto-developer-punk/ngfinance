@@ -456,7 +456,7 @@ const Hero = props => {
                     xs={12} md={8}
                     data-aos={'fade-up'}
                 >
-                  <Grid item xs={11}>
+                  <Grid item xs={10}>
                     <SectionHeader
                         title={
                           <span>
@@ -469,7 +469,7 @@ const Hero = props => {
                         disableGutter
                     />
                   </Grid>
-                  <Grid item xs={1} align="right">
+                  <Grid item xs={2} align="right">
                     <Image
                         src={Rarible}
                         style={{ width: '40px', height:'40px' }}

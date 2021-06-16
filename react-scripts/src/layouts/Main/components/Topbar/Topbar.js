@@ -316,7 +316,6 @@ const Topbar = ({ themeMode, themeToggler, onSidebarOpen, pages, className, ...r
             <Button
               variant="contained"
               color="primary"
-              component="a"
               className={classes.listItemButton}
               onClick={(e) => {
                 e.preventDefault();
@@ -340,7 +339,6 @@ const Topbar = ({ themeMode, themeToggler, onSidebarOpen, pages, className, ...r
         <Button
             variant="contained"
             color="primary"
-            component="a"
             className={classes.listItemButton}
             onClick={(e) => {
               e.preventDefault();
