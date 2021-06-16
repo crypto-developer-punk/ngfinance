@@ -19,6 +19,10 @@ import CustomizedProgressBars from "../../../../components/molecules/CustomizedP
 import axios from "axios";
 
 import Config from '../../../../config.json';
+import ReactGA from 'react-ga';
+
+ReactGA.initialize(Config.ga_code);
+ReactGA.pageview(window.location.pathname + window.location.search);
 
 // Configuration depending on development environment
 const defaultConfig = Config.development;
@@ -263,12 +267,11 @@ const Hero = props => {
                     }
                     align="left"
                     disableGutter
-                    titleVariant="h2"
                 />
               </Grid>
               <Grid item xs={9}>
                 <SectionHeader
-                    subtitle={
+                    title={
                       <span>
                         <div>
                           <Typography variant="caption" className={classes.tag} >
@@ -282,7 +285,6 @@ const Hero = props => {
                     }
                     align="left"
                     disableGutter
-                    titleVariant="h2"
                 />
               </Grid>
               <Grid item xs={3} align="right">
@@ -293,7 +295,7 @@ const Hero = props => {
               </Grid>
               <Grid item xs={12}>
                 <SectionHeader
-                    subtitle={
+                    title={
                       <span>
                         <Typography component="span" variant="h5" color="textPrimary" >
                           <strong>Beginning of Nostalgia</strong>
@@ -302,7 +304,6 @@ const Hero = props => {
                     }
                     align="left"
                     disableGutter
-                    titleVariant="h2"
                 />
               </Grid>
               <Grid item xs={12}>
@@ -360,7 +361,7 @@ const Hero = props => {
               </Grid>
 
               {/* Test Code - Web3 */}
-              <Grid item xs={12} hidden={connectedWallet!==true}>
+              <Grid item xs={12} hidden={(connectedWallet!==true) && (environment === 'development')}>
                 <div className={classes.inputContainer}>
                   <h4>Web3 Dashboard</h4>
                   <div>
@@ -401,14 +402,13 @@ const Hero = props => {
                 }
                 align="left"
                 disableGutter
-                titleVariant="h2"
             />
           </Grid>
 
           <Grid item xs={12}>
             <CardBase liftUp variant="outlined" align="left" withShadow
                       style={{ borderTop: `5px solid ${colors.blueGrey[500]}` }}>
-              <Grid container xs={12} spacing={5} hidden={nftBalance!==0}>
+              <Grid container spacing={5} hidden={nftBalance!==0}>
                 <Grid
                     item
                     container
@@ -427,11 +427,10 @@ const Hero = props => {
                       }
                       align="left"
                       disableGutter
-                      titleVariant="h2"
                   />
                 </Grid>
               </Grid>
-              <Grid container xs={12} spacing={5} hidden={nftBalance===0}>
+              <Grid container spacing={5} hidden={nftBalance===0}>
                 <Grid
                     item
                     container
@@ -468,7 +467,6 @@ const Hero = props => {
                         }
                         align="left"
                         disableGutter
-                        titleVariant="h2"
                     />
                   </Grid>
                   <Grid item xs={1} align="right">
@@ -496,12 +494,11 @@ const Hero = props => {
                         }
                         align="left"
                         disableGutter
-                        titleVariant="h2"
                     />
                     <Divider style={{marginTop: '20px'}} />
                   </Grid>
                   <Grid item xs={12} className={classes.gridItem}>
-                    <Grid container xs={12}>
+                    <Grid container>
                       <Grid item xs={12} md={3}>
                         <Typography variant="subtitle1" color={"primary"}>
                           Description
@@ -515,7 +512,7 @@ const Hero = props => {
                     </Grid>
                   </Grid>
                   <Grid item xs={12} className={classes.gridItem}>
-                    <Grid container xs={12}>
+                    <Grid container>
                       <Grid item xs={12} md={3}>
                         <Typography variant="subtitle1" color={"primary"}>
                           ISSUE DATE
@@ -529,7 +526,7 @@ const Hero = props => {
                     </Grid>
                   </Grid>
                   <Grid item xs={12} className={classes.gridItem}>
-                    <Grid container xs={12}>
+                    <Grid container>
                       <Grid item xs={12} md={3}>
                         <Typography variant="subtitle1" color={"primary"}>
                           TOTAL SUPPLY
@@ -543,7 +540,7 @@ const Hero = props => {
                     </Grid>
                   </Grid>
                   <Grid item xs={12} className={classes.gridItem}>
-                    <Grid container xs={12}>
+                    <Grid container>
                       <Grid item xs={12} md={3}>
                         <Typography variant="subtitle1" color={"primary"}>
                           TRANSACTIONS

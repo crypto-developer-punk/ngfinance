@@ -10,6 +10,11 @@ import {partners} from "../DesignCompany/data";
 import {Partners} from "../DesignCompany/components";
 import Backer from "./components/Backer";
 import EndHero from "./components/EndHero";
+import Config from '../../config.json';
+import ReactGA from 'react-ga';
+
+ReactGA.initialize(Config.ga_code);
+ReactGA.pageview(window.location.pathname + window.location.search);
 
 const useStyles = makeStyles(theme => ({
   hero: {
