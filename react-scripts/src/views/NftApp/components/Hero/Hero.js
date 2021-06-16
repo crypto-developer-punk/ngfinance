@@ -393,7 +393,7 @@ const Hero = props => {
             md={12}
             data-aos={'fade-up'}
         >
-          <Grid item xs={12}>
+          <Grid item xs={12} style={{marginBottom: '15px'}}>
             <SectionHeader
                 title={
                   <Typography variant="h5">
