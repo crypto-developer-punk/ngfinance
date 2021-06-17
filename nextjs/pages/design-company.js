@@ -1,5 +1,5 @@
 import React from 'react';
-import DesignCompany from 'views/DesignCompany';
+import DesignCompany from 'views/NostalgiaIndex';
 import Main from 'layouts/Main';
 import WithLayout from 'WithLayout';
 

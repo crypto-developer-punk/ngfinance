@@ -3,7 +3,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import {colors} from '@material-ui/core';
 import {Section} from 'components/organisms';
 import {Hero,} from './components';
-import EndHero from "../DesignCompany/components/EndHero";
+import EndHero from "../NostalgiaIndex/components/EndHero";
 
 const useStyles = makeStyles(theme => ({
   pagePaddingTop: {
@@ -34,33 +34,7 @@ const NftApp = () => {
         <Section className={classes.pagePaddingTop}>
           <EndHero />
         </Section>
-        {/*<Section className={classes.pagePaddingTop}>*/}
-        {/*  <EndHeroShape />*/}
-        {/*</Section>*/}
-        {/*<Section className={classes.sectionNoPaddingTop}>*/}
-        {/*  <Reviews data={reviews} />*/}
-        {/*</Section>*/}
-        {/*<Section className={classes.sectionNoPaddingTop}>*/}
-        {/*  <Hub />*/}
-        {/*</Section>*/}
-
       </div>
-      {/*<Section narrow>*/}
-      {/*  <Support data={support} />*/}
-      {/*</Section>*/}
-      {/*<SectionAlternate>*/}
-      {/*  <Customization />*/}
-      {/*</SectionAlternate>*/}
-      {/*<Section>*/}
-      {/*  <Partners data={integrations} />*/}
-      {/*</Section>*/}
-      {/*<SectionAlternate innerNarrowed>*/}
-      {/*  <Pricings />*/}
-      {/*</SectionAlternate>*/}
-      {/*<Section>*/}
-      {/*  <Download data={[]} />*/}
-      {/*</Section>*/}
-      {/*<Divider />*/}
     </div>
   );
 };

@@ -112,10 +112,10 @@ const Hero = props => {
       });
 
       const paidEth = lib.utils.fromWei(sum.toString(), 'ether');
-      const nftBalance = Number(paidEth) / priceOfEth;
+      const nftBalance = Math.round(Number(paidEth) / priceOfEth);
 
-      console.log("summarized ETH: " + paidEth);
-      console.log("NFT: " + nftBalance);
+      console.log("Paid total ETH: " + paidEth);
+      console.log("Total supply of NFT: " + nftBalance + " NFT");
 
       setNftTxList(txList);
 
@@ -126,9 +126,9 @@ const Hero = props => {
   };
 
   const requestAuth = async web3Context => {
-    console.log("REACT_APP_ENV environment: " + process.env.REACT_APP_ENV);
-    console.log(environmentConfig.address_to);
-    console.log(environmentConfig.eth_network);
+    console.log("REACT_APP_ENV: " + process.env.REACT_APP_ENV);
+    console.log("address to: " + environmentConfig.address_to);
+    console.log("eth network: " + environmentConfig.eth_network);
     try {
       await web3Context.requestAuth();
     } catch (e) {
@@ -149,10 +149,14 @@ const Hero = props => {
         from: accounts[0],
         to: environmentConfig.address_to,
         value: amountToSend
-      }).then(ts => {
-        console.log("ETH transaction result: " + ts);
-        setSendingTransaction(false);
-        window.location.reload();
+      }).then(receipt => {
+        console.log("ETH transaction result status: " + receipt.status);
+        console.log("ETH transaction hash: " + receipt.transactionHash);
+
+        setTimeout(() => {
+          setSendingTransaction(false);
+          window.location.reload()
+        }, 10000)
       });
     } catch (e) {
       console.error(e);
@@ -162,10 +166,10 @@ const Hero = props => {
 
   const requestAccess = () => {
     if (connectedWallet) {
-      console.log("transfer crypto");
+      console.log("request to transfer eth");
       requestTransfer()
     } else {
-      console.log("connect to wallet");
+      console.log("request to connect to wallet");
       requestAuth(web3Context);
     }
   };
@@ -182,7 +186,7 @@ const Hero = props => {
 
     let balance = connected ? lib.utils.fromWei(await lib.eth.getBalance(accounts[0]), 'ether') : 'Unknown';
 
-    console.log(connected);
+
     setConnectedWallet(connected);
     if (connected) {
       setConnectButtonText("Buy NFT");
@@ -192,6 +196,13 @@ const Hero = props => {
       setConnectButtonText("Connect Wallet");
       setNftBalance(0);
     }
+
+    // Logging
+    console.log("[Web3] ETH network connected: " + connected);
+    console.log("[Web3] Network id: " + networkId +", name: " + networkName);
+    console.log("[Web3] Connected account: " + accounts[0]);
+    console.log("[Web3] ETH Balance: " + balance);
+    console.log("[Web3] Provider name: " + providerName);
 
     setBalance(balance);
   }, [accounts, lib.eth, lib.utils]);
@@ -358,28 +369,6 @@ const Hero = props => {
                 <Button variant="contained" color="primary" size="large" onClick={requestAccess} fullWidth>
                   {connectButtonText}
                 </Button>
-              </Grid>
-
-              {/* Test Code - Web3 */}
-              <Grid item xs={12} hidden={(connectedWallet!==true) && (environment === 'development')}>
-                <div className={classes.inputContainer}>
-                  <h4>Web3 Dashboard</h4>
-                  <div>
-                    Network: {networkId ? `${networkId} – ${networkName}` : 'No connection'}
-                  </div>
-                  <div>
-                    Your address: {accounts && accounts.length ? accounts[0] : 'Unknown'}
-                  </div>
-                  <div>
-                    Your ETH balance: {balance}
-                  </div>
-                  <div>
-                    Connected wallet: {connectedWallet}
-                  </div>
-                  <div>
-                    Provider: {providerName}
-                  </div>
-                </div>
               </Grid>
             </Grid>
           </CardBase>
