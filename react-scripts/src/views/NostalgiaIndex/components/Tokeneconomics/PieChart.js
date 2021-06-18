@@ -56,28 +56,22 @@ const options = {
         enabled: false
     },
     series: [{
-        name: 'Token distribution',
+        name: '$PAINT Token',
         colorByPoint: true,
         data: [{
-            name: 'Token Sale: 61.41%',
-            y: 61.41,
+            name: 'Token Sale: 75%',
+            y: 75,
             sliced: true,
             selected: true
         }, {
-            name: 'Community Mining: 11.84%',
-            y: 11.84
-        }, {
-            name: 'Liquidity Fund: 10.85%',
-            y: 10.85
-        }, {
-            name: 'Team: 4.67%',
+            name: 'Team: 15%',
             y: 4.67
         }, {
-            name: 'Team: 4.18%',
-            y: 4.18
+            name: 'Partners: 5%',
+            y: 5
         }, {
-            name: 'Tresury Fund: 1.64%',
-            y: 1.64
+            name: 'Treasury Fund: 5%',
+            y: 5
         }]
     }]
 };

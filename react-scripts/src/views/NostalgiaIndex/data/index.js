@@ -10,6 +10,7 @@ import Partner2 from '../../../assets/images/main/partner2.jpeg';
 import Partner3 from '../../../assets/images/main/partner3.jpeg';
 import Partner4 from '../../../assets/images/main/partner4.jpeg';
 import Partner5 from '../../../assets/images/main/partner5.jpeg';
+import Partner6 from '../../../assets/images/main/partner6.jpeg';
 
 export const team = [
   {
@@ -74,12 +75,12 @@ export const backer = [
     youtubeLink: 'https://www.youtube.com/channel/UCqBav2f9-MtpMicWya7nHPA',
   },
   {
-    title: 'Blog',
+    title: 'Blogger',
     authorPhoto: {
       src: Partner5,
     },
     authorName: '0xJee',
-    youtubeLink: '',
+    youtubeLink: 'https://jeeee.medium.com',
   },
   {
     title: 'Telegram',
@@ -90,12 +91,12 @@ export const backer = [
     youtubeLink: 'https://t.me/ilgiyebo',
   },
   {
-    title: 'Blog',
+    title: 'Blogger',
     authorPhoto: {
-      src: 'Blog',
+      src: Partner6,
     },
     authorName: 'Jayplayco',
-    youtubeLink: '',
+    youtubeLink: 'https://cobak.co.kr/user/18776286f2',
   },
 ];
 

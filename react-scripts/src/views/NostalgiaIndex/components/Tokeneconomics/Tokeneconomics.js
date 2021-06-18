@@ -10,7 +10,7 @@ const Tokeneconomics = props => {
     <div className={className} {...rest}>
       <SectionHeader
         data-aos="fade-up"
-        title="Token Distribution"
+        title="$PAINT Token Distribution"
       />
       <PieChart />
     </div>
