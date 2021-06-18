@@ -195,7 +195,7 @@ export const services = [
         'NFT holder can get weekly token airdrop. we notice specific number before snapshot.',
   },
   {
-    icon: 'fa fa-burn',
+    icon: 'fas fa-fire',
     title: 'The Burn',
     description:
         'People buy more NFT, we burn more token.',

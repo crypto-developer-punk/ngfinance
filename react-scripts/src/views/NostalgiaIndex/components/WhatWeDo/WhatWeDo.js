@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Button, colors } from '@material-ui/core';
+import {Grid, Button, colors, Typography} from '@material-ui/core';
 import { SectionHeader, IconAlternate } from 'components/molecules';
 import { CardBase, DescriptionListIcon } from 'components/organisms';
 
@@ -32,7 +32,11 @@ const WhatWeDo = props => {
                   />
                 }
                 title={item.title}
-                subtitle={item.description}
+                subtitle={
+                    <Typography variant="subtitle1">
+                        {item.description}
+                    </Typography>
+                }
               />
             </CardBase>
           </Grid>
