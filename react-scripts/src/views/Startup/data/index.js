@@ -27,41 +27,23 @@ export const partners = [
 
 export const services = [
   {
-    icon: 'fas fa-laptop-code',
-    title: 'Web Design',
+    icon: 'fas fa-rocket',
+    title: 'The Drop',
     description:
-      'We design and develop beautiful, lightning fast, scalable, and marketing-focused websites tailored to grow your business.',
-  },
-  {
-    icon: 'fas fa-mobile-alt',
-    title: 'UI / UX Design',
-    description:
-      'We craft great user centered interfaces for web and mobile apps. We ensure to deliver intuitive and seamless experiences.',
+        'NFT holder can get weekly token airdrop. we notice specific number before snapshot.',
   },
   {
     icon: 'far fa-lightbulb',
-    title: 'Product Design',
+    title: 'The Burn',
     description:
-      'We help you to carefully improve your digital product to deliver a great user experience, grow its user base and increase retention.',
+        'People buy more NFT, we burn more token.',
   },
   {
-    icon: 'fas fa-brain',
-    title: 'Branding',
+    icon: 'fas fa-laptop-code',
+    title: 'The Art',
     description:
-      'We transform businesses into brands through high quality brand identity design.',
-  },
-  {
-    icon: 'fas fa-rocket',
-    title: 'Optimization',
-    description:
-      'We help you optimize your website or mobile app to increase your conversion rates.',
-  },
-  {
-    icon: 'fas fa-cogs',
-    title: 'Automation',
-    description:
-      'We help your business gain leverage and efficiency through smart automation.',
-  },
+      'We open physical art auction you. you can redeem it if you won.',
+  }
 ];
 
 export const process = [

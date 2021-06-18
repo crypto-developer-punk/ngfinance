@@ -186,3 +186,24 @@ export const reviews = [
       'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
   },
 ];
+
+export const services = [
+  {
+    icon: 'fas fa-parachute-box',
+    title: 'The Drop',
+    description:
+        'NFT holder can get weekly token airdrop. we notice specific number before snapshot.',
+  },
+  {
+    icon: 'fa fa-burn',
+    title: 'The Burn',
+    description:
+        'People buy more NFT, we burn more token.',
+  },
+  {
+    icon: 'fas fa-paint-brush',
+    title: 'The Art',
+    description:
+        'We open physical art auction you. you can redeem it if you won.',
+  }
+];

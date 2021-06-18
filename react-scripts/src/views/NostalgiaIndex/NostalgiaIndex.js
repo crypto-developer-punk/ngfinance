@@ -5,11 +5,12 @@ import {Section, SectionAlternate} from 'components/organisms';
 
 import {About, Hero, Partners, Roadmap, Team, Tokeneconomics} from './components';
 
-import {backer, partners, team} from './data';
+import {backer, partners, team, services} from './data';
 import Backer from "./components/Backer";
 import EndHero from "./components/EndHero";
 import Config from '../../config.json';
 import ReactGA from 'react-ga';
+import WhatWeDo from "./components/WhatWeDo";
 
 ReactGA.initialize(Config.ga_code);
 ReactGA.pageview(window.location.pathname + window.location.search);
@@ -45,6 +46,10 @@ const NostalgiaIndex = () => {
       <Section>
           <Partners data={partners} />
       </Section>
+        <Divider/>
+        <Section>
+            <WhatWeDo data={services} />
+        </Section>
       <SectionAlternate className={classes.sectionAlternate}>
         <About />
       </SectionAlternate>

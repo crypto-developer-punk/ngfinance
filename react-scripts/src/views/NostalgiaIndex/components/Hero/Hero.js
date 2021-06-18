@@ -118,7 +118,10 @@ const Hero = props => {
                     {' '}
                     every week.
                     <br />
-                    you can easily harvest with connected wallet by single click. anyone can freely enjoy our defi platform without difficult options like LPing, IL
+                    <br />
+                    you can easily harvest with connected wallet by single click.
+                    <br />
+                    anyone can freely enjoy our defi platform without difficult options like LPing, IL
                 </span>
             }
             ctaGroup={[
