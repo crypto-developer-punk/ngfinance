@@ -14,7 +14,7 @@ import Partner6 from '../../../assets/images/main/partner6.jpeg';
 
 export const team = [
   {
-    title: 'Cofounder',
+    title: 'Cofounder / CEO',
     authorPhoto: {
       src: Coinbokjisa,
       // srcSet: 'https://assets.maccarianagency.com/the-front/photos/people/kate-segelson@2x.jpg 2x',
@@ -23,7 +23,7 @@ export const team = [
     youtubeLink: 'https://www.youtube.com/channel/UCF7sstdSY4dAOXQ29yVAI-Q',
   },
   {
-    title: 'Cofounder',
+    title: 'Cofounder / CTO',
     authorPhoto: {
       src: Cryptodeveloper,
       // srcSet: 'https://assets.maccarianagency.com/the-front/photos/people/alex-johnson@2x.jpg 2x',
@@ -192,18 +192,18 @@ export const services = [
     icon: 'fas fa-parachute-box',
     title: 'The Drop',
     description:
-        'NFT holder can get weekly token airdrop. we notice specific number before snapshot.',
+        'NFT holders can claim weekly token rewards. The specific amount will be announced before each snapshot.',
   },
   {
     icon: 'fas fa-fire',
     title: 'The Burn',
     description:
-        'People buy more NFT, we burn more token.',
+        'With more NFTs sold, more tokens are burned.',
   },
   {
     icon: 'fas fa-paint-brush',
     title: 'The Art',
     description:
-        'We open physical art auction you. you can redeem it if you won.',
+        'Open auctions for physical art will be held. Win a chance to redeem artwork in real life.',
   }
 ];

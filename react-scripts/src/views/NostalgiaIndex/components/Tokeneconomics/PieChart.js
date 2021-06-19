@@ -59,13 +59,16 @@ const options = {
         name: '$PAINT Token',
         colorByPoint: true,
         data: [{
-            name: 'Token Sale: 75%',
-            y: 75,
+            name: 'Token Sale: 65%',
+            y: 65,
             sliced: true,
             selected: true
         }, {
             name: 'Team: 15%',
-            y: 4.67
+            y: 15
+        }, {
+            name: 'Liquidity Fund: 10%',
+            y: 10
         }, {
             name: 'Partners: 5%',
             y: 5

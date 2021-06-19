@@ -56,6 +56,9 @@ const useStyles = makeStyles(theme => ({
   },
   gridItem: {
     marginTop: theme.spacing(5)
+  },
+  gridItemMain: {
+    marginTop: theme.spacing(1)
   }
 }));
 
@@ -318,6 +321,34 @@ const Hero = props => {
                     disableGutter
                 />
               </Grid>
+              <Grid item xs={12} className={classes.gridItemMain}>
+                <Grid container>
+                  <Grid item xs={12} md={3}>
+                    <Typography variant="subtitle1" color={"primary"}>
+                      DESCRIPTION
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} md={9}>
+                    <Typography variant="subtitle1">
+                      NG.finance Genesis NFT
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={12} className={classes.gridItemMain}>
+                <Grid container>
+                  <Grid item xs={12} md={3}>
+                    <Typography variant="subtitle1" color={"primary"}>
+                      ISSUE DATE
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} md={9}>
+                    <Typography variant="subtitle1">
+                      It will be minted at July 11, 2021
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
               <Grid item xs={12}>
                 <SectionHeader
                     title={
@@ -361,7 +392,7 @@ const Hero = props => {
               </Grid>
               <Grid item xs={12} align="center">
                 <Typography component="span" variant="inherit" color="textSecondary">
-                  Approx. {amountOfNft} NFT = {summarizedPrice} ETH
+                  {amountOfNft} NFT = {summarizedPrice} ETH
                 </Typography>
               </Grid>
               <Grid item xs={12} align="center">
@@ -387,7 +418,7 @@ const Hero = props => {
             <SectionHeader
                 title={
                   <Typography variant="h5">
-                    YOUR NFTS
+                    YOUR NFTs
                   </Typography>
                 }
                 align="left"
@@ -411,7 +442,7 @@ const Hero = props => {
                       title={
                         <span>
                           <Typography variant="h6" color={"textSecondary"} >
-                            There is no your NFT history.
+                            No history found.
                           </Typography>
                         </span>
                       }
@@ -491,12 +522,12 @@ const Hero = props => {
                     <Grid container>
                       <Grid item xs={12} md={3}>
                         <Typography variant="subtitle1" color={"primary"}>
-                          Description
+                          DESCRIPTION
                         </Typography>
                       </Grid>
                       <Grid item xs={12} md={9}>
                         <Typography variant="subtitle1">
-                          설명 예정
+                          NG.finance Genesis NFT
                         </Typography>
                       </Grid>
                     </Grid>
@@ -510,7 +541,7 @@ const Hero = props => {
                       </Grid>
                       <Grid item xs={12} md={9}>
                         <Typography variant="subtitle1">
-                          It will be minted at 2021/07/12
+                          It will be minted at July 11, 2021
                         </Typography>
                       </Grid>
                     </Grid>

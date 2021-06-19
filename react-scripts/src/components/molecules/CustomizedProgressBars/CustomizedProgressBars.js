@@ -28,9 +28,9 @@ export default function CustomizedProgressBars() {
                 color="primary"
                 align={"left"}
             >
-                Public sale open until - {' '}
+                Public sale closes in {' '}
                 <Countdown
-                    date={Date.now() + Moment('11-07-2021 00:00:00', 'DD-MM-YYYY hh:mm:ss').diff(Moment(), 'milliseconds')}
+                    date={Date.now() + Moment('10-07-2021 00:00:00', 'DD-MM-YYYY hh:mm:ss').diff(Moment(), 'milliseconds')}
                     renderer={props => <span>{props.days} d {props.hours} h {props.minutes} m {props.seconds} s</span>}
                 />
             </Typography>

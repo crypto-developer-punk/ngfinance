@@ -49,7 +49,7 @@ const About = props => {
             </Typography>
           </span>
         }
-        subtitle="The Genesis NFT. Can purchase with ETH or BNB This is only chance to get utility NFT without personal capacity limit."
+        subtitle="Purchase the genesis NFT with ETH. The Genesis NFT will be the only version without a personal purchase limit."
         ctaGroup={[
           <Button color="primary" variant="contained" size="large"
                   onClick={(e) => {

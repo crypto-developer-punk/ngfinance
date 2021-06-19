@@ -74,14 +74,14 @@ const Roadmap = props => {
                         <Typography variant="h6" color={"primary"}>
                             Nostalgia finance launch Q3
                         </Typography>
-                        <Typography variant="body1">Platform official launch</Typography>
+                        <Typography variant="body1">Official platform launch</Typography>
                     </Paper>
                     <br />
                     <Paper elevation={3} className={classes.paper}>
                         <Typography variant="h6" color={"primary"}>
                             First token drop Q3
                         </Typography>
-                        <Typography variant="body1">NFT staker got drop</Typography>
+                        <Typography variant="body1">$PAINT drops for staking NFTs</Typography>
                     </Paper>
                     <br />
                     <Paper elevation={3} className={classes.paper}>
