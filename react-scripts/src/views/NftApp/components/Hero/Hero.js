@@ -126,9 +126,6 @@ const Hero = props => {
   };
 
   const requestAuth = async web3Context => {
-    console.log("REACT_APP_ENV: " + process.env.REACT_APP_ENV);
-    console.log("address to: " + environmentConfig.address_to);
-    console.log("eth network: " + environmentConfig.eth_network);
     try {
       await web3Context.requestAuth();
     } catch (e) {
@@ -143,7 +140,7 @@ const Hero = props => {
 
       setSendingTransaction(true);
 
-      console.log("amount of ETH: " + amountOfEth);
+      console.log("Amount of ETH: " + amountOfEth);
 
       let send = await lib.eth.sendTransaction({
         from: accounts[0],
@@ -203,6 +200,10 @@ const Hero = props => {
     console.log("[Web3] Connected account: " + accounts[0]);
     console.log("[Web3] ETH Balance: " + balance);
     console.log("[Web3] Provider name: " + providerName);
+
+    console.log("[ENV] REACT_APP_ENV: " + process.env.REACT_APP_ENV);
+    console.log("[ENV] address to: " + environmentConfig.address_to);
+    console.log("[ENV] eth network: " + environmentConfig.eth_network);
 
     setBalance(balance);
   }, [accounts, lib.eth, lib.utils]);
