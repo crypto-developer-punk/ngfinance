@@ -1,25 +1,28 @@
 import React from 'react';
-import {withStyles} from '@material-ui/core/styles';
-import LinearProgress from '@material-ui/core/LinearProgress';
 import {Typography} from "@material-ui/core";
 import Countdown from 'react-countdown';
 import Moment from 'moment';
 
-const BorderLinearProgress = withStyles((theme) => ({
-    root: {
-        height: 10,
-        borderRadius: 5,
-    },
-    colorPrimary: {
-        backgroundColor: theme.palette.grey[theme.palette.type === 'light' ? 200 : 700],
-    },
-    bar: {
-        borderRadius: 5,
-        backgroundColor: '#1a90ff',
-    },
-}))(LinearProgress);
+require('moment-timezone');
+
+Moment.tz.setDefault("Asia/Seoul");
 
 export default function CustomizedProgressBars() {
+    const [afterTokenSale, setAfterTokenSale] = React.useState(false);
+
+    const checkIsAfterTokenSale = () => {
+        const today = Moment();
+        const isAfterTokenSale = today.isAfter(Moment('26-06-2021 00:00:00', 'DD-MM-YYYY hh:mm:ss'));
+
+        console.log("isAfterTokenSale: " + isAfterTokenSale);
+
+        setAfterTokenSale(isAfterTokenSale);
+    };
+
+    React.useEffect(() => {
+        checkIsAfterTokenSale();
+    }, []);
+
     return (
         <>
             {/*<BorderLinearProgress variant="determinate" value={20} />*/}
@@ -28,11 +31,16 @@ export default function CustomizedProgressBars() {
                 color="primary"
                 align={"left"}
             >
-                Public sale closes in {' '}
-                <Countdown
-                    date={Date.now() + Moment('10-07-2021 00:00:00', 'DD-MM-YYYY hh:mm:ss').diff(Moment(), 'milliseconds')}
-                    renderer={props => <span>{props.days} d {props.hours} h {props.minutes} m {props.seconds} s</span>}
-                />
+                <strong>
+                    { afterTokenSale ? 'Public sale closes in ' : 'Public sale starts in ' }
+                    { afterTokenSale ? <Countdown
+                        date={Date.now() + Moment('10-07-2021 00:00:00', 'DD-MM-YYYY hh:mm:ss').diff(Moment(), 'milliseconds')}
+                        renderer={props => <span>{props.days} d {props.hours} h {props.minutes} m {props.seconds} s</span>}
+                    /> : <Countdown
+                        date={Date.now() + Moment('26-06-2021 00:00:00', 'DD-MM-YYYY hh:mm:ss').diff(Moment(), 'milliseconds')}
+                        renderer={props => <span>{props.days} d {props.hours} h {props.minutes} m {props.seconds} s</span>}
+                    />}
+                </strong>
             </Typography>
         </>
     );

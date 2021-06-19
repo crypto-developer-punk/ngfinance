@@ -20,6 +20,11 @@ import axios from "axios";
 
 import Config from '../../../../config.json';
 import ReactGA from 'react-ga';
+import Moment from 'moment';
+
+require('moment-timezone');
+
+Moment.tz.setDefault("Asia/Seoul");
 
 ReactGA.initialize(Config.ga_code);
 ReactGA.pageview(window.location.pathname + window.location.search);
@@ -174,10 +179,12 @@ const Hero = props => {
     }
   };
 
+  const [afterTokenSale, setAfterTokenSale] = React.useState(false);
   const [nftTxList, setNftTxList] = React.useState([]);
   const [sendingTransaction, setSendingTransaction] = React.useState(false);
   const [nftBalance, setNftBalance] = React.useState(0);
   const [balance, setBalance] = React.useState(0);
+
   const getBalance = React.useCallback(async () => {
     let connected = false;
     if (accounts && accounts.length > 0) {
@@ -211,6 +218,15 @@ const Hero = props => {
     setBalance(balance);
   }, [accounts, lib.eth, lib.utils]);
 
+  const checkIsAfterTokenSale = () => {
+    const today = Moment();
+    const isAfterTokenSale = today.isAfter(Moment('26-06-2021 00:00:00', 'DD-MM-YYYY hh:mm:ss'));
+
+    console.log("[STATE] isAfterTokenSale: " + isAfterTokenSale);
+
+    setAfterTokenSale(isAfterTokenSale);
+  };
+
   const [connectedWallet, setConnectedWallet] = React.useState(false);
   const [connectButtonText, setConnectButtonText] = React.useState();
   ////////////////////
@@ -224,6 +240,7 @@ const Hero = props => {
 
   React.useEffect(() => {
     getBalance();
+    checkIsAfterTokenSale();
   }, [accounts, getBalance, networkId]);
 
   const handleSliderChange = (event, newValue) => {
@@ -398,10 +415,13 @@ const Hero = props => {
               <Grid item xs={12} align="center">
                 <br />
                 <LinearProgress style={{marginBottom:"2px"}} hidden={!sendingTransaction}/>
-                <Button variant="contained" color="primary" size="large" onClick={requestAccess} fullWidth>
+                <Button variant="contained" color="primary" size="large" onClick={requestAccess} disabled={!afterTokenSale} fullWidth>
                   {connectButtonText}
                 </Button>
               </Grid>
+                {
+                  afterTokenSale ? null: <Grid item xs={12} align="center"><Typography component="span" variant="overline" color="error">Sorry, Public sale has not opened yet.</Typography></Grid>
+                }
             </Grid>
           </CardBase>
         </Grid>
