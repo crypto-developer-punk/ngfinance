@@ -1,12 +1,12 @@
 {
   "files": {
     "main.css": "/static/css/main.bbfbdd4f.chunk.css",
-    "main.js": "/static/js/main.fb2feb45.chunk.js",
+    "main.js": "/static/js/main.97d25e77.chunk.js",
     "runtime-main.js": "/static/js/runtime-main.053ac144.js",
     "static/css/2.7c286cb1.chunk.css": "/static/css/2.7c286cb1.chunk.css",
-    "static/js/2.a179ee8a.chunk.js": "/static/js/2.a179ee8a.chunk.js",
+    "static/js/2.e68ad6cd.chunk.js": "/static/js/2.e68ad6cd.chunk.js",
     "index.html": "/index.html",
-    "static/js/2.a179ee8a.chunk.js.LICENSE.txt": "/static/js/2.a179ee8a.chunk.js.LICENSE.txt",
+    "static/js/2.e68ad6cd.chunk.js.LICENSE.txt": "/static/js/2.e68ad6cd.chunk.js.LICENSE.txt",
     "static/media/coingecko.1cf40e0f.svg": "/static/media/coingecko.1cf40e0f.svg",
     "static/media/coinmarketcap.4b9ed4fa.png": "/static/media/coinmarketcap.4b9ed4fa.png",
     "static/media/endHeroBackground.45a5fd08.png": "/static/media/endHeroBackground.45a5fd08.png",
@@ -23,8 +23,8 @@
   "entrypoints": [
     "static/js/runtime-main.053ac144.js",
     "static/css/2.7c286cb1.chunk.css",
-    "static/js/2.a179ee8a.chunk.js",
+    "static/js/2.e68ad6cd.chunk.js",
     "static/css/main.bbfbdd4f.chunk.css",
-    "static/js/main.fb2feb45.chunk.js"
+    "static/js/main.97d25e77.chunk.js"
   ]
 }
