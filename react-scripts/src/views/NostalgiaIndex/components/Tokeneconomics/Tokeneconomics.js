@@ -13,7 +13,7 @@ const Tokeneconomics = props => {
         data-aos="fade-up"
         title="$PAINT Token Distribution"
       />
-        <Grid container spacing={2} alignItems={"center"} align={"center"}>
+        <Grid container spacing={2} alignItems={"center"} align={"center"} data-aos="fade-up">
             <Grid item xs={12}>
                 <Typography color="textSecondary" variant="h6">
                     Max Supply : 1B

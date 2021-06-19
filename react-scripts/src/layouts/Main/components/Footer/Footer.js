@@ -11,6 +11,7 @@ import {
 } from '@material-ui/core';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import TwitterIcon from '@material-ui/icons/Twitter';
+import TelegramIcon from '@material-ui/icons/Telegram';
 import InstagramIcon from '@material-ui/icons/Instagram';
 import PinterestIcon from '@material-ui/icons/Pinterest';
 
@@ -213,8 +214,11 @@ const Footer = props => {
                 {/*<IconButton className={classes.socialIcon}>*/}
                 {/*  <InstagramIcon className={classes.icon} />*/}
                 {/*</IconButton>*/}
-                <IconButton className={classes.socialIcon} href="https://twitter.com/nostalg58397094">
+                <IconButton className={classes.socialIcon} href="https://twitter.com/nostalgia_fi" target={"_blank"}>
                   <TwitterIcon className={classes.icon}/>
+                </IconButton>
+                <IconButton className={classes.socialIcon} href="https://t.me/official_nostalgia" target={"_blank"}>
+                  <TelegramIcon className={classes.icon}/>
                 </IconButton>
                 {/*<IconButton className={classes.socialIcon}>*/}
                 {/*  <PinterestIcon className={classes.icon} />*/}

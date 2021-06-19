@@ -116,7 +116,7 @@ export const partners = [
   {
     name: 'Twitter',
     logo: Twitter,
-    link: 'https://twitter.com/nostalg58397094',
+    link: 'https://twitter.com/nostalgia_fi',
     target: '_blank'
   },
   {
