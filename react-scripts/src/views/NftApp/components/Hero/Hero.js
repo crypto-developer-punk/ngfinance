@@ -32,6 +32,7 @@ ReactGA.pageview(window.location.pathname + window.location.search);
 // Configuration depending on development environment
 const defaultConfig = Config.development;
 const environment = process.env.REACT_APP_ENV || 'development';
+const isDebugMode = environment === 'development';
 const environmentConfig = Config[environment];
 
 const useStyles = makeStyles(theme => ({
@@ -179,6 +180,7 @@ const Hero = props => {
     }
   };
 
+  const [disableBuyNft, setDisableBuyNft] = React.useState(false);
   const [afterTokenSale, setAfterTokenSale] = React.useState(false);
   const [nftTxList, setNftTxList] = React.useState([]);
   const [sendingTransaction, setSendingTransaction] = React.useState(false);
@@ -225,6 +227,10 @@ const Hero = props => {
     console.log("[STATE] isAfterTokenSale: " + isAfterTokenSale);
 
     setAfterTokenSale(isAfterTokenSale);
+
+    if ((!isDebugMode) && (!isAfterTokenSale)) {
+      setDisableBuyNft(true);
+    }
   };
 
   const [connectedWallet, setConnectedWallet] = React.useState(false);
@@ -415,12 +421,12 @@ const Hero = props => {
               <Grid item xs={12} align="center">
                 <br />
                 <LinearProgress style={{marginBottom:"2px"}} hidden={!sendingTransaction}/>
-                <Button variant="contained" color="primary" size="large" onClick={requestAccess} disabled={!afterTokenSale} fullWidth>
+                <Button variant="contained" color="primary" size="large" onClick={requestAccess} disabled={disableBuyNft} fullWidth>
                   {connectButtonText}
                 </Button>
               </Grid>
                 {
-                  afterTokenSale ? null: <Grid item xs={12} align="center"><Typography component="span" variant="overline" color="error">Sorry, Public sale has not opened yet.</Typography></Grid>
+                  disableBuyNft ? <Grid item xs={12} align="center"><Typography component="span" variant="overline" color="error">Sorry, Public sale has not opened yet.</Typography></Grid> : null
                 }
             </Grid>
           </CardBase>
