@@ -1,29 +1,32 @@
 {
   "files": {
     "main.css": "/static/css/main.bbfbdd4f.chunk.css",
-    "main.js": "/static/js/main.4f0ae10b.chunk.js",
+    "main.js": "/static/js/main.b4997f8a.chunk.js",
     "runtime-main.js": "/static/js/runtime-main.053ac144.js",
     "static/css/2.7c286cb1.chunk.css": "/static/css/2.7c286cb1.chunk.css",
     "static/js/2.f1f8fdd7.chunk.js": "/static/js/2.f1f8fdd7.chunk.js",
     "index.html": "/index.html",
     "static/js/2.f1f8fdd7.chunk.js.LICENSE.txt": "/static/js/2.f1f8fdd7.chunk.js.LICENSE.txt",
     "static/media/coingecko.1cf40e0f.svg": "/static/media/coingecko.1cf40e0f.svg",
+    "static/media/coingecko_hover.ee151a4d.svg": "/static/media/coingecko_hover.ee151a4d.svg",
     "static/media/coinmarketcap.4b9ed4fa.png": "/static/media/coinmarketcap.4b9ed4fa.png",
+    "static/media/coinmarketcap_hover.387bf922.png": "/static/media/coinmarketcap_hover.387bf922.png",
     "static/media/endHeroBackground.45a5fd08.png": "/static/media/endHeroBackground.45a5fd08.png",
     "static/media/genesis_nft.f5cb0c86.jpg": "/static/media/genesis_nft.f5cb0c86.jpg",
-    "static/media/header_background.afa93040.jpg": "/static/media/header_background.afa93040.jpg",
+    "static/media/header_background.6c4c6797.jpg": "/static/media/header_background.6c4c6797.jpg",
     "static/media/logo_eth.b3ec96d9.svg": "/static/media/logo_eth.b3ec96d9.svg",
-    "static/media/logo_footer.541c20ef.svg": "/static/media/logo_footer.541c20ef.svg",
-    "static/media/logo_topbar.0e9c0b96.svg": "/static/media/logo_topbar.0e9c0b96.svg",
+    "static/media/logo_footer.adeeb140.svg": "/static/media/logo_footer.adeeb140.svg",
+    "static/media/logo_topbar.4f0403fb.svg": "/static/media/logo_topbar.4f0403fb.svg",
     "static/media/partner5.676f6153.jpeg": "/static/media/partner5.676f6153.jpeg",
     "static/media/partner6.619c75bb.jpeg": "/static/media/partner6.619c75bb.jpeg",
-    "static/media/twitter.f997662c.png": "/static/media/twitter.f997662c.png"
+    "static/media/twitter.f997662c.png": "/static/media/twitter.f997662c.png",
+    "static/media/twitter_hover.c2e49765.png": "/static/media/twitter_hover.c2e49765.png"
   },
   "entrypoints": [
     "static/js/runtime-main.053ac144.js",
     "static/css/2.7c286cb1.chunk.css",
     "static/js/2.f1f8fdd7.chunk.js",
     "static/css/main.bbfbdd4f.chunk.css",
-    "static/js/main.4f0ae10b.chunk.js"
+    "static/js/main.b4997f8a.chunk.js"
   ]
 }
