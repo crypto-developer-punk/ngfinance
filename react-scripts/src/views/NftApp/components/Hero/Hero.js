@@ -596,7 +596,7 @@ const Hero = props => {
                       <Grid item xs={12} md={9}>
                         <Typography variant="subtitle1">
                           {nftTxList.map(function(d, idx){
-                            return (<li key={idx}><a href={environmentConfig.etherscan_uri + String(d)}>{truncateString(String(d))}</a></li>)
+                            return (<li key={idx}><a href={environmentConfig.etherscan_uri + String(d)} target={"_blank"}>{truncateString(String(d))}</a></li>)
                           })}
                         </Typography>
                       </Grid>

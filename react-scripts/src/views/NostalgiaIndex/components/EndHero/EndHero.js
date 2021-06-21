@@ -86,7 +86,7 @@ const EndHero = ({ themeMode = 'light', className, ...rest }) => {
           strings: [
             'With Physical Art',
             'Artist Certification',
-            'Farm Governance Token',
+            'Farm Canvas',
           ],
           typeSpeed: 100,
           loop: true,
