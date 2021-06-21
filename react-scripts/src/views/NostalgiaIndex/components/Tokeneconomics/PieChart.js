@@ -59,7 +59,7 @@ const options = {
         name: '$PAINT Token',
         colorByPoint: true,
         data: [{
-            name: 'Token Sale: 65%',
+            name: 'Farming: 65%',
             y: 65,
             sliced: true,
             selected: true

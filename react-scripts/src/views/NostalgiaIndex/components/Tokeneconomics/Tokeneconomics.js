@@ -21,7 +21,7 @@ const Tokeneconomics = props => {
             </Grid>
             <Grid item xs={12}>
                 <Typography color="textSecondary" variant="h6">
-                    Token Burn : If NFTs sold, more tokens will be burned.
+                    Token Burn : With more NFTs sold, more tokens will be burned.
                 </Typography>
             </Grid>
             <Grid item xs={12}>

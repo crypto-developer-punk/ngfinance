@@ -4,7 +4,6 @@ import Twitter from '../../../assets/images/main/twitter.png';
 import Telegram from '../../../assets/images/main/telegram.png';
 import Coinbokjisa from '../../../assets/images/main/coinbokjisa.jpeg';
 import Cryptodeveloper from '../../../assets/images/main/cryptodeveloper.jpeg';
-import EverGreen from '../../../assets/images/main/evergreen.jpeg';
 import Partner1 from '../../../assets/images/main/partner1.jpeg';
 import Partner2 from '../../../assets/images/main/partner2.jpeg';
 import Partner3 from '../../../assets/images/main/partner3.jpeg';
@@ -34,14 +33,6 @@ export const team = [
 ];
 
 export const backer = [
-  {
-    title: 'Youtube Creator',
-    authorPhoto: {
-      src: EverGreen,
-    },
-    authorName: 'Evergreen',
-    youtubeLink: 'https://www.youtube.com/user/allaboutbiostudy',
-  },
   {
     title: 'Youtube Creator',
     authorPhoto: {
