@@ -9,7 +9,23 @@ const WhatWeDo = props => {
 
   return (
     <div className={className} data-aos="fade-up" {...rest}>
-      <SectionHeader title="What we do" fadeUp />
+      <SectionHeader
+          title="What we do"
+          subtitle={
+              <span>
+                  Nostalgia Finance is NFT based Defi protocol where you can simply stake your NFTs and earn drops of {' '}
+                  <Typography color="primary" variant="inherit" component="span">$PAINT</Typography>
+                  {' '}
+                  every week.
+                  <br />
+                Harvest your rewards with a single click from your wallet.
+                <br /><br />
+                Enjoy Defi without any complex procedures such as liquidity providing.
+                <br />
+                No need to endure impermanent loss.
+              </span>
+          }
+          fadeUp />
       <Grid container spacing={4}>
         {data.map((item, index) => (
           <Grid

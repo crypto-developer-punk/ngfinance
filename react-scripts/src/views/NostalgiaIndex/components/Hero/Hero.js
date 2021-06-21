@@ -110,22 +110,12 @@ const Hero = props => {
         <Section narrow>
           <SectionHeader
             title={title}
-            titleVariant="h3"
             subtitle={
-                <span className={classes.textWhite}>
-                    Nostalgia Finance is NFT based Defi protocol where you can simply stake your NFTs and earn drops of {' '}
-                    <Typography color="primary" variant="inherit" component="span">$PAINT</Typography>
-                    {' '}
-                    every week.
-                    <br />
-                    <br />
-                    Harvest your rewards with a single click from your wallet.
-                    <br />
-                    Enjoy Defi without any complex procedures such as liquidity providing.
-                    <br />
-                    No need to endure impermanent loss.
-                </span>
+                <div>
+                    <br/>
+                </div>
             }
+            titleVariant="h3"
             ctaGroup={[
                 <Button color="primary" variant="contained" size="large"
                         onClick={(e) => {

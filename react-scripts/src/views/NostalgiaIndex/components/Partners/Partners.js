@@ -35,6 +35,12 @@ const Partners = props => {
             <a href={partner.link} target={partner.target}>
                 <Image
                   src={partner.logo}
+                  onMouseOver={(e) => {
+                      e.currentTarget.src = partner.logo_hover;
+                  }}
+                  onMouseOut={(e) => {
+                      e.currentTarget.src = partner.logo;
+                  }}
                   alt={partner.name}
                   className={classes.logoImg}
                   lazy={false}

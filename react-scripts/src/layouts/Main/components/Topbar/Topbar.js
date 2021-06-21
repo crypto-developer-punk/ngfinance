@@ -322,7 +322,7 @@ const Topbar = ({ themeMode, themeToggler, onSidebarOpen, pages, className, ...r
                 window.location.href="app";
               }}
             >
-              Go to app
+              Launch App
             </Button>
           </ListItem>
         </List>
@@ -345,7 +345,7 @@ const Topbar = ({ themeMode, themeToggler, onSidebarOpen, pages, className, ...r
               window.location.href="app";
             }}
         >
-          Go to app
+          Launch App
         </Button>
       </Hidden>
     </Toolbar>

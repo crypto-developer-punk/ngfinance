@@ -72,21 +72,21 @@ const Roadmap = props => {
                 <TimelineContent>
                     <Paper elevation={3} className={classes.paper}>
                         <Typography variant="h6" color={"primary"}>
-                            Nostalgia finance launch Q3
+                            Nostalgia Finance launch Q3
                         </Typography>
                         <Typography variant="body1">Official platform launch</Typography>
                     </Paper>
                     <br />
                     <Paper elevation={3} className={classes.paper}>
                         <Typography variant="h6" color={"primary"}>
-                            First token drop Q3
+                            First token drop in July Q3
                         </Typography>
                         <Typography variant="body1">$PAINT drops for staking NFTs</Typography>
                     </Paper>
                     <br />
                     <Paper elevation={3} className={classes.paper}>
                         <Typography variant="h6" color={"primary"}>
-                            Physical Art auction Q3
+                            Physical Art auction in August Q3
                         </Typography>
                         <Typography variant="body1">First physical art reveal</Typography>
                     </Paper>

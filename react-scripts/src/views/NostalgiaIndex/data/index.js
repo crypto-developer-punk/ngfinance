@@ -1,7 +1,11 @@
 import Coingecko from '../../../assets/images/main/coingecko.svg';
+import CoingeckoHover from '../../../assets/images/main/coingecko_hover.svg';
 import Coinmarketcap from '../../../assets/images/main/coinmarketcap.png';
+import CoinmarketcapHover from '../../../assets/images/main/coinmarketcap_hover.png';
 import Twitter from '../../../assets/images/main/twitter.png';
+import TwitterHover from '../../../assets/images/main/twitter_hover.png';
 import Telegram from '../../../assets/images/main/telegram.png';
+import TelegramHover from '../../../assets/images/main/telegram_hover.png';
 import Coinbokjisa from '../../../assets/images/main/coinbokjisa.jpeg';
 import Cryptodeveloper from '../../../assets/images/main/cryptodeveloper.jpeg';
 import Partner1 from '../../../assets/images/main/partner1.jpeg';
@@ -73,14 +77,14 @@ export const backer = [
     authorName: '0xJee',
     youtubeLink: 'https://jeeee.medium.com',
   },
-  {
-    title: 'Telegram',
-    authorPhoto: {
-      src: '',
-    },
-    authorName: '일기예보',
-    youtubeLink: 'https://t.me/ilgiyebo',
-  },
+  // {
+  //   title: 'Telegram',
+  //   authorPhoto: {
+  //     src: '',
+  //   },
+  //   authorName: '일기예보',
+  //   youtubeLink: 'https://t.me/ilgiyebo',
+  // },
   {
     title: 'Blogger',
     authorPhoto: {
@@ -95,24 +99,28 @@ export const partners = [
   {
     name: 'Coingecko',
     logo: Coingecko,
+    logo_hover: CoingeckoHover,
     link: '',
     target: ''
   },
   {
     name: 'Coinmarketcap',
     logo: Coinmarketcap,
+    logo_hover: CoinmarketcapHover,
     link: '',
     target: ''
   },
   {
     name: 'Twitter',
     logo: Twitter,
+    logo_hover: TwitterHover,
     link: 'https://twitter.com/nostalgia_fi',
     target: '_blank'
   },
   {
     name: 'Telegram',
     logo: Telegram,
+    logo_hover: TelegramHover,
     link: 'https://t.me/official_nostalgia',
     target: '_blank'
   },
