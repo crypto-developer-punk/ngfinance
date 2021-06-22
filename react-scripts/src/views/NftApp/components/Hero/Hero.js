@@ -32,7 +32,7 @@ ReactGA.pageview(window.location.pathname + window.location.search);
 // Configuration depending on development environment
 const defaultConfig = Config.development;
 const environment = process.env.REACT_APP_ENV || 'development';
-const isDebugMode = environment === 'development';
+const isDebugMode = environment === 'development' || environment === 'staging';
 const environmentConfig = Config[environment];
 
 const useStyles = makeStyles(theme => ({
@@ -224,13 +224,13 @@ const Hero = props => {
     const today = Moment();
     const isAfterTokenSale = today.isAfter(Moment('26-06-2021 00:00:00', 'DD-MM-YYYY hh:mm:ss'));
 
-    console.log("[STATE] isAfterTokenSale: " + isAfterTokenSale);
-
     setAfterTokenSale(isAfterTokenSale);
 
     if ((!isDebugMode) && (!isAfterTokenSale)) {
       setDisableBuyNft(true);
     }
+
+    console.log("[STATE] disableBuyNft: " + disableBuyNft);
   };
 
   const [connectedWallet, setConnectedWallet] = React.useState(false);
