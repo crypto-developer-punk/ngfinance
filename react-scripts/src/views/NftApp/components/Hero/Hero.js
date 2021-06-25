@@ -21,6 +21,12 @@ import axios from "axios";
 import Config from '../../../../config.json';
 import ReactGA from 'react-ga';
 import Moment from 'moment';
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogActions from "@material-ui/core/DialogActions";
+import Slide from "@material-ui/core/Slide";
 
 require('moment-timezone');
 
@@ -34,6 +40,10 @@ const defaultConfig = Config.development;
 const environment = process.env.REACT_APP_ENV || 'development';
 const isDebugMode = environment === 'development' || environment === 'staging';
 const environmentConfig = Config[environment];
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const useStyles = makeStyles(theme => ({
   image: {
@@ -171,6 +181,13 @@ const Hero = props => {
   };
 
   const requestAccess = () => {
+    const validNetwork = (networkId === 1) || (networkId === 4);
+
+    if (!validNetwork) {
+      handleClickOpen();
+      return;
+    }
+
     if (connectedWallet) {
       console.log("request to transfer eth");
       requestTransfer()
@@ -243,6 +260,15 @@ const Hero = props => {
   const PRICE_ETH_PER_NFT = 0.13;
   const [amountOfNft, setAmountNft] = React.useState(1);
   const [summarizedPrice, setSummarizedPrice] = React.useState(PRICE_ETH_PER_NFT);
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   React.useEffect(() => {
     getBalance();
@@ -569,6 +595,29 @@ const Hero = props => {
           </Grid>
         </Grid>
       </Grid>
+
+      <Dialog
+          open={open}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle id="alert-dialog-slide-title">{"Wrong network"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            We only provide purchase on ethereum mainnet.
+            <br />
+            Beware for using Binance Smart Chain(BSC).
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
