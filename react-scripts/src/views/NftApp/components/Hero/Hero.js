@@ -426,7 +426,12 @@ const Hero = props => {
                 </Button>
               </Grid>
                 {
-                  disableBuyNft ? <Grid item xs={12} align="center"><Typography component="span" variant="overline" color="error">Sorry, Public sale has not opened yet.</Typography></Grid> : null
+                  <Grid item xs={12} align="center"><Typography component="span" variant="overline" color="error">
+                    We only provide purchase on Ethereum mainnet.
+                    <br/>
+                    beware for using Binance smart chain.
+                  </Typography>
+                  </Grid>
                 }
             </Grid>
           </CardBase>
