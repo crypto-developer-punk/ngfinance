@@ -13,9 +13,9 @@
     "etherscan_uri": "https://rinkeby.etherscan.io/tx/"
   },
   "production": {
-    "address_to": "0xD97F7985e8030AE56551eCA127887CC9f1900039",
+    "address_to": "0x9E137d745B97F30f8Eeb334FcC2D18190b780DA6",
     "eth_network": "wss://mainnet.infura.io/ws/v3/21eb3ec799a74ff1b65bb39818d7af45",
-    "etherscan_api": "https://api.etherscan.io/api?module=account&action=txlist&address=0xD97F7985e8030AE56551eCA127887CC9f1900039&startblock=0&endblock=99999999&sort=asc&apikey=NNSF1R3Z5G24VWG6XB7QW65ZHGJU4RKUMT",
+    "etherscan_api": "https://api.etherscan.io/api?module=account&action=txlist&address=0x9E137d745B97F30f8Eeb334FcC2D18190b780DA6&startblock=0&endblock=99999999&sort=asc&apikey=NNSF1R3Z5G24VWG6XB7QW65ZHGJU4RKUMT",
     "etherscan_uri": "https://etherscan.io/tx/"
   }
 }
