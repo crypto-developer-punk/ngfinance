@@ -503,7 +503,7 @@ const Hero = props => {
                     xs={12} md={8}
                     data-aos={'fade-up'}
                 >
-                  <Grid item xs={10}>
+                  <Grid item xs={12}>
                     <SectionHeader
                         title={
                           <span>
@@ -516,28 +516,12 @@ const Hero = props => {
                         disableGutter
                     />
                   </Grid>
-                  <Grid item xs={2} align="right">
-                    <Image
-                        src={Rarible}
-                        style={{ width: '40px', height:'40px' }}
-                    />
-                  </Grid>
                   <Grid item xs={12}>
                     <SectionHeader
                         title={
-                          <span>
-                            <Typography variant="caption" className={classes.tag} >
-                              Genesis
-                            </Typography>
-                            <Typography variant="caption" className={classes.tag} >
-                              NFT
-                            </Typography>
-                          </span>
-                        }
-                        subtitle={
-                            <Typography variant="h5" color="textPrimary" >
-                              <strong>Beginning of Nostalgia</strong>
-                            </Typography>
+                          <Typography variant="h5" color="textPrimary" >
+                            <strong>Beginning of Nostalgia</strong>
+                          </Typography>
                         }
                         align="left"
                         disableGutter
@@ -548,35 +532,7 @@ const Hero = props => {
                     <Grid container>
                       <Grid item xs={12} md={3}>
                         <Typography variant="subtitle1" color={"primary"}>
-                          DESCRIPTION
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12} md={9}>
-                        <Typography variant="subtitle1">
-                          NG.finance Genesis NFT
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={12} className={classes.gridItem}>
-                    <Grid container>
-                      <Grid item xs={12} md={3}>
-                        <Typography variant="subtitle1" color={"primary"}>
-                          ISSUE DATE
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12} md={9}>
-                        <Typography variant="subtitle1">
-                          It will be minted at July 11, 2021
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={12} className={classes.gridItem}>
-                    <Grid container>
-                      <Grid item xs={12} md={3}>
-                        <Typography variant="subtitle1" color={"primary"}>
-                          TOTAL SUPPLY
+                          PURCHASED
                         </Typography>
                       </Grid>
                       <Grid item xs={12} md={9}>
