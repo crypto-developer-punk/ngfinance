@@ -14,6 +14,9 @@ import Partner3 from '../../../assets/images/main/partner3.jpeg';
 import Partner4 from '../../../assets/images/main/partner4.jpeg';
 import Partner5 from '../../../assets/images/main/partner5.jpeg';
 import Partner6 from '../../../assets/images/main/partner6.jpeg';
+import WhatwedoAirdrop from '../../../assets/images/main/whatwedo_airdrop.jpg';
+import WhatwedoBurn from '../../../assets/images/main/whatwedo_burn.jpg';
+import WhatwedoArt from '../../../assets/images/main/whatwedo_art.jpg';
 
 export const team = [
   {
@@ -189,18 +192,21 @@ export const reviews = [
 export const services = [
   {
     icon: 'fas fa-parachute-box',
+    img: WhatwedoAirdrop,
     title: 'The Drop',
     description:
         'NFT holders can claim weekly token rewards. The specific amount will be announced before each snapshot.',
   },
   {
     icon: 'fas fa-fire',
+    img: WhatwedoBurn,
     title: 'The Burn',
     description:
         'With more NFTs sold, more tokens are burned.',
   },
   {
     icon: 'fas fa-paint-brush',
+    img: WhatwedoArt,
     title: 'The Art',
     description:
         'Open auctions for physical art will be held. Win a chance to redeem artwork in real life.',

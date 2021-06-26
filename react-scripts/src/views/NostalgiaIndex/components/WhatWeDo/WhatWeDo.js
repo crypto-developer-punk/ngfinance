@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {Grid, Button, colors, Typography} from '@material-ui/core';
 import { SectionHeader, IconAlternate } from 'components/molecules';
 import { CardBase, DescriptionListIcon } from 'components/organisms';
+import { Image } from 'components/atoms';
 
 const WhatWeDo = props => {
   const { data, className, ...rest } = props;
@@ -26,7 +27,7 @@ const WhatWeDo = props => {
               </span>
           }
           fadeUp />
-      <Grid container spacing={4}>
+      <Grid container spacing={2}>
         {data.map((item, index) => (
           <Grid
             key={index}
@@ -42,10 +43,18 @@ const WhatWeDo = props => {
             <CardBase liftUp variant="outlined" withShadow>
               <DescriptionListIcon
                 icon={
-                  <IconAlternate
-                    fontIconClass={item.icon}
-                    color={colors.indigo}
-                  />
+                    // <IconAlternate
+                    //   fontIconClass={item.icon}
+                    //   color={colors.indigo}
+                    // />
+                    <Image
+                        src={item.img}
+                        alt={item.title}
+                        lazyProps={{
+                            width: '100%',
+                            height: '100%',
+                        }}
+                    />
                 }
                 title={item.title}
                 subtitle={
