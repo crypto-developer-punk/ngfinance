@@ -106,7 +106,11 @@ const Hero = props => {
 
   return (
     <div className={className} {...rest}>
-      <HeroSimpleBackground backgroundImage={Background}>
+      <HeroSimpleBackground backgroundImage={Background}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                window.location.href = "app";
+                            }}>
         <Section narrow>
           <SectionHeader
             title={title}
