@@ -26,6 +26,15 @@ const WhatWeDo = props => {
                 No need to endure impermanent loss.
               </span>
           }
+          ctaGroup={[
+              <Button color="primary" variant="contained" size="large"
+                      onClick={(e) => {
+                          e.preventDefault();
+                          window.open("https://drive.google.com/file/d/1Eh2TB-0U1chmfb8E7692OrL-rzu217wP/view?usp=sharing", '_blank');
+                      }}>
+                  Lite PAPER
+              </Button>,
+          ]}
           fadeUp />
       <Grid container spacing={2}>
         {data.map((item, index) => (
