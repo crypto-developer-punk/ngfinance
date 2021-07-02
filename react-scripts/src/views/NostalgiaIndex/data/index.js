@@ -40,22 +40,30 @@ export const team = [
 ];
 
 export const backer = [
-  {
-    title: 'Youtube Creator',
-    authorPhoto: {
-      src: Partner1,
-    },
-    authorName: '코인 같이 투자',
-    youtubeLink: 'https://www.youtube.com/channel/UCtWJlG1_QzGUbPYGPqL3rcQ',
-  },
-  {
-    title: 'Youtube Creator',
-    authorPhoto: {
-      src: Partner2,
-    },
-    authorName: 'Ripplemania',
-    youtubeLink: 'https://www.youtube.com/channel/UCmsPhoeAf6qto-K16Hb5LZw',
-  },
+  // {
+  //   title: 'Youtube Creator',
+  //   authorPhoto: {
+  //     src: Partner1,
+  //   },
+  //   authorName: '코인 같이 투자',
+  //   youtubeLink: 'https://www.youtube.com/channel/UCtWJlG1_QzGUbPYGPqL3rcQ',
+  // },
+  // {
+  //   title: 'Youtube Creator',
+  //   authorPhoto: {
+  //     src: Partner2,
+  //   },
+  //   authorName: 'Ripplemania',
+  //   youtubeLink: 'https://www.youtube.com/channel/UCmsPhoeAf6qto-K16Hb5LZw',
+  // },
+  // {
+  //   title: 'Youtube Creator',
+  //   authorPhoto: {
+  //     src: Partner4,
+  //   },
+  //   authorName: '아기고래',
+  //   youtubeLink: 'https://www.youtube.com/channel/UCqBav2f9-MtpMicWya7nHPA',
+  // },
   {
     title: 'Youtube Creator',
     authorPhoto: {
@@ -63,14 +71,6 @@ export const backer = [
     },
     authorName: 'YANABU',
     youtubeLink: 'https://www.youtube.com/channel/UCFxaEbgE8j4rbTo2jtvaDyQ',
-  },
-  {
-    title: 'Youtube Creator',
-    authorPhoto: {
-      src: Partner4,
-    },
-    authorName: '아기고래',
-    youtubeLink: 'https://www.youtube.com/channel/UCqBav2f9-MtpMicWya7nHPA',
   },
   {
     title: 'Blogger',
