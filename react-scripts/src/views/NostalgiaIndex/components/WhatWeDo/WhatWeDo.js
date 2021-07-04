@@ -30,7 +30,7 @@ const WhatWeDo = props => {
               <Button color="primary" variant="contained" size="large"
                       onClick={(e) => {
                           e.preventDefault();
-                          window.open("https://drive.google.com/file/d/1Eh2TB-0U1chmfb8E7692OrL-rzu217wP/view?usp=sharing", '_blank');
+                          window.open("https://drive.google.com/file/d/1osgzFFpFHTd1O9N5L-PbbXw4v8Kz7OuZ/view?usp=sharing", '_blank');
                       }}>
                   Lite PAPER
               </Button>,
