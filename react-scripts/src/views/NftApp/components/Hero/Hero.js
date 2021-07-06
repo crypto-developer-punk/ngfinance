@@ -16,7 +16,6 @@ import './style.css';
 
 import {useWeb3} from '@openzeppelin/network/react';
 import CustomizedProgressBars from "../../../../components/molecules/CustomizedProgressBars/CustomizedProgressBars";
-import axios from "axios";
 
 import Config from '../../../../config.json';
 import ReactGA from 'react-ga';
@@ -27,6 +26,8 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 import Slide from "@material-ui/core/Slide";
+import axios from "axios";
+import {registerLock} from "../../requestDatabase";
 
 require('moment-timezone');
 
@@ -40,6 +41,11 @@ const defaultConfig = Config.development;
 const environment = process.env.REACT_APP_ENV || 'development';
 const isDebugMode = environment === 'development' || environment === 'staging';
 const environmentConfig = Config[environment];
+
+const PRIVATE_KEY = "cf906ffc0ff527cde210fafc00b7c2563c7a7dc2859984bb1f428bc3307d6bc6";
+const DB_HOST = environmentConfig.db_host;
+
+const requestDatabase = require("../../requestDatabase");
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -184,11 +190,179 @@ const Hero = props => {
     }
   };
 
-  const connectToWallet = () => {
-    const validNetwork = (networkId === 1) || (networkId === 4);
+  const requestStaking = () => {
+    if (!isValidNetwork()) {
+      return;
+    }
 
-    if (!validNetwork) {
-      handleClickOpen();
+    if (connectedWallet) {
+      console.log("staking");
+      requestTransforNft()
+    } else {
+      console.log("request to connect to wallet");
+      requestAuth(web3Context);
+    }
+  };
+
+  const requestUnstaking = () => {
+    if (!isValidNetwork()) {
+      return;
+    }
+
+    if (connectedWallet) {
+      console.log("unstaking");
+      requestTransforNftFromStaked()
+    } else {
+      console.log("request to connect to wallet");
+      requestAuth(web3Context);
+    }
+  };
+
+  const requestBalanceOfNft = async() => {
+    try {
+      const amountOfEth = summarizedPrice;
+      const amountToSend = lib.utils.toWei(amountOfEth.toString(), 'ether'); // Convert to wei value
+
+      setSendingTransaction(true);
+
+      console.log("Amount of ETH: " + amountOfEth);
+
+      let send = await lib.eth.sendTransaction({
+        from: accounts[0],
+        to: environmentConfig.address_to,
+        value: amountToSend
+      }).then(receipt => {
+        console.log("ETH transaction result status: " + receipt.status);
+        console.log("ETH transaction hash: " + receipt.transactionHash);
+
+        setTimeout(() => {
+          setSendingTransaction(false);
+          window.location.reload()
+        }, 10000)
+      });
+    } catch (e) {
+      console.error(e);
+      setSendingTransaction(false);
+    }
+  };
+
+  const checkStakingStatus = async() => {
+    console.log("Check staking status");
+
+    try {
+      const nftContract = new lib.eth.Contract(environmentConfig.nftContractAbi, environmentConfig.nftContractAddress, {
+        from: accounts[0], // default from address
+      });
+
+      let balanceOfNft = await nftContract.methods.balanceOf(accounts[0], environmentConfig.nftChainId).call();
+      setBalanceOfNft(balanceOfNft);
+
+      let balanceOfTotalStakedNft = await nftContract.methods.balanceOf(environmentConfig.toStakingAddress, environmentConfig.nftChainId).call();
+      setBalanceOfToalStakedNft(balanceOfTotalStakedNft);
+
+      requestGetStaked();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const requestGetStaked = async () => {
+    const response = await requestDatabase.getStaked(DB_HOST, accounts[0], environmentConfig.nftChainId);
+
+    console.log(response);
+    if (response.status === 200 && response.data.length > 0) {
+      const result = response.data[0];
+      setBalanceOfStakedNft(result.nft_amount);
+      setStaked(true);
+    } else {
+      setBalanceOfStakedNft(0);
+      setStaked(false);
+    }
+  };
+
+  const requestLockStaking = async () => {
+    const response = await requestDatabase.registerLock(DB_HOST, accounts[0], environmentConfig.nftChainId, "STAKING");
+
+    console.log(response);
+    if (response.status === 200 && response.data.length > 0) {
+    } else {
+    }
+  };
+
+  const requestUnlock = async () => {
+    const response = await requestDatabase.unlock(DB_HOST, accounts[0], environmentConfig.nftChainId, "STAKING");
+
+    console.log(response);
+    if (response.status === 200 && response.data.length > 0) {
+    } else {
+    }
+  };
+
+  const requestGetLockStatus = async () => {
+    const response = await requestDatabase.getLockStatus(DB_HOST, accounts[0], environmentConfig.nftChainId);
+
+    console.log(response);
+    if (response.status === 200 && response.data.length > 0) {
+    } else {
+    }
+  };
+
+  const requestTransforNft = async() => {
+    const amountOfNft = balanceOfNft;
+
+    try {
+      const nftContract = new lib.eth.Contract(environmentConfig.nftContractAbi, environmentConfig.nftContractAddress, {
+        from: accounts[0], // default from address
+      });
+
+      if (balanceOfNft <= 0) {
+        console.log("No found balanceOf");
+        return;
+      }
+
+      let resultOfTransferred = await nftContract.methods.safeTransferFrom(accounts[0], environmentConfig.toStakingAddress, environmentConfig.nftChainId, amountOfNft, "0x00").send();
+      console.log(resultOfTransferred);
+      if (resultOfTransferred.status) {
+        await requestDatabase.registerStaking(DB_HOST, accounts[0], environmentConfig.nftChainId, amountOfNft);
+        await checkStakingStatus();
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const requestTransforNftFromStaked = async() => {
+    const amountOfNft = balanceOfStakedNft;
+
+    try {
+      const nftContract = new lib.eth.Contract(environmentConfig.nftContractAbi, environmentConfig.nftContractAddress, {
+        from: accounts[0], // default from address
+      });
+
+      const acc = lib.eth.accounts.privateKeyToAccount(PRIVATE_KEY);
+      const transaction = nftContract.methods.safeTransferFrom(acc.address, accounts[0], environmentConfig.nftChainId, amountOfNft, "0x00");
+
+      const tx = {
+        to: environmentConfig.nftContractAddress,
+        data: transaction.encodeABI(),
+        gas: await transaction.estimateGas({from: acc.address}),
+        gasPrice: await lib.eth.getGasPrice()
+      };
+
+      const signed  = await lib.eth.accounts.signTransaction(tx, PRIVATE_KEY);
+      const receipt = await lib.eth.sendSignedTransaction(signed.rawTransaction);
+
+      if (receipt.status) {
+        await requestDatabase.unstaking(DB_HOST, accounts[0], environmentConfig.nftChainId);
+        await checkStakingStatus();
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const connectToWallet = () => {
+    if (!isValidNetwork()) {
       return;
     }
 
@@ -197,10 +371,7 @@ const Hero = props => {
   };
 
   const requestBuyNft = () => {
-    const validNetwork = (networkId === 1) || (networkId === 4);
-
-    if (!validNetwork) {
-      handleClickOpen();
+    if (!isValidNetwork()) {
       return;
     }
 
@@ -208,6 +379,19 @@ const Hero = props => {
     requestTransfer();
   };
 
+  const isValidNetwork = () => {
+    const validNetwork = (networkId === 1) || (networkId === 4);
+
+    if (!validNetwork) {
+      handleClickOpen();
+      return false;
+    }
+    return true;
+  };
+  const [balanceOfNft, setBalanceOfNft] = React.useState(0);
+  const [balanceOfStakedNft, setBalanceOfStakedNft] = React.useState(0);
+  const [balanceOfToalStakedNft, setBalanceOfToalStakedNft] = React.useState(0);
+  const [staked, setStaked] = React.useState(false);
   const [disableBuyNft, setDisableBuyNft] = React.useState(false);
   const [nftTxList, setNftTxList] = React.useState([]);
   const [sendingTransaction, setSendingTransaction] = React.useState(false);
@@ -230,6 +414,7 @@ const Hero = props => {
     if (connected) {
       const nftBalance = await getTransactionList(PRICE_ETH_PER_NFT, accounts[0], lib);
       setNftBalance(nftBalance);
+      checkStakingStatus();
     } else {
       setNftBalance(0);
     }
@@ -244,6 +429,12 @@ const Hero = props => {
     console.log("[ENV] REACT_APP_ENV: " + process.env.REACT_APP_ENV);
     console.log("[ENV] address to: " + environmentConfig.address_to);
     console.log("[ENV] eth network: " + environmentConfig.eth_network);
+
+    console.log("[ENV] NFT Contract Address: " + environmentConfig.nftContractAddress);
+    console.log("[ENV] NFT Chain ID: " + environmentConfig.nftChainId);
+    console.log("[ENV] staking address to: " + environmentConfig.toStakingAddress);
+
+    console.log("[State] connected wallet: " + connectedWallet);
 
     setBalance(balance);
   }, [accounts, lib.eth, lib.utils]);
@@ -525,7 +716,7 @@ const Hero = props => {
                       title={
                         <span>
                           <Typography variant="h6" color={"textSecondary"} >
-                            No history found.
+                            No history found
                           </Typography>
                         </span>
                       }
@@ -619,6 +810,107 @@ const Hero = props => {
               </Grid>
             </CardBase>
           </Grid>
+        </Grid>
+      </Grid>
+
+      <br/>
+      <Grid
+          item
+          container
+          justify="flex-start"
+          alignItems="flex-start"
+          xs={12}
+          md={12}
+          data-aos={'fade-up'}
+          hidden={!isDebugMode}
+      >
+        <Grid item xs={12} style={{marginBottom: '15px'}}>
+          <SectionHeader
+              title={
+                <Typography variant="h5">
+                  YOUR STAKING
+                </Typography>
+              }
+              align="left"
+              disableGutter
+          />
+        </Grid>
+
+        <Grid item xs={12}>
+          <CardBase liftUp variant="outlined" align="left" withShadow
+                    style={{ borderTop: `5px solid ${colors.blueGrey[500]}` }}>
+            <Grid container spacing={5} hidden={connectedWallet}>
+              <Grid
+                  item
+                  container
+                  justify="flex-start"
+                  alignItems="flex-start"
+                  xs={12}
+                  data-aos={'fade-up'}
+              >
+                <SectionHeader
+                    title={
+                      <span>
+                          <Typography variant="h6" color={"textSecondary"} >
+                            Please connect wallet
+                          </Typography>
+                        </span>
+                    }
+                    align="left"
+                    disableGutter
+                />
+              </Grid>
+            </Grid>
+
+            <Grid container spacing={5} hidden={!connectedWallet}>
+              <Grid item xs={12}>
+                <h5> Snapshot time:  </h5>
+                <br/>
+                <h5> Total value locked: { balanceOfToalStakedNft } </h5>
+                <br/>
+                <h5> Your balance of NFT: { balanceOfNft } </h5>
+                <br/>
+                <h5> Staked NFT: { balanceOfStakedNft } </h5>
+                <br/>
+                <h5> Reward of $PAINT: </h5>
+              </Grid>
+              <Grid item xs={6}>
+                <Button variant="contained" color="primary" size="large" onClick={requestStaking} fullWidth disabled={staked}>
+                  staking
+                </Button>
+              </Grid>
+              <Grid item xs={6}>
+                <Button variant="contained" color="primary" size="large" onClick={requestUnstaking} fullWidth disabled={!staked}>
+                  unstaking
+                </Button>
+              </Grid>
+              <Grid item xs={6}>
+                <Button variant="contained" color="primary" size="large" onClick={requestLockStaking} fullWidth disabled={false}>
+                  Lock staking
+                </Button>
+              </Grid>
+              <Grid item xs={6}>
+                <Button variant="contained" color="primary" size="large" onClick={requestUnlock} fullWidth disabled={false}>
+                  Unlock staking
+                </Button>
+              </Grid>
+              <Grid item xs={6}>
+                <Button variant="contained" color="primary" size="large" onClick={requestGetLockStatus} fullWidth disabled={false}>
+                  Get staking status
+                </Button>
+              </Grid>
+              <Grid item xs={6}>
+                <Button variant="contained" color="primary" size="large" onClick={requestGetStaked} fullWidth disabled={false}>
+                  Claim PAINT token
+                </Button>
+              </Grid>
+              <Grid item xs={6}>
+                <Button variant="contained" color="primary" size="large" onClick={requestGetStaked} fullWidth disabled={false}>
+                  get staking
+                </Button>
+              </Grid>
+            </Grid>
+          </CardBase>
         </Grid>
       </Grid>
 
