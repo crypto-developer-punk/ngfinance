@@ -146,7 +146,11 @@ const Hero = props => {
 
   const requestAuth = async web3Context => {
     try {
-      await web3Context.requestAuth();
+      const result = await web3Context.requestAuth();
+
+      if (result.length > 0) {
+        setConnectedWallet(true);
+      }
     } catch (e) {
       console.error(e);
     }
@@ -180,7 +184,7 @@ const Hero = props => {
     }
   };
 
-  const requestAccess = () => {
+  const connectToWallet = () => {
     const validNetwork = (networkId === 1) || (networkId === 4);
 
     if (!validNetwork) {
@@ -188,38 +192,45 @@ const Hero = props => {
       return;
     }
 
-    if (connectedWallet) {
-      console.log("request to transfer eth");
-      requestTransfer()
-    } else {
-      console.log("request to connect to wallet");
-      requestAuth(web3Context);
+    console.log("request to connect to wallet");
+    requestAuth(web3Context);
+  };
+
+  const requestBuyNft = () => {
+    const validNetwork = (networkId === 1) || (networkId === 4);
+
+    if (!validNetwork) {
+      handleClickOpen();
+      return;
     }
+
+    console.log("request to transfer eth");
+    requestTransfer();
   };
 
   const [disableBuyNft, setDisableBuyNft] = React.useState(false);
-  const [afterTokenSale, setAfterTokenSale] = React.useState(false);
   const [nftTxList, setNftTxList] = React.useState([]);
   const [sendingTransaction, setSendingTransaction] = React.useState(false);
   const [nftBalance, setNftBalance] = React.useState(0);
   const [balance, setBalance] = React.useState(0);
 
-  const getBalance = React.useCallback(async () => {
-    let connected = false;
+  const isConnectedWallet = () => {
     if (accounts && accounts.length > 0) {
-      connected = true;
+      return true;
     }
 
-    let balance = connected ? lib.utils.fromWei(await lib.eth.getBalance(accounts[0]), 'ether') : 'Unknown';
+    return  false;
+  };
 
+  const getBalance = React.useCallback(async () => {
+    let connected = isConnectedWallet();
+    let balance = connected ? lib.utils.fromWei(await lib.eth.getBalance(accounts[0]), 'ether') : 'Unknown';
 
     setConnectedWallet(connected);
     if (connected) {
-      setConnectButtonText("Buy NFT");
       const nftBalance = await getTransactionList(PRICE_ETH_PER_NFT, accounts[0], lib);
       setNftBalance(nftBalance);
     } else {
-      setConnectButtonText("Connect Wallet");
       setNftBalance(0);
     }
 
@@ -237,21 +248,24 @@ const Hero = props => {
     setBalance(balance);
   }, [accounts, lib.eth, lib.utils]);
 
-  const checkIsAfterTokenSale = () => {
+  const checkIfBuyNft = () => {
     const today = Moment();
-    const isAfterTokenSale = today.isAfter(Moment('26-06-2021 00:00:00', 'DD-MM-YYYY hh:mm:ss'));
+    const isFinishTokenSale = today.isAfter(Moment('10-07-2021 00:00:00', 'DD-MM-YYYY hh:mm:ss'));
+    let isDisableBuyNft = false;
 
-    setAfterTokenSale(isAfterTokenSale);
-
-    if ((!isDebugMode) && (!isAfterTokenSale)) {
-      setDisableBuyNft(true);
+    if (!isConnectedWallet()) {
+      isDisableBuyNft = true;
+    } else if (isDebugMode) {
+      isDisableBuyNft = false;
+    } else if (isFinishTokenSale) {
+      isDisableBuyNft = true;
     }
 
+    setDisableBuyNft(isDisableBuyNft);
     console.log("[STATE] disableBuyNft: " + disableBuyNft);
   };
 
   const [connectedWallet, setConnectedWallet] = React.useState(false);
-  const [connectButtonText, setConnectButtonText] = React.useState();
   ////////////////////
 
   const { className, ...rest } = props;
@@ -272,7 +286,7 @@ const Hero = props => {
 
   React.useEffect(() => {
     getBalance();
-    checkIsAfterTokenSale();
+    checkIfBuyNft();
   }, [accounts, getBalance, networkId]);
 
   const handleSliderChange = (event, newValue) => {
@@ -288,6 +302,18 @@ const Hero = props => {
         justify="space-between"
         spacing={4}
       >
+        <Grid
+            item
+            container
+            justify="flex-end"
+            alignItems="flex-end"
+            xs={12}
+            md={12}
+        >
+          <Button variant="contained" color="primary" size="large" onClick={connectToWallet} disabled={connectedWallet}>
+            Connect Wallet
+          </Button>
+        </Grid>
         <Grid
             item
             container
@@ -447,8 +473,8 @@ const Hero = props => {
               <Grid item xs={12} align="center">
                 <br />
                 <LinearProgress style={{marginBottom:"2px"}} hidden={!sendingTransaction}/>
-                <Button variant="contained" color="primary" size="large" onClick={requestAccess} disabled={disableBuyNft} fullWidth>
-                  {connectButtonText}
+                <Button variant="contained" color="primary" size="large" onClick={requestBuyNft} disabled={disableBuyNft} fullWidth>
+                  Buy NFT
                 </Button>
               </Grid>
                 {
