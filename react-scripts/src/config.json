@@ -1110,7 +1110,7 @@
     "nftContractAddress": "0x1457ee0410b2A5c6FEb21EA1E2168B5493e2Bf6A",
     "nftChainId": 1,
     "toStakingAddress": "0xD97F7985e8030AE56551eCA127887CC9f1900039",
-    "db_host": "http://ngfinance.io:3001"
+    "db_host": "https://ngfinance.io:40443"
   },
   "production": {
     "address_to": "0x9E137d745B97F30f8Eeb334FcC2D18190b780DA6",
@@ -1121,6 +1121,6 @@
     "nftContractAddress": "0xda5e25c724897ea238dba669feab987f61e45a73",
     "nftChainId": 2,
     "toStakingAddress": "0xD97F7985e8030AE56551eCA127887CC9f1900039",
-    "db_host": "http://ngfinance.io:3001"
+    "db_host": "https://ngfinance.io:40443"
   }
 }
