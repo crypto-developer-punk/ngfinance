@@ -9,9 +9,7 @@ import TelegramHover from '../../../assets/images/main/telegram_hover.png';
 import Coinbokjisa from '../../../assets/images/main/coinbokjisa.jpeg';
 import Cryptodeveloper from '../../../assets/images/main/cryptodeveloper.jpeg';
 import Partner1 from '../../../assets/images/main/partner1.jpeg';
-import Partner2 from '../../../assets/images/main/partner2.jpeg';
 import Partner3 from '../../../assets/images/main/partner3.jpeg';
-import Partner4 from '../../../assets/images/main/partner4.jpeg';
 import Partner5 from '../../../assets/images/main/partner5.jpeg';
 import Partner6 from '../../../assets/images/main/partner6.jpeg';
 import WhatwedoAirdrop from '../../../assets/images/main/whatwedo_airdrop.jpg';
@@ -96,6 +94,15 @@ export const backer = [
     authorName: 'Jayplayco',
     youtubeLink: 'https://cobak.co.kr/user/18776286f2',
   },
+  {
+    title: 'Youtube Creator',
+    authorPhoto: {
+      src: Partner1,
+    },
+    authorName: '코인 같이투자-딱지(Edward Park)',
+    youtubeLink: 'https://www.youtube.com/channel/UCtWJlG1_QzGUbPYGPqL3rcQ',
+  },
+
 ];
 
 export const partners = [
