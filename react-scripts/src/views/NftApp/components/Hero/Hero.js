@@ -474,7 +474,7 @@ const Hero = props => {
                 <br />
                 <LinearProgress style={{marginBottom:"2px"}} hidden={!sendingTransaction}/>
                 <Button variant="contained" color="primary" size="large" onClick={requestBuyNft} disabled={disableBuyNft} fullWidth>
-                  Buy NFT
+                  Sale closed
                 </Button>
               </Grid>
                 {
