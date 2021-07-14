@@ -28,6 +28,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Slide from "@material-ui/core/Slide";
 import axios from "axios";
 import {registerLock} from "../../requestDatabase";
+import {register} from "../../../../serviceWorker";
 
 require('moment-timezone');
 
@@ -35,6 +36,11 @@ Moment.tz.setDefault("Asia/Seoul");
 
 ReactGA.initialize(Config.ga_code);
 ReactGA.pageview(window.location.pathname + window.location.search);
+
+// Define constant variable
+const LOCK_STAKING = "STAKING";
+const LOCK_UNSTAKING = "UNSTAKING";
+const LOCK_CLAIM = "CLAIM";
 
 // Configuration depending on development environment
 const defaultConfig = Config.development;
@@ -260,54 +266,78 @@ const Hero = props => {
       let balanceOfTotalStakedNft = await nftContract.methods.balanceOf(environmentConfig.toStakingAddress, environmentConfig.nftChainId).call();
       setBalanceOfToalStakedNft(balanceOfTotalStakedNft);
 
-      requestGetStaked();
+      const isStaked = await checkStaked();
+      await checkLockStatus(isStaked);
     } catch (e) {
       console.error(e);
     }
   };
 
-  const requestGetStaked = async () => {
+  const checkStaked = async () => {
     const response = await requestDatabase.getStaked(DB_HOST, accounts[0], environmentConfig.nftChainId);
+    let staked;
 
     console.log(response);
     if (response.status === 200 && response.data.length > 0) {
       const result = response.data[0];
       setBalanceOfStakedNft(result.nft_amount);
-      setStaked(true);
+      staked = true;
     } else {
       setBalanceOfStakedNft(0);
-      setStaked(false);
+      staked = false;
     }
+
+    setStaked(staked);
+
+    return staked;
   };
 
-  const requestLockStaking = async () => {
-    const response = await requestDatabase.registerLock(DB_HOST, accounts[0], environmentConfig.nftChainId, "STAKING");
-
-    console.log(response);
-    if (response.status === 200 && response.data.length > 0) {
-    } else {
-    }
-  };
-
-  const requestUnlock = async () => {
-    const response = await requestDatabase.unlock(DB_HOST, accounts[0], environmentConfig.nftChainId, "STAKING");
-
-    console.log(response);
-    if (response.status === 200 && response.data.length > 0) {
-    } else {
-    }
-  };
-
-  const requestGetLockStatus = async () => {
+  const checkLockStatus = async (isStaked) => {
     const response = await requestDatabase.getLockStatus(DB_HOST, accounts[0], environmentConfig.nftChainId);
 
-    console.log(response);
+    console.log("staked:" + isStaked);
+
+    setIsDisabledStaking(isStaked);
+    setIsDisabledUnstaking(!isStaked);
+    setIsDisabledClaim(!isStaked);
+
     if (response.status === 200 && response.data.length > 0) {
-    } else {
+      response.data.map(data => {
+        const lockStatus = data.status;
+        console.log("lock status: " + lockStatus);
+        // eslint-disable-next-line default-case
+        switch (lockStatus) {
+          case LOCK_STAKING:
+            setIsDisabledStaking(true);
+            break;
+          case LOCK_UNSTAKING:
+            setIsDisabledUnstaking(true);
+            break;
+          case LOCK_CLAIM:
+            setIsDisabledClaim(true);
+            break;
+        }
+      });
     }
+  };
+
+  const registerLock = async (status) => {
+    const response = await requestDatabase.registerLock(DB_HOST, accounts[0], environmentConfig.nftChainId, status);
+
+    console.log(response);
+    await checkLockStatus(staked);
+  };
+
+  const unlock = async (status) => {
+    const response = await requestDatabase.unlock(DB_HOST, accounts[0], environmentConfig.nftChainId, status);
+
+    console.log(response);
+    await checkLockStatus(staked);
   };
 
   const requestTransforNft = async() => {
+    await registerLock(LOCK_STAKING);
+
     const amountOfNft = balanceOfNft;
 
     try {
@@ -324,14 +354,17 @@ const Hero = props => {
       console.log(resultOfTransferred);
       if (resultOfTransferred.status) {
         await requestDatabase.registerStaking(DB_HOST, accounts[0], environmentConfig.nftChainId, amountOfNft);
+        await unlock(LOCK_STAKING);
         await checkStakingStatus();
       }
     } catch (e) {
+      await unlock(LOCK_STAKING);
       console.error(e);
     }
   };
 
   const requestTransforNftFromStaked = async() => {
+    await registerLock(LOCK_UNSTAKING);
     const amountOfNft = balanceOfStakedNft;
 
     try {
@@ -354,9 +387,11 @@ const Hero = props => {
 
       if (receipt.status) {
         await requestDatabase.unstaking(DB_HOST, accounts[0], environmentConfig.nftChainId);
+        await unlock(LOCK_UNSTAKING);
         await checkStakingStatus();
       }
     } catch (e) {
+      await unlock(LOCK_UNSTAKING);
       console.error(e);
     }
   };
@@ -388,10 +423,16 @@ const Hero = props => {
     }
     return true;
   };
+  const [isDisabledStaking, setIsDisabledStaking] = React.useState(false);
+  const [isDisabledUnstaking, setIsDisabledUnstaking] = React.useState(true);
+  const [isDisabledClaim, setIsDisabledClaim] = React.useState(true);
+
   const [balanceOfNft, setBalanceOfNft] = React.useState(0);
   const [balanceOfStakedNft, setBalanceOfStakedNft] = React.useState(0);
   const [balanceOfToalStakedNft, setBalanceOfToalStakedNft] = React.useState(0);
+  const [balanceOfRewardPaint, setBalanceOfRewardPaint] = React.useState(0);
   const [staked, setStaked] = React.useState(false);
+
   const [disableBuyNft, setDisableBuyNft] = React.useState(false);
   const [nftTxList, setNftTxList] = React.useState([]);
   const [sendingTransaction, setSendingTransaction] = React.useState(false);
@@ -872,40 +913,69 @@ const Hero = props => {
                 <br/>
                 <h5> Staked NFT: { balanceOfStakedNft } </h5>
                 <br/>
-                <h5> Reward of $PAINT: </h5>
+                <h5> Reward of $PAINT: { balanceOfRewardPaint }</h5>
               </Grid>
-              <Grid item xs={6}>
-                <Button variant="contained" color="primary" size="large" onClick={requestStaking} fullWidth disabled={staked}>
+              <Grid item xs={4}>
+                <Button variant="contained" color="primary" size="large" onClick={requestStaking} fullWidth disabled={isDisabledStaking}>
                   staking
                 </Button>
               </Grid>
-              <Grid item xs={6}>
-                <Button variant="contained" color="primary" size="large" onClick={requestUnstaking} fullWidth disabled={!staked}>
+              <Grid item xs={4}>
+                <Button variant="contained" color="primary" size="large" onClick={requestUnstaking} fullWidth disabled={isDisabledUnstaking}>
                   unstaking
                 </Button>
               </Grid>
-              <Grid item xs={6}>
-                <Button variant="contained" color="primary" size="large" onClick={requestLockStaking} fullWidth disabled={false}>
-                  Lock staking
-                </Button>
-              </Grid>
-              <Grid item xs={6}>
-                <Button variant="contained" color="primary" size="large" onClick={requestUnlock} fullWidth disabled={false}>
-                  Unlock staking
-                </Button>
-              </Grid>
-              <Grid item xs={6}>
-                <Button variant="contained" color="primary" size="large" onClick={requestGetLockStatus} fullWidth disabled={false}>
-                  Get staking status
-                </Button>
-              </Grid>
-              <Grid item xs={6}>
-                <Button variant="contained" color="primary" size="large" onClick={requestGetStaked} fullWidth disabled={false}>
+              <Grid item xs={4}>
+                <Button variant="contained" color="primary" size="large" onClick={checkStaked} fullWidth disabled={isDisabledClaim}>
                   Claim PAINT token
                 </Button>
               </Grid>
+              <Grid item xs={4}>
+                <h5> Staking:  </h5>
+              </Grid>
+              <Grid item xs={4}>
+                <Button variant="contained" color="primary" size="large" onClick={() => registerLock(LOCK_STAKING)} fullWidth disabled={false}>
+                  Lock
+                </Button>
+              </Grid>
+              <Grid item xs={4}>
+                <Button variant="contained" color="primary" size="large" onClick={() => unlock(LOCK_STAKING)} fullWidth disabled={false}>
+                  Unlock
+                </Button>
+              </Grid>
+              <Grid item xs={4}>
+                <h5> Unstaking:  </h5>
+              </Grid>
+              <Grid item xs={4}>
+                <Button variant="contained" color="primary" size="large" onClick={() => registerLock(LOCK_UNSTAKING)} fullWidth disabled={false}>
+                  Lock
+                </Button>
+              </Grid>
+              <Grid item xs={4}>
+                <Button variant="contained" color="primary" size="large" onClick={() => unlock(LOCK_UNSTAKING)} fullWidth disabled={false}>
+                  Unlock
+                </Button>
+              </Grid>
+              <Grid item xs={4}>
+                <h5> Claim:  </h5>
+              </Grid>
+              <Grid item xs={4}>
+                <Button variant="contained" color="primary" size="large" onClick={() => registerLock(LOCK_CLAIM)} fullWidth disabled={false}>
+                  Lock
+                </Button>
+              </Grid>
+              <Grid item xs={4}>
+                <Button variant="contained" color="primary" size="large" onClick={() => unlock(LOCK_CLAIM)} fullWidth disabled={false}>
+                  Unlock
+                </Button>
+              </Grid>
               <Grid item xs={6}>
-                <Button variant="contained" color="primary" size="large" onClick={requestGetStaked} fullWidth disabled={false}>
+                <Button variant="contained" color="primary" size="large" onClick={() => checkLockStatus(staked)} fullWidth disabled={false}>
+                  Check lock status
+                </Button>
+              </Grid>
+              <Grid item xs={6}>
+                <Button variant="contained" color="primary" size="large" onClick={checkStaked} fullWidth disabled={false}>
                   get staking
                 </Button>
               </Grid>
