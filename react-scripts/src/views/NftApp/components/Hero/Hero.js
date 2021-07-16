@@ -37,6 +37,10 @@ Moment.tz.setDefault("Asia/Seoul");
 ReactGA.initialize(Config.ga_code);
 ReactGA.pageview(window.location.pathname + window.location.search);
 
+// Define token type
+const TOKEN_TYPE_PAINT = 0;
+const TOKEN_TYPE_CANVAS = 1;
+
 // Define constant variable
 const LOCK_STAKING = "STAKING";
 const LOCK_UNSTAKING = "UNSTAKING";
@@ -252,7 +256,7 @@ const Hero = props => {
     }
   };
 
-  const checkStakingStatus = async() => {
+  const checkStakingAndLockStatus = async() => {
     console.log("Check staking status");
 
     try {
@@ -290,6 +294,45 @@ const Hero = props => {
     setStaked(staked);
 
     return staked;
+  };
+
+  const registerReward = async () => {
+    const response = await requestDatabase.registerReward(DB_HOST, accounts[0], environmentConfig.nftChainId);
+
+    console.log(response);
+    await checkRewardStatus();
+  };
+
+  const checkRewardStatus = async () => {
+    const response = await requestDatabase.getReward(DB_HOST, accounts[0], TOKEN_TYPE_PAINT);
+
+    if (response.status === 200 && response.data.length > 0) {
+      const result = response.data[0];
+      const tokenAmount = result.token_amount || 0;
+      setBalanceOfRewardPaint(tokenAmount)
+    } else {
+      setBalanceOfRewardPaint(0);
+    }
+  };
+
+  const claim = async () => {
+    const response = await requestDatabase.claim(DB_HOST, accounts[0], environmentConfig.nftChainId, TOKEN_TYPE_PAINT);
+
+    console.log(response);
+    await checkRewardStatus();
+  };
+
+  const checkSnapshotStatus = async () => {
+    const response = await requestDatabase.getSnapshot(DB_HOST, accounts[0], TOKEN_TYPE_PAINT);
+
+    console.log(response);
+    if (response.status === 200 && response.data.length > 0) {
+      const result = response.data[0];
+      const snapshot_time = result.snapshot_time || "";
+      setSnapshotStatus(snapshot_time);
+    } else {
+      setSnapshotStatus("");
+    }
   };
 
   const checkLockStatus = async (isStaked) => {
@@ -336,9 +379,12 @@ const Hero = props => {
   };
 
   const requestTransforNft = async() => {
-    await registerLock(LOCK_STAKING);
-
     const amountOfNft = balanceOfNft;
+
+    await requestDatabase.registerStaking(DB_HOST, accounts[0], environmentConfig.nftChainId, amountOfNft);
+    await checkStakingAndLockStatus();
+
+    return;
 
     try {
       const nftContract = new lib.eth.Contract(environmentConfig.nftContractAbi, environmentConfig.nftContractAddress, {
@@ -354,8 +400,7 @@ const Hero = props => {
       console.log(resultOfTransferred);
       if (resultOfTransferred.status) {
         await requestDatabase.registerStaking(DB_HOST, accounts[0], environmentConfig.nftChainId, amountOfNft);
-        await unlock(LOCK_STAKING);
-        await checkStakingStatus();
+        await checkStakingAndLockStatus();
       }
     } catch (e) {
       await unlock(LOCK_STAKING);
@@ -364,8 +409,11 @@ const Hero = props => {
   };
 
   const requestTransforNftFromStaked = async() => {
-    await registerLock(LOCK_UNSTAKING);
     const amountOfNft = balanceOfStakedNft;
+
+    await requestDatabase.unstaking(DB_HOST, accounts[0], environmentConfig.nftChainId);
+    await checkStakingAndLockStatus();
+    return;
 
     try {
       const nftContract = new lib.eth.Contract(environmentConfig.nftContractAbi, environmentConfig.nftContractAddress, {
@@ -387,8 +435,7 @@ const Hero = props => {
 
       if (receipt.status) {
         await requestDatabase.unstaking(DB_HOST, accounts[0], environmentConfig.nftChainId);
-        await unlock(LOCK_UNSTAKING);
-        await checkStakingStatus();
+        await checkStakingAndLockStatus();
       }
     } catch (e) {
       await unlock(LOCK_UNSTAKING);
@@ -433,6 +480,8 @@ const Hero = props => {
   const [balanceOfRewardPaint, setBalanceOfRewardPaint] = React.useState(0);
   const [staked, setStaked] = React.useState(false);
 
+  const [snapshotStatus, setSnapshotStatus] = React.useState("");
+
   const [disableBuyNft, setDisableBuyNft] = React.useState(false);
   const [nftTxList, setNftTxList] = React.useState([]);
   const [sendingTransaction, setSendingTransaction] = React.useState(false);
@@ -455,7 +504,10 @@ const Hero = props => {
     if (connected) {
       const nftBalance = await getTransactionList(PRICE_ETH_PER_NFT, accounts[0], lib);
       setNftBalance(nftBalance);
-      checkStakingStatus();
+
+      checkRewardStatus();
+      checkStakingAndLockStatus();
+      checkSnapshotStatus();
     } else {
       setNftBalance(0);
     }
@@ -905,7 +957,7 @@ const Hero = props => {
 
             <Grid container spacing={5} hidden={!connectedWallet}>
               <Grid item xs={12}>
-                <h5> Snapshot time:  </h5>
+                <h5> Snapshot time: { snapshotStatus } </h5>
                 <br/>
                 <h5> Total value locked: { balanceOfToalStakedNft } </h5>
                 <br/>
@@ -913,7 +965,7 @@ const Hero = props => {
                 <br/>
                 <h5> Staked NFT: { balanceOfStakedNft } </h5>
                 <br/>
-                <h5> Reward of $PAINT: { balanceOfRewardPaint }</h5>
+                <h5> Reward of $PAINT: { balanceOfRewardPaint } </h5>
               </Grid>
               <Grid item xs={4}>
                 <Button variant="contained" color="primary" size="large" onClick={requestStaking} fullWidth disabled={isDisabledStaking}>
@@ -926,8 +978,8 @@ const Hero = props => {
                 </Button>
               </Grid>
               <Grid item xs={4}>
-                <Button variant="contained" color="primary" size="large" onClick={checkStaked} fullWidth disabled={isDisabledClaim}>
-                  Claim PAINT token
+                <Button variant="contained" color="primary" size="large" onClick={claim} fullWidth disabled={isDisabledClaim}>
+                  Claim
                 </Button>
               </Grid>
               <Grid item xs={4}>
@@ -977,6 +1029,19 @@ const Hero = props => {
               <Grid item xs={6}>
                 <Button variant="contained" color="primary" size="large" onClick={checkStaked} fullWidth disabled={false}>
                   get staking
+                </Button>
+              </Grid>
+              <Grid item xs={4}>
+                <h5> Reward: </h5>
+              </Grid>
+              <Grid item xs={4}>
+                <Button variant="contained" color="primary" size="large" onClick={registerReward} fullWidth disabled={false}>
+                  Register reward
+                </Button>
+              </Grid>
+              <Grid item xs={4}>
+                <Button variant="contained" color="primary" size="large" onClick={checkRewardStatus} fullWidth disabled={false}>
+                  Check Reward status
                 </Button>
               </Grid>
             </Grid>
