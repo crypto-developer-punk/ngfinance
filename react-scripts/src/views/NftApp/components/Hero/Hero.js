@@ -306,10 +306,13 @@ const Hero = props => {
   };
 
   const claim = async () => {
+    setIsDisabledClaim(true);
+
     const response = await requestDatabase.claim(DB_HOST, accounts[0], environmentConfig.nftChainId, TOKEN_TYPE_PAINT);
 
     console.log(response);
     await checkRewardStatus();
+    await checkStakingAndLockStatus();
   };
 
   const checkSnapshotStatus = async () => {
