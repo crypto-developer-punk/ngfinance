@@ -124,41 +124,15 @@ const PrettoSlider = withStyles({
   },
 })(Slider);
 
-const truncateString = (str) => {
-  return str.length > 15 ? str.substring(0, 15) + "..." : str;
+const sleep = (ms) => {
+  return new Promise(resolve=>{
+    setTimeout(resolve,ms)
+  })
 };
 
 const Hero = props => {
   const web3Context = useWeb3(environmentConfig.eth_network);
   const { networkId, networkName, accounts, providerName, lib } = web3Context;
-
-  const getTransactionList = async (priceOfEth, connectedAddress, lib) => {
-    try {
-      const response = await axios.get(environmentConfig.etherscan_api);
-      const result = response.data.result;
-      let sum = 0;
-      let txList = [];
-
-      result.forEach(itemTransaction => {
-        if (String(connectedAddress).toUpperCase() === String(itemTransaction["from"]).toUpperCase()) {
-          sum += Number(itemTransaction["value"]);
-          txList.push(itemTransaction['hash']);
-        }
-      });
-
-      const paidEth = lib.utils.fromWei(sum.toString(), 'ether');
-      const nftBalance = Math.round(Number(paidEth) / priceOfEth);
-
-      console.log("Paid total ETH: " + paidEth);
-      console.log("Total supply of NFT: " + nftBalance + " NFT");
-
-      setNftTxList(txList);
-
-      return nftBalance;
-    } catch (e) {
-      console.error(e);
-    }
-  };
 
   const requestAuth = async web3Context => {
     try {
@@ -200,28 +174,28 @@ const Hero = props => {
     }
   };
 
-  const requestStaking = () => {
+  const requestStaking = (nft_chain_id) => {
     if (!isValidNetwork()) {
       return;
     }
 
     if (connectedWallet) {
       console.log("staking");
-      requestTransforNft()
+      requestTransforNft(nft_chain_id)
     } else {
       console.log("request to connect to wallet");
       requestAuth(web3Context);
     }
   };
 
-  const requestUnstaking = () => {
+  const requestUnstaking = (nft_chain_id) => {
     if (!isValidNetwork()) {
       return;
     }
 
     if (connectedWallet) {
       console.log("unstaking");
-      requestTransforNftFromStaked()
+      requestTransforNftFromStaked(nft_chain_id)
     } else {
       console.log("request to connect to wallet");
       requestAuth(web3Context);
@@ -256,19 +230,32 @@ const Hero = props => {
     }
   };
 
+  const getNftContract = async() => {
+    const nftContract = new lib.eth.Contract(environmentConfig.nftContractAbi, environmentConfig.nftContractAddress, {
+      from: accounts[0] // default from address
+    });
+
+    return nftContract;
+  };
+
+  const checkBalanceOfNft = async(nft_chain_id) => {
+    console.log("Check balance of nft. nft chain id: " + nft_chain_id);
+
+    const nftContract = await getNftContract();
+
+    let balanceOfNft = await nftContract.methods.balanceOf(accounts[0], nft_chain_id).call();
+    upsertState(nft_chain_id, balanceOfNft);
+  };
+
   const checkStakingAndLockStatus = async() => {
     console.log("Check staking status");
 
     try {
-      const nftContract = new lib.eth.Contract(environmentConfig.nftContractAbi, environmentConfig.nftContractAddress, {
-        from: accounts[0], // default from address
-      });
+      const nftContract = await getNftContract();
+      const balanceOfTotalStakedNft = await nftContract.methods.balanceOf(environmentConfig.toStakingAddress, environmentConfig.nftChainId).call();
 
-      let balanceOfNft = await nftContract.methods.balanceOf(accounts[0], environmentConfig.nftChainId).call();
-      setBalanceOfNft(balanceOfNft);
-
-      let balanceOfTotalStakedNft = await nftContract.methods.balanceOf(environmentConfig.toStakingAddress, environmentConfig.nftChainId).call();
-      setBalanceOfToalStakedNft(balanceOfTotalStakedNft);
+      console.log("balanceOfTotalStakedNft: " + balanceOfTotalStakedNft);
+      setBalanceOfTotalStakedNft(balanceOfTotalStakedNft);
 
       const isStaked = await checkStaked();
       await checkLockStatus(isStaked);
@@ -281,8 +268,11 @@ const Hero = props => {
     const response = await requestDatabase.getStaked(DB_HOST, accounts[0], environmentConfig.nftChainId);
     let staked;
 
-    console.log(response);
+    console.log("Check staking status");
+
     if (response.status === 200 && response.data.length > 0) {
+      console.log(response.data);
+
       const result = response.data[0];
       setBalanceOfStakedNft(result.nft_amount);
       staked = true;
@@ -297,7 +287,7 @@ const Hero = props => {
   };
 
   const registerReward = async () => {
-    const response = await requestDatabase.registerReward(DB_HOST, accounts[0], environmentConfig.nftChainId);
+    const response = await requestDatabase.registerReward(DB_HOST, accounts[0]);
 
     console.log(response);
     await checkRewardStatus();
@@ -338,7 +328,7 @@ const Hero = props => {
   const checkLockStatus = async (isStaked) => {
     const response = await requestDatabase.getLockStatus(DB_HOST, accounts[0], environmentConfig.nftChainId);
 
-    console.log("staked:" + isStaked);
+    console.log("Check lock status");
 
     setIsDisabledStaking(isStaked);
     setIsDisabledUnstaking(!isStaked);
@@ -378,28 +368,24 @@ const Hero = props => {
     await checkLockStatus(staked);
   };
 
-  const requestTransforNft = async() => {
-    const amountOfNft = balanceOfNft;
-
-    await requestDatabase.registerStaking(DB_HOST, accounts[0], environmentConfig.nftChainId, amountOfNft);
-    await checkStakingAndLockStatus();
-
-    return;
+  const requestTransforNft = async(nft_chain_id) => {
+    const amountOfNft = state.get(nft_chain_id);
 
     try {
       const nftContract = new lib.eth.Contract(environmentConfig.nftContractAbi, environmentConfig.nftContractAddress, {
         from: accounts[0], // default from address
       });
 
-      if (balanceOfNft <= 0) {
+      if (amountOfNft <= 0) {
         console.log("No found balanceOf");
         return;
       }
 
-      let resultOfTransferred = await nftContract.methods.safeTransferFrom(accounts[0], environmentConfig.toStakingAddress, environmentConfig.nftChainId, amountOfNft, "0x00").send();
+      let resultOfTransferred = await nftContract.methods.safeTransferFrom(accounts[0], environmentConfig.toStakingAddress, nft_chain_id, amountOfNft, "0x00").send();
       console.log(resultOfTransferred);
       if (resultOfTransferred.status) {
-        await requestDatabase.registerStaking(DB_HOST, accounts[0], environmentConfig.nftChainId, amountOfNft);
+        await requestDatabase.registerStaking(DB_HOST, accounts[0], nft_chain_id, amountOfNft);
+        await checkBalanceOfNft(nft_chain_id);
         await checkStakingAndLockStatus();
       }
     } catch (e) {
@@ -408,35 +394,14 @@ const Hero = props => {
     }
   };
 
-  const requestTransforNftFromStaked = async() => {
+  const requestTransforNftFromStaked = async(nft_chain_id) => {
     const amountOfNft = balanceOfStakedNft;
 
-    await requestDatabase.unstaking(DB_HOST, accounts[0], environmentConfig.nftChainId);
-    await checkStakingAndLockStatus();
-    return;
-
     try {
-      const nftContract = new lib.eth.Contract(environmentConfig.nftContractAbi, environmentConfig.nftContractAddress, {
-        from: accounts[0], // default from address
-      });
-
-      const acc = lib.eth.accounts.privateKeyToAccount(PRIVATE_KEY);
-      const transaction = nftContract.methods.safeTransferFrom(acc.address, accounts[0], environmentConfig.nftChainId, amountOfNft, "0x00");
-
-      const tx = {
-        to: environmentConfig.nftContractAddress,
-        data: transaction.encodeABI(),
-        gas: await transaction.estimateGas({from: acc.address}),
-        gasPrice: await lib.eth.getGasPrice()
-      };
-
-      const signed  = await lib.eth.accounts.signTransaction(tx, PRIVATE_KEY);
-      const receipt = await lib.eth.sendSignedTransaction(signed.rawTransaction);
-
-      if (receipt.status) {
-        await requestDatabase.unstaking(DB_HOST, accounts[0], environmentConfig.nftChainId);
-        await checkStakingAndLockStatus();
-      }
+      await requestDatabase.unstaking(DB_HOST, accounts[0], nft_chain_id, amountOfNft);
+      await sleep(1000);
+      await checkBalanceOfNft(nft_chain_id);
+      await checkStakingAndLockStatus();
     } catch (e) {
       await unlock(LOCK_UNSTAKING);
       console.error(e);
@@ -470,23 +435,57 @@ const Hero = props => {
     }
     return true;
   };
+
   const [isDisabledStaking, setIsDisabledStaking] = React.useState(false);
   const [isDisabledUnstaking, setIsDisabledUnstaking] = React.useState(true);
   const [isDisabledClaim, setIsDisabledClaim] = React.useState(true);
 
-  const [balanceOfNft, setBalanceOfNft] = React.useState(0);
   const [balanceOfStakedNft, setBalanceOfStakedNft] = React.useState(0);
-  const [balanceOfToalStakedNft, setBalanceOfToalStakedNft] = React.useState(0);
+  const [balanceOfTotalStakedNft, setBalanceOfTotalStakedNft] = React.useState(0);
   const [balanceOfRewardPaint, setBalanceOfRewardPaint] = React.useState(0);
   const [staked, setStaked] = React.useState(false);
 
   const [snapshotStatus, setSnapshotStatus] = React.useState("");
 
-  const [disableBuyNft, setDisableBuyNft] = React.useState(false);
-  const [nftTxList, setNftTxList] = React.useState([]);
   const [sendingTransaction, setSendingTransaction] = React.useState(false);
-  const [nftBalance, setNftBalance] = React.useState(0);
-  const [balance, setBalance] = React.useState(0);
+
+  const [nftInfos, setNftInfos] = React.useState([]);
+  const [state, setState] = React.useState(new Map());
+
+  // Map functions
+  const addState = (key, value) => {
+    setState((prev) => new Map([...prev, [key, value]]));
+  };
+
+
+  const upsertState = (key, value) => {
+    setState((prev) => new Map(prev).set(key, value));
+  };
+
+  const deleteState = (key) => {
+    setState((prev) => {
+      const newState = new Map(prev);
+      newState.delete(key);
+      return newState;
+    });
+  };
+
+  const clearState = () => {
+    setState((prev) => new Map(prev.clear()));
+  };
+
+  const getNftInfo = async() => {
+    console.log("Get NFT Info ");
+
+    const response = await requestDatabase.getNftInfo(DB_HOST);
+    const nftInfos = response.data;
+
+    // todo - check response
+    console.log(nftInfos);
+    setNftInfos(nftInfos);
+
+    return nftInfos;
+  };
 
   const isConnectedWallet = () => {
     if (accounts && accounts.length > 0) {
@@ -497,19 +496,18 @@ const Hero = props => {
   };
 
   const getBalance = React.useCallback(async () => {
+    // get nft contents
+    const nftInfos = await getNftInfo();
+
     let connected = isConnectedWallet();
     let balance = connected ? lib.utils.fromWei(await lib.eth.getBalance(accounts[0]), 'ether') : 'Unknown';
-
     setConnectedWallet(connected);
-    if (connected) {
-      const nftBalance = await getTransactionList(PRICE_ETH_PER_NFT, accounts[0], lib);
-      setNftBalance(nftBalance);
 
+    if (connected) {
+      nftInfos.map(nftInfo => checkBalanceOfNft(nftInfo.nft_chain_id));
       checkRewardStatus();
       checkStakingAndLockStatus();
       checkSnapshotStatus();
-    } else {
-      setNftBalance(0);
     }
 
     // Logging
@@ -528,26 +526,7 @@ const Hero = props => {
     console.log("[ENV] staking address to: " + environmentConfig.toStakingAddress);
 
     console.log("[State] connected wallet: " + connectedWallet);
-
-    setBalance(balance);
   }, [accounts, lib.eth, lib.utils]);
-
-  const checkIfBuyNft = () => {
-    const today = Moment();
-    const isFinishTokenSale = today.isAfter(Moment('10-07-2021 00:00:00', 'DD-MM-YYYY hh:mm:ss'));
-    let isDisableBuyNft = false;
-
-    if (!isConnectedWallet()) {
-      isDisableBuyNft = true;
-    } else if (isDebugMode) {
-      isDisableBuyNft = false;
-    } else if (isFinishTokenSale) {
-      isDisableBuyNft = true;
-    }
-
-    setDisableBuyNft(isDisableBuyNft);
-    console.log("[STATE] disableBuyNft: " + disableBuyNft);
-  };
 
   const [connectedWallet, setConnectedWallet] = React.useState(false);
   ////////////////////
@@ -570,7 +549,6 @@ const Hero = props => {
 
   React.useEffect(() => {
     getBalance();
-    checkIfBuyNft();
   }, [accounts, getBalance, networkId]);
 
   const handleSliderChange = (event, newValue) => {
@@ -585,14 +563,31 @@ const Hero = props => {
         container
         justify="space-between"
         spacing={4}
+      ><Grid
+          item
+          container
+          justify="flex-start"
+          alignItems="flex-start"
+          xs={12}
+          md={6}
       >
+        <SectionHeader
+            title={
+              <Typography variant="h5">
+                Now open sale
+              </Typography>
+            }
+            align="left"
+            disableGutter
+        />
+      </Grid>
         <Grid
             item
             container
             justify="flex-end"
             alignItems="flex-end"
             xs={12}
-            md={12}
+            md={6}
         >
           <Button variant="contained" color="primary" size="large" onClick={connectToWallet} disabled={connectedWallet}>
             Connect Wallet
@@ -628,21 +623,21 @@ const Hero = props => {
           <CardBase liftUp variant="outlined" align="left" withShadow
                     style={{ borderTop: `5px solid ${colors.blueGrey[500]}` }}>
             <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <SectionHeader
-                    title={
-                      <span>
-                        <CustomizedProgressBars />
-                          {/*<Typography variant="h6" color="primary">*/}
-                          {/*    <b> Genesis NFT </b>*/}
-                          {/*</Typography>*/}
-                        <Divider style={{marginTop: '10px'}} />
-                      </span>
-                    }
-                    align="left"
-                    disableGutter
-                />
-              </Grid>
+              {/*<Grid item xs={12}>*/}
+              {/*  <SectionHeader*/}
+              {/*      title={*/}
+              {/*        <span>*/}
+              {/*          <CustomizedProgressBars />*/}
+              {/*            /!*<Typography variant="h6" color="primary">*!/*/}
+              {/*            /!*    <b> Genesis NFT </b>*!/*/}
+              {/*            /!*</Typography>*!/*/}
+              {/*          <Divider style={{marginTop: '10px'}} />*/}
+              {/*        </span>*/}
+              {/*      }*/}
+              {/*      align="left"*/}
+              {/*      disableGutter*/}
+              {/*  />*/}
+              {/*</Grid>*/}
               <Grid item xs={9}>
                 <SectionHeader
                     title={
@@ -737,28 +732,33 @@ const Hero = props => {
               <Grid item xs={12}>
                 <span>
                   <Typography id="discrete-slider-small-steps" gutterBottom>
-                    Amount : {amountOfNft} NFT
+                    Total amount : {amountOfNft} NFT
                   </Typography>
                 </span>
-                <PrettoSlider
-                    valueLabelDisplay="auto"
-                    aria-label="Amount of NFT"
-                    min={1}
-                    max={100}
-                    onChange={handleSliderChange}
-                    value={amountOfNft}
-                />
+                {/*<PrettoSlider*/}
+                {/*    valueLabelDisplay="auto"*/}
+                {/*    aria-label="Amount of NFT"*/}
+                {/*    min={1}*/}
+                {/*    max={100}*/}
+                {/*    onChange={handleSliderChange}*/}
+                {/*    value={amountOfNft}*/}
+                {/*/>*/}
               </Grid>
-              <Grid item xs={12} align="center">
-                <Typography component="span" variant="inherit" color="textSecondary">
-                  {amountOfNft} NFT = {summarizedPrice} ETH
-                </Typography>
-              </Grid>
+              {/*<Grid item xs={12} align="center">*/}
+              {/*  <Typography component="span" variant="inherit" color="textSecondary">*/}
+              {/*    {amountOfNft} NFT = {summarizedPrice} ETH*/}
+              {/*  </Typography>*/}
+              {/*</Grid>*/}
               <Grid item xs={12} align="center">
                 <br />
                 <LinearProgress style={{marginBottom:"2px"}} hidden={!sendingTransaction}/>
-                <Button variant="contained" color="primary" size="large" onClick={requestBuyNft} disabled={disableBuyNft} fullWidth>
-                  Sale closed
+                <Button variant="contained" color="primary" size="large"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          window.open("https://rarible.com/collection/0x6cff6eb6c7cc2409b48e6192f98914fd05aab4ba?tab=owned", '_blank');
+                        }}
+                        fullWidth>
+                  Buy NFT
                 </Button>
               </Grid>
                 {
@@ -785,7 +785,7 @@ const Hero = props => {
             <SectionHeader
                 title={
                   <Typography variant="h5">
-                    YOUR NFTs
+                    Our NFTs
                   </Typography>
                 }
                 align="left"
@@ -796,111 +796,124 @@ const Hero = props => {
           <Grid item xs={12}>
             <CardBase liftUp variant="outlined" align="left" withShadow
                       style={{ borderTop: `5px solid ${colors.blueGrey[500]}` }}>
-              <Grid container spacing={5} hidden={nftBalance!==0}>
-                <Grid
-                    item
-                    container
-                    justify="flex-start"
-                    alignItems="flex-start"
-                    xs={12}
-                    data-aos={'fade-up'}
-                >
-                  <SectionHeader
-                      title={
-                        <span>
-                          <Typography variant="h6" color={"textSecondary"} >
-                            No history found
-                          </Typography>
-                        </span>
-                      }
-                      align="left"
-                      disableGutter
-                  />
-                </Grid>
-              </Grid>
-              <Grid container spacing={5} hidden={nftBalance===0}>
-                <Grid
-                    item
-                    container
-                    justify="flex-start"
-                    alignItems="flex-start"
-                    xs={12} md={4}
-                    data-aos={'fade-up'}
-                >
-                  <Image
-                      src={GenesisNFT}
-                      alt="Genesis NFT"
-                      className={classes.image}
-                      data-aos="flip-left"
-                      data-aos-easing="ease-out-cubic"
-                      data-aos-duration="2000"
-                  />
-                </Grid>
-                <Grid
-                    item
-                    container
-                    justify="flex-start"
-                    alignItems="flex-start"
-                    xs={12} md={8}
-                    data-aos={'fade-up'}
-                >
-                  <Grid item xs={12}>
-                    <SectionHeader
-                        title={
-                          <span>
+
+              {
+                nftInfos.map((nftInfo) =>
+                  <Grid container spacing={5}>
+                    <Grid
+                        item
+                        container
+                        justify="flex-start"
+                        alignItems="flex-start"
+                        xs={12} md={4}
+                        data-aos={'fade-up'}
+                    >
+                      <Image
+                          src={nftInfo.image_url}
+                          alt="Genesis NFT"
+                          className={classes.image}
+                          data-aos="flip-left"
+                          data-aos-easing="ease-out-cubic"
+                          data-aos-duration="2000"
+                      />
+                    </Grid>
+                    <Grid
+                        item
+                        container
+                        justify="flex-start"
+                        alignItems="flex-start"
+                        xs={12} md={8}
+                        data-aos={'fade-up'}
+                    >
+                      <Grid item xs={12}>
+                        <SectionHeader
+                            title={
+                              <span>
                             <Typography variant="subtitle1" color={"textSecondary"} >
                               Nostalgia Finance
                             </Typography>
                           </span>
-                        }
-                        align="left"
-                        disableGutter
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <SectionHeader
-                        title={
-                          <Typography variant="h5" color="textPrimary" >
-                            <strong>Beginning of Nostalgia</strong>
-                          </Typography>
-                        }
-                        align="left"
-                        disableGutter
-                    />
-                    <Divider style={{marginTop: '20px'}} />
-                  </Grid>
-                  <Grid item xs={12} className={classes.gridItem}>
-                    <Grid container>
-                      <Grid item xs={12} md={3}>
-                        <Typography variant="subtitle1" color={"primary"}>
-                          PURCHASED
-                        </Typography>
+                            }
+                            align="left"
+                            disableGutter
+                        />
                       </Grid>
-                      <Grid item xs={12} md={9}>
-                        <Typography variant="subtitle1">
-                          {nftBalance} NFT
-                        </Typography>
+                      <Grid item xs={12}>
+                        <SectionHeader
+                            title={
+                              <Typography variant="h5" color="textPrimary" >
+                                <strong>{nftInfo.subject}</strong>
+                              </Typography>
+                            }
+                            align="left"
+                            disableGutter
+                        />
+                        <Divider style={{marginTop: '20px'}} />
+                      </Grid>
+                      <Grid item xs={12} className={classes.gridItem}>
+                        <Grid container>
+                          <Grid item xs={12} md={3}>
+                            <Typography variant="subtitle1" color={"primary"}>
+                              PURCHASED
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={12} md={9}>
+                            <Typography variant="subtitle1">
+                              {state.get(nftInfo.nft_chain_id)} NFT
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                      <Grid item xs={12} className={classes.gridItem}>
+                        <Grid container>
+                          <Grid item xs={12} md={3}>
+                            <Typography variant="subtitle1" color={"primary"}>
+                              NFT URL
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={12} md={9} >
+                            <a href='https://rarible.com/token/0x6cff6eb6c7cc2409b48e6192f98914fd05aab4ba:2?tab=owners' target='_blank'>
+                              https://rarible.com/token/0x6cff6eb6c7cc2409b48e6192f98914fd05aab4ba:2?tab=owners
+                            </a>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                      <Grid item xs={12} className={classes.gridItem}>
+                        <Grid container>
+                          <Grid item xs={12} md={3}>
+                            <Typography variant="subtitle1" color={"primary"}>
+                              STAKING
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={12} md={9} >
+                            <Button variant="contained" color="primary" size="small" onClick={() => requestStaking(nftInfo.nft_chain_id)} disabled={isDisabledStaking}>
+                              staking
+                            </Button>
+                            {' '}
+                            <Button variant="contained" color="primary" size="small" onClick={() => requestUnstaking(nftInfo.nft_chain_id)} disabled={isDisabledUnstaking}>
+                              unstaking
+                            </Button>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                      <Grid item xs={12} className={classes.gridItem}>
+                        <Grid container>
+                          <Grid item xs={12} md={3}>
+                            <Typography variant="subtitle1" color={"primary"}>
+                              STAKED NFT
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={12} md={9}>
+                            <Typography variant="subtitle1">
+                              {balanceOfStakedNft} NFT
+                            </Typography>
+                          </Grid>
+                        </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item xs={12} className={classes.gridItem}>
-                    <Grid container>
-                      <Grid item xs={12} md={3}>
-                        <Typography variant="subtitle1" color={"primary"}>
-                          TRANSACTIONS
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12} md={9}>
-                        <Typography variant="subtitle1">
-                          {nftTxList.map(function(d, idx){
-                            return (<li key={idx}><a href={environmentConfig.etherscan_uri + String(d)} target={"_blank"}>{truncateString(String(d))}</a></li>)
-                          })}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Grid>
+                )
+              }
             </CardBase>
           </Grid>
         </Grid>
@@ -921,7 +934,7 @@ const Hero = props => {
           <SectionHeader
               title={
                 <Typography variant="h5">
-                  YOUR STAKING
+                  Staking
                 </Typography>
               }
               align="left"
@@ -956,32 +969,81 @@ const Hero = props => {
             </Grid>
 
             <Grid container spacing={5} hidden={!connectedWallet}>
-              <Grid item xs={12}>
-                <h5> Snapshot time: { snapshotStatus } </h5>
-                <br/>
-                <h5> Total value locked: { balanceOfToalStakedNft } </h5>
-                <br/>
-                <h5> Your balance of NFT: { balanceOfNft } </h5>
-                <br/>
-                <h5> Staked NFT: { balanceOfStakedNft } </h5>
-                <br/>
-                <h5> Reward of $PAINT: { balanceOfRewardPaint } </h5>
+              <Grid item xs={8} align="left">
+                <h5> Next Snapshot Time : { snapshotStatus } </h5>
               </Grid>
-              <Grid item xs={4}>
-                <Button variant="contained" color="primary" size="large" onClick={requestStaking} fullWidth disabled={isDisabledStaking}>
-                  staking
-                </Button>
-              </Grid>
-              <Grid item xs={4}>
-                <Button variant="contained" color="primary" size="large" onClick={requestUnstaking} fullWidth disabled={isDisabledUnstaking}>
-                  unstaking
-                </Button>
-              </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={4} align="right">
                 <Button variant="contained" color="primary" size="large" onClick={claim} fullWidth disabled={isDisabledClaim}>
                   Claim
                 </Button>
               </Grid>
+              <Grid item xs={12}>
+                <Divider />
+              </Grid>
+              <Grid item xs={12}>
+                <br/>
+                <h5> Total value locked: { balanceOfTotalStakedNft } </h5>
+                <br/>
+                <h5> Reward of $PAINT: { balanceOfRewardPaint } </h5>
+                <br/>
+                <h5> Reward of $Canvas: { 0 } </h5>
+              </Grid>
+            </Grid>
+          </CardBase>
+        </Grid>
+      </Grid>
+
+      <br/>
+
+      <Grid
+          item
+          container
+          justify="flex-start"
+          alignItems="flex-start"
+          xs={12}
+          md={12}
+          data-aos={'fade-up'}
+          hidden={!isDebugMode}
+      >
+        <Grid item xs={12} style={{marginBottom: '15px'}}>
+          <SectionHeader
+              title={
+                <Typography variant="h5">
+                  [Debug] Staking
+                </Typography>
+              }
+              align="left"
+              disableGutter
+          />
+        </Grid>
+
+        <Grid item xs={12}>
+          <CardBase liftUp variant="outlined" align="left" withShadow
+                    style={{ borderTop: `5px solid ${colors.blueGrey[500]}` }}>
+            <Grid container spacing={5} hidden={connectedWallet}>
+              <Grid
+                  item
+                  container
+                  justify="flex-start"
+                  alignItems="flex-start"
+                  xs={12}
+                  data-aos={'fade-up'}
+              >
+                <SectionHeader
+                    title={
+                      <span>
+                          <Typography variant="h6" color={"textSecondary"} >
+                            Please connect wallet
+                          </Typography>
+                        </span>
+                    }
+                    align="left"
+                    disableGutter
+                />
+              </Grid>
+            </Grid>
+
+            <Grid container spacing={5} hidden={!connectedWallet}>
               <Grid item xs={4}>
                 <h5> Staking:  </h5>
               </Grid>
@@ -1044,11 +1106,15 @@ const Hero = props => {
                   Check Reward status
                 </Button>
               </Grid>
+              <Grid item xs={12}>
+                <Button variant="contained" color="primary" size="large" onClick={getNftInfo} fullWidth disabled={false}>
+                  Get NFT info
+                </Button>
+              </Grid>
             </Grid>
           </CardBase>
         </Grid>
       </Grid>
-
       <Dialog
           open={open}
           TransitionComponent={Transition}
