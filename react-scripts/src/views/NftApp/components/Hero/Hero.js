@@ -508,6 +508,8 @@ const Hero = props => {
       checkRewardStatus();
       checkStakingAndLockStatus();
       checkSnapshotStatus();
+    } else {
+      nftInfos.map(nftInfo => upsertState(nftInfo.nft_chain_id, 0));
     }
 
     // Logging
