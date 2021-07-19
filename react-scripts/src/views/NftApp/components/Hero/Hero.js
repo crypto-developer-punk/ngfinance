@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {makeStyles, withStyles} from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import {Button, ButtonGroup, colors, Grid, Typography, Divider} from '@material-ui/core';
+import {Button, ButtonGroup, colors, Grid, Typography, Divider, Paper} from '@material-ui/core';
 import {Image} from 'components/atoms';
 import {SectionHeader} from 'components/molecules';
 import GenesisNFT from '../../../../assets/images/main/genesis_nft.jpg';
@@ -100,7 +100,13 @@ const useStyles = makeStyles(theme => ({
   },
   gridItemMain: {
     marginTop: theme.spacing(1)
-  }
+  },
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: 'center',
+    color: '#E3E3E3',
+    background: '#2E3348'
+  },
 }));
 
 const PrettoSlider = withStyles({
@@ -1032,25 +1038,37 @@ const Hero = props => {
             </Grid>
 
             <Grid container spacing={5} hidden={!connectedWallet}>
-              <Grid item xs={8} align="left">
-                <h5> Next Snapshot Time : { snapshotStatus } </h5>
+              <Grid item xs={9}>
+                <Typography component="span" variant="h6">
+                  Overview
+                </Typography>
               </Grid>
-              <Grid item xs={4} align="right">
-                <Button variant="contained" color="primary" size="large" onClick={claim} fullWidth disabled={isLockedClaim || isDisabledClaim}>
+              <Grid item xs={3} align="right">
+                <Button variant="outlined" color="primary" size="large" onClick={claim} disabled={isLockedClaim || isDisabledClaim}>
                   Claim
                 </Button>
               </Grid>
+              <Grid item xs={6} align="left">
+                <Paper className={classes.paper}>
+                  <Typography component="span" variant="subtitle1">
+                    Next snapshot time : { snapshotStatus }
+                  </Typography>
+                </Paper>
+              </Grid>
+              <Grid item xs={6}>
+                <Paper className={classes.paper}>
+                  <Typography component="span" variant="subtitle1">
+                    Total value locked NFT : { balanceOfTotalStakedNft }
+                  </Typography>
+                </Paper>
+              </Grid>
               <Grid item xs={12}>
                 <Divider />
               </Grid>
               <Grid item xs={12}>
-                <h5> Total value locked: { balanceOfTotalStakedNft } </h5>
-              </Grid>
-              <Grid item xs={12}>
-                <Divider />
-              </Grid>
-              <Grid item xs={12}>
-                <h5> Balance </h5>
+                <Typography component="span" variant="h6">
+                  Balance
+                </Typography>
               </Grid>
               <Grid
                   container
@@ -1066,7 +1084,9 @@ const Hero = props => {
                 <Grid item
                       alignItems=""
                       justify="center">
-                  <h5> Paint: { balanceOfRewardPaint } </h5>
+                  <Typography component="span" variant="subtitle1">
+                    Paint Token : { balanceOfRewardPaint }
+                  </Typography>
                 </Grid>
               </Grid>
               <Grid
@@ -1081,7 +1101,9 @@ const Hero = props => {
                          style={{ width: '120px', height:'120px' }}/>
                 </Grid>
                 <Grid item>
-                  <h5> Canvas: { 0 } </h5>
+                  <Typography component="span" variant="subtitle1">
+                    Canvas Token : { 0 }
+                  </Typography>
                 </Grid>
               </Grid>
             </Grid>
