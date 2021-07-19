@@ -9,6 +9,8 @@ import GenesisNFT from '../../../../assets/images/main/genesis_nft.jpg';
 import {CardBase} from "../../../../components/organisms";
 import Eth from "../../../../assets/images/main/logo_eth.svg";
 import Rarible from "../../../../assets/images/main/logo_rarible.png";
+import PaintToken from "../../../../assets/images/main/paint_token.jpg";
+import CanvasToken from "../../../../assets/images/main/canvas_token.jpg";
 import Slider from '@material-ui/core/Slider';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -333,15 +335,17 @@ const Hero = props => {
   };
 
   const claim = async () => {
-    setIsLockedClaim(true);
-
     try {
+      setIsLockedClaim(true);
+      setOpenClaimDialog(true);
+
       const response = await requestDatabase.claim(DB_HOST, accounts[0], environmentConfig.nftChainId, TOKEN_TYPE_PAINT);
       console.log(response);
 
     } finally {
       await checkRewardStatus();
       await checkLockStatus(environmentConfig.nftChainId);
+      setOpenClaimDialog(false);
     }
   };
 
@@ -412,6 +416,8 @@ const Hero = props => {
   };
 
   const requestTransforNft = async(nft_chain_id) => {
+    setOpenStakingDialog(true);
+
     const amountOfNft = state.get(KEY_NFT_AMOUNT + nft_chain_id);
 
     try {
@@ -437,12 +443,14 @@ const Hero = props => {
       console.error(e);
     } finally {
       upsertState(KEY_IS_LOCKED_STAKING + nft_chain_id, false);
+      setOpenStakingDialog(false);
     }
   };
 
   const requestTransforNftFromStaked = async(nft_chain_id) => {
     try {
       upsertState(KEY_IS_LOCKED_UNSTAKING + nft_chain_id, true);
+      setOpenUnstakingDialog(true);
 
       await requestDatabase.unstaking(DB_HOST, accounts[0], nft_chain_id, balanceOfStakedNft);
       await sleep(2000);
@@ -452,6 +460,7 @@ const Hero = props => {
       console.error(e);
     } finally {
       upsertState(KEY_IS_LOCKED_UNSTAKING + nft_chain_id, false);
+      setOpenUnstakingDialog(false);
     }
   };
 
@@ -477,7 +486,6 @@ const Hero = props => {
     const validNetwork = (networkId === 1) || (networkId === 4);
 
     if (!validNetwork) {
-      handleClickOpen();
       return false;
     }
     return true;
@@ -594,15 +602,9 @@ const Hero = props => {
   const PRICE_ETH_PER_NFT = 0.13;
   const [amountOfNft, setAmountNft] = React.useState(1);
   const [summarizedPrice, setSummarizedPrice] = React.useState(PRICE_ETH_PER_NFT);
-  const [open, setOpen] = React.useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const [openStakingDialog, setOpenStakingDialog] = React.useState(false);
+  const [openUnstakingDialog, setOpenUnstakingDialog] = React.useState(false);
+  const [openClaimDialog, setOpenClaimDialog] = React.useState(false);
 
   React.useEffect(() => {
     getBalance();
@@ -993,7 +995,7 @@ const Hero = props => {
           <SectionHeader
               title={
                 <Typography variant="h5">
-                  Staking
+                  Stake NFT
                 </Typography>
               }
               align="left"
@@ -1040,12 +1042,45 @@ const Hero = props => {
                 <Divider />
               </Grid>
               <Grid item xs={12}>
-                <br/>
                 <h5> Total value locked: { balanceOfTotalStakedNft } </h5>
-                <br/>
-                <h5> Reward of $PAINT: { balanceOfRewardPaint } </h5>
-                <br/>
-                <h5> Reward of $Canvas: { 0 } </h5>
+              </Grid>
+              <Grid item xs={12}>
+                <Divider />
+              </Grid>
+              <Grid item xs={12}>
+                <h5> Balance </h5>
+              </Grid>
+              <Grid
+                  container
+                  xs={6}
+                  alignContent="flex-start"
+                  justify="flex-start"
+                  alignItems="center"
+              >
+                <Grid item>
+                  <Image src={PaintToken}
+                         style={{ width: '120px', height:'120px' }}/>
+                </Grid>
+                <Grid item
+                      alignItems=""
+                      justify="center">
+                  <h5> Paint: { balanceOfRewardPaint } </h5>
+                </Grid>
+              </Grid>
+              <Grid
+                  container
+                  xs={6}
+                  alignContent="flex-start"
+                  justify="flex-start"
+                  alignItems="center"
+              >
+                <Grid item>
+                  <Image src={CanvasToken}
+                         style={{ width: '120px', height:'120px' }}/>
+                </Grid>
+                <Grid item>
+                  <h5> Canvas: { 0 } </h5>
+                </Grid>
               </Grid>
             </Grid>
           </CardBase>
@@ -1170,28 +1205,81 @@ const Hero = props => {
                   Get NFT info
                 </Button>
               </Grid>
+              <Grid item xs={12}>
+                <Button variant="contained" color="primary" size="large" onClick={() => setOpenStakingDialog(true)} fullWidth disabled={false}>
+                  Start dialog
+                </Button>
+              </Grid>
             </Grid>
           </CardBase>
         </Grid>
       </Grid>
+
       <Dialog
-          open={open}
+          open={openStakingDialog}
           TransitionComponent={Transition}
           keepMounted
-          onClose={handleClose}
+          // onClose={handleClose}
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle id="alert-dialog-slide-title">{"Wrong network"}</DialogTitle>
+        <DialogTitle id="alert-dialog-slide-title">{"Staking"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            We only provide purchase on ethereum mainnet.
-            <br />
-            Beware for using Binance Smart Chain(BSC).
+            Now your NFT is staking.
+            <br/>
+            <br/>
+            <LinearProgress />
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={() => setOpenStakingDialog(false)} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+          open={openUnstakingDialog}
+          TransitionComponent={Transition}
+          keepMounted
+          // onClose={handleClose}
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle id="alert-dialog-slide-title">{"Unstaking"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            Now your NFT is unstaking.
+            <br/>
+            <br/>
+            <LinearProgress />
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenUnstakingDialog(false)} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+          open={openClaimDialog}
+          TransitionComponent={Transition}
+          keepMounted
+          // onClose={handleClose}
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle id="alert-dialog-slide-title">{"Claim"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            Reward token is in-progress.
+            <br/>
+            <br/>
+            <LinearProgress />
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenClaimDialog(false)} color="primary">
             Close
           </Button>
         </DialogActions>
