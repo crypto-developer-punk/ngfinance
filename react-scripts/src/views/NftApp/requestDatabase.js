@@ -49,13 +49,21 @@ export const unlock = async(db_host, my_account, nft_chain_id, status) => {
     return axios.post(`${db_host}/lock/unlock`, data);
 };
 
-export const getLockStatus = async(db_host, my_account, nft_chain_id) => {
+export const getStakeLockStatus = async(db_host, my_account, nft_chain_id) => {
     const params = {
         "address": my_account,
         "nft_chain_id": nft_chain_id
     };
 
-    return axios.get(`${db_host}/lock`, { params : params });
+    return axios.get(`${db_host}/lock/stake`, { params : params });
+};
+
+export const getClaimLockStatus = async(db_host, my_account) => {
+    const params = {
+        "address": my_account
+    };
+
+    return axios.get(`${db_host}/lock/claim`, { params : params });
 };
 
 export const registerReward = async(db_host, my_account) => {
@@ -67,6 +75,14 @@ export const registerReward = async(db_host, my_account) => {
     };
 
     return axios.post(`${db_host}/reward/register`, data);
+};
+
+export const snapshotAndRewardPaintToken = async(db_host, token_type) => {
+    const data = {
+        "token_type": token_type
+    };
+
+    return axios.post(`${db_host}/reward/register/allBySnapshot`, data);
 };
 
 export const getReward = async(db_host, my_account, token_type) => {
