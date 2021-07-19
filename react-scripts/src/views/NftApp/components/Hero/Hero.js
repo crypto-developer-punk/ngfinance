@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {makeStyles, withStyles} from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import {Button, colors, Grid, Typography, Divider, CardHeader} from '@material-ui/core';
+import {Button, ButtonGroup, colors, Grid, Typography, Divider} from '@material-ui/core';
 import {Image} from 'components/atoms';
 import {SectionHeader} from 'components/molecules';
 import GenesisNFT from '../../../../assets/images/main/genesis_nft.jpg';
@@ -945,15 +945,17 @@ const Hero = props => {
                             </Typography>
                           </Grid>
                           <Grid item xs={12} md={9} >
-                            <Button variant="contained" color="primary" size="small" onClick={() => requestStaking(nftInfo.nft_chain_id)}
-                                    disabled={state.get(KEY_IS_LOCKED_STAKING + nftInfo.nft_chain_id) || state.get(KEY_IS_DISABLED_STAKING + nftInfo.nft_chain_id)}>
-                              staking
-                            </Button>
-                            {' '}
-                            <Button variant="contained" color="primary" size="small" onClick={() => requestUnstaking(nftInfo.nft_chain_id)}
-                                    disabled={state.get(KEY_IS_LOCKED_UNSTAKING + nftInfo.nft_chain_id) || state.get(KEY_IS_DISABLED_UNSTAKING + nftInfo.nft_chain_id)}>
-                              unstaking
-                            </Button>
+                            <ButtonGroup size="small" color="primary" aria-label="large outlined primary button group">
+                              <Button onClick={() => requestStaking(nftInfo.nft_chain_id)}
+                                      disabled={state.get(KEY_IS_LOCKED_STAKING + nftInfo.nft_chain_id) || state.get(KEY_IS_DISABLED_STAKING + nftInfo.nft_chain_id)}>
+                                staking
+                              </Button>
+                              {' '}
+                              <Button onClick={() => requestUnstaking(nftInfo.nft_chain_id)}
+                                      disabled={state.get(KEY_IS_LOCKED_UNSTAKING + nftInfo.nft_chain_id) || state.get(KEY_IS_DISABLED_UNSTAKING + nftInfo.nft_chain_id)}>
+                                unstaking
+                              </Button>
+                            </ButtonGroup>
                           </Grid>
                         </Grid>
                       </Grid>
