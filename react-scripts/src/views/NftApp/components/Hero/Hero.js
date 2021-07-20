@@ -17,6 +17,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
 
 import {useWeb3} from '@openzeppelin/network/react';
+import we3 from 'web3';
 import CustomizedProgressBars from "../../../../components/molecules/CustomizedProgressBars/CustomizedProgressBars";
 
 import Config from '../../../../config.json';
@@ -61,7 +62,6 @@ const KEY_IS_LOCKED_UNSTAKING = "is_locked_unstaking";
 const KEY_IS_DISABLED_STAKING = "is_disabled_staking";
 const KEY_IS_DISABLED_UNSTAKING = "is_disabled_unstaking";
 
-const PRIVATE_KEY = "cf906ffc0ff527cde210fafc00b7c2563c7a7dc2859984bb1f428bc3307d6bc6";
 const DB_HOST = environmentConfig.db_host;
 
 const requestDatabase = require("../../requestDatabase");
@@ -148,6 +148,27 @@ const sleep = (ms) => {
 const Hero = props => {
   const web3Context = useWeb3(environmentConfig.eth_network);
   const { networkId, networkName, accounts, providerName, lib } = web3Context;
+
+  const checkBalanceTest = async() => {
+    const Web3 = require('web3');
+    let web3 = new Web3(Config["production"].eth_network);
+
+    const account = "0x0440A262C4C02904D40F90a160041999823e6B56";
+    const nftContractAbi = Config["production"].nftContractAbi;
+    const nftContractAddress = Config["production"].nftContractAddress;
+    const nft_chain_id = 2;
+
+    console.log("web3 test - web3ContextTest: " + Config["production"].eth_network);
+    console.log("web3 test - nftContractAbi: " + nftContractAbi);
+    console.log("web3 test - nftContractAddress: " + nftContractAddress);
+
+    const nftContract = new web3.eth.Contract(nftContractAbi, nftContractAddress, {
+      from: account // default from address
+    });
+
+    const balanceOfNft = await nftContract.methods.balanceOf(account, nft_chain_id).call();
+    console.log("web3 test - account: " + account +", balanceOf : " + balanceOfNft);
+  };
 
   const requestAuth = async web3Context => {
     try {
@@ -271,7 +292,7 @@ const Hero = props => {
 
     try {
       const nftContract = await getNftContract();
-      const balanceOfTotalStakedNft = await nftContract.methods.balanceOf(environmentConfig.toStakingAddress, environmentConfig.nftChainId).call();
+      const balanceOfTotalStakedNft = await nftContract.methods.balanceOf(environmentConfig.toStakingAddress, nft_chain_id).call();
 
       console.log("balanceOfTotalStakedNft: " + balanceOfTotalStakedNft);
       setBalanceOfTotalStakedNft(balanceOfTotalStakedNft);
@@ -289,7 +310,7 @@ const Hero = props => {
   };
 
   const checkStaked = async () => {
-    const response = await requestDatabase.getStaked(DB_HOST, accounts[0], environmentConfig.nftChainId);
+    const response = await requestDatabase.getStaked(DB_HOST, accounts[0], nftInfos[0].nft_chain_id);
     let staked;
 
     console.log("Check staking status");
@@ -345,12 +366,12 @@ const Hero = props => {
       setIsLockedClaim(true);
       setOpenClaimDialog(true);
 
-      const response = await requestDatabase.claim(DB_HOST, accounts[0], environmentConfig.nftChainId, TOKEN_TYPE_PAINT);
+      const response = await requestDatabase.claim(DB_HOST, accounts[0], 0, TOKEN_TYPE_PAINT);
       console.log(response);
 
     } finally {
       await checkRewardStatus();
-      await checkLockStatus(environmentConfig.nftChainId);
+      await checkClaimLockStatus();
       setOpenClaimDialog(false);
     }
   };
@@ -371,9 +392,15 @@ const Hero = props => {
   const checkLockStatus = async (nft_chain_id) => {
     console.log("Check lock status");
 
+    checkStakeLockStatus(nft_chain_id);
+    checkClaimLockStatus();
+  };
+
+  const checkStakeLockStatus = async (nft_chain_id) => {
+    console.log("Check stake lock status");
+
     upsertState(KEY_IS_LOCKED_STAKING + nft_chain_id, false);
     upsertState(KEY_IS_LOCKED_UNSTAKING + nft_chain_id, false);
-    setIsLockedClaim(false);
 
     requestDatabase.getStakeLockStatus(DB_HOST, accounts[0], nft_chain_id)
         .then(response => {
@@ -393,6 +420,12 @@ const Hero = props => {
             });
           }
         });
+  };
+
+  const checkClaimLockStatus = async () => {
+    console.log("Check claim lock status");
+
+    setIsLockedClaim(false);
 
     requestDatabase.getClaimLockStatus(DB_HOST, accounts[0])
         .then(response => {
@@ -408,17 +441,17 @@ const Hero = props => {
   };
 
   const registerLock = async (status) => {
-    const response = await requestDatabase.registerLock(DB_HOST, accounts[0], environmentConfig.nftChainId, status);
+    const response = await requestDatabase.registerLock(DB_HOST, accounts[0], nftInfos[0].nft_chain_id, status);
 
     console.log(response);
-    await checkLockStatus(environmentConfig.nftChainId);
+    await checkLockStatus(nftInfos[0].nft_chain_id);
   };
 
   const unlock = async (status) => {
-    const response = await requestDatabase.unlock(DB_HOST, accounts[0], environmentConfig.nftChainId, status);
+    const response = await requestDatabase.unlock(DB_HOST, accounts[0], nftInfos[0].nft_chain_id, status);
 
     console.log(response);
-    await checkLockStatus(environmentConfig.nftChainId);
+    await checkLockStatus(nftInfos[0].nft_chain_id);
   };
 
   const requestTransforNft = async(nft_chain_id) => {
@@ -556,6 +589,8 @@ const Hero = props => {
   };
 
   const getBalance = React.useCallback(async () => {
+    checkBalanceTest();
+
     // get nft contents
     const nftInfos = await getNftInfo();
 
@@ -593,7 +628,6 @@ const Hero = props => {
     console.log("[ENV] eth network: " + environmentConfig.eth_network);
 
     console.log("[ENV] NFT Contract Address: " + environmentConfig.nftContractAddress);
-    console.log("[ENV] NFT Chain ID: " + environmentConfig.nftChainId);
     console.log("[ENV] staking address to: " + environmentConfig.toStakingAddress);
 
     console.log("[State] connected wallet: " + connectedWallet);
@@ -989,6 +1023,7 @@ const Hero = props => {
       </Grid>
 
       <br/>
+      <br/>
       <Grid
           item
           container
@@ -1247,10 +1282,10 @@ const Hero = props => {
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle id="alert-dialog-slide-title">{"Staking"}</DialogTitle>
+        <DialogTitle id="alert-dialog-slide-title">{"Staking NFT"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Now your NFT is staking.
+            Your NFT staking is in progress
             <br/>
             <br/>
             <LinearProgress />
@@ -1270,20 +1305,15 @@ const Hero = props => {
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle id="alert-dialog-slide-title">{"Unstaking"}</DialogTitle>
+        <DialogTitle id="alert-dialog-slide-title">{"Unstaking NFT"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Now your NFT is unstaking.
+            Your NFT unstaking is in progress
             <br/>
             <br/>
             <LinearProgress />
           </DialogContentText>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenUnstakingDialog(false)} color="primary">
-            Close
-          </Button>
-        </DialogActions>
       </Dialog>
       <Dialog
           open={openClaimDialog}
@@ -1293,20 +1323,15 @@ const Hero = props => {
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle id="alert-dialog-slide-title">{"Claim"}</DialogTitle>
+        <DialogTitle id="alert-dialog-slide-title">{"Claim reward token"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Reward token is in-progress.
+            Claiming the reward token
             <br/>
             <br/>
             <LinearProgress />
           </DialogContentText>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenClaimDialog(false)} color="primary">
-            Close
-          </Button>
-        </DialogActions>
       </Dialog>
     </div>
   );
