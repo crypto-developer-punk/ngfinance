@@ -554,7 +554,7 @@
     "nftContractAddress": "0x1457ee0410b2A5c6FEb21EA1E2168B5493e2Bf6A",
     "nftChainId": 1,
     "toStakingAddress": "0xD97F7985e8030AE56551eCA127887CC9f1900039",
-    "db_host": "http://localhost:3001"
+    "backend_url": "http://localhost:3001"
   },
   "staging": {
     "address_to": "0xD97F7985e8030AE56551eCA127887CC9f1900039",
@@ -1110,7 +1110,7 @@
     "nftContractAddress": "0x1457ee0410b2A5c6FEb21EA1E2168B5493e2Bf6A",
     "nftChainId": 1,
     "toStakingAddress": "0xD97F7985e8030AE56551eCA127887CC9f1900039",
-    "db_host": "http://localhost:3001"
+    "backend_url": "http://localhost:3001"
   },
   "production": {
     "address_to": "0x9E137d745B97F30f8Eeb334FcC2D18190b780DA6",
@@ -1121,6 +1121,6 @@
     "nftContractAddress": "0x6cff6eb6c7cc2409b48e6192f98914fd05aab4ba",
     "nftChainId": 2,
     "toStakingAddress": "0xD97F7985e8030AE56551eCA127887CC9f1900039",
-    "db_host": "http://localhost:3002"
+    "backend_url": "http://localhost:3002"
   }
 }

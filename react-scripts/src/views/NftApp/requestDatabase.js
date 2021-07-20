@@ -29,6 +29,10 @@ export const getStaked = async(db_host, my_account, nft_chain_id) => {
     return axios.get(`${db_host}/staking`, { params : params });
 };
 
+export const getTotalValueLockedNftAmount = async(db_host) => {
+    return axios.get(`${db_host}/staking/getTotalValueLockedNftAmount`);
+};
+
 export const registerLock = async(db_host, my_account, nft_chain_id, status) => {
     const data = {
         "address": my_account,
