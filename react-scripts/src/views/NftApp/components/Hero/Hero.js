@@ -219,7 +219,8 @@ const Hero = props => {
       const isStaked = await checkStaked(nft_chain_id);
       console.log("checkStakingAndLockStatus > isStaked: " + isStaked);
 
-      console.log("state.get(KEY_NFT_AMOUNT + nft_chain_id): " + state.get(KEY_NFT_AMOUNT + nft_chain_id));
+      console.log("checkStakingAndLockStatus > state.get(KEY_NFT_AMOUNT + nft_chain_id): " + state.get(KEY_NFT_AMOUNT + nft_chain_id));
+
       if (isStaked) {
         upsertState(KEY_IS_DISABLED_STAKING + nft_chain_id, true);
         upsertState(KEY_IS_DISABLED_UNSTAKING + nft_chain_id, false);
@@ -238,15 +239,17 @@ const Hero = props => {
     const response = await requestDatabase.getStaked(BACKEND_URL, accounts[0], nft_chain_id);
     let staked;
 
-    console.log("Check staking status");
-
     if (response.status === 200 && response.data.length > 0) {
-      console.log(response.data);
-
       const result = response.data[0];
-      setBalanceOfStakedNft(result.nft_amount);
+      const nft_amount = result.nft_amount;
+
+      console.log("checkStaked > staked nft_amount: " + nft_amount);
+
+      upsertState(KEY_STAKED_NFT_AMOUNT + nft_chain_id, nft_amount);
       staked = true;
     } else {
+      console.log("checkStaked > staked nft_amount: 0");
+
       upsertState(KEY_STAKED_NFT_AMOUNT + nft_chain_id, 0);
       staked = false;
     }
@@ -433,14 +436,15 @@ const Hero = props => {
       console.log(resultOfTransferred);
       if (resultOfTransferred.status) {
         await requestDatabase.registerStaking(BACKEND_URL, accounts[0], nft_chain_id, amountOfNft);
-        await checkBalanceOfNft(nft_chain_id);
-        await checkStakingAndLockStatus(amountOfNft, nft_chain_id);
       }
     } catch (e) {
       console.error(e);
     } finally {
       upsertState(KEY_IS_LOCKED_STAKING + nft_chain_id, false);
       setOpenStakingDialog(false);
+
+      const balanceOfNft = await checkBalanceOfNft(nft_chain_id);
+      await checkStakingAndLockStatus(balanceOfNft, nft_chain_id);
     }
   };
 
@@ -449,15 +453,21 @@ const Hero = props => {
       upsertState(KEY_IS_LOCKED_UNSTAKING + nft_chain_id, true);
       setOpenUnstakingDialog(true);
 
-      await requestDatabase.unstaking(BACKEND_URL, accounts[0], nft_chain_id, balanceOfStakedNft);
+      const amountOfNft = state.get(KEY_STAKED_NFT_AMOUNT + nft_chain_id);
+
+      await requestDatabase.unstaking(BACKEND_URL, accounts[0], nft_chain_id, amountOfNft);
+
       await sleep(2000);
-      await checkBalanceOfNft(nft_chain_id);
-      await checkStakingAndLockStatus(0, nft_chain_id);
+      window.location.reload();
     } catch (e) {
       console.error(e);
     } finally {
       upsertState(KEY_IS_LOCKED_UNSTAKING + nft_chain_id, false);
       setOpenUnstakingDialog(false);
+
+      await sleep(2000);
+      await checkBalanceOfNft(nft_chain_id);
+      await checkStakingAndLockStatus(0, nft_chain_id);
     }
   };
 
@@ -929,7 +939,7 @@ const Hero = props => {
                             </Grid>
                             <Grid item xs={12} md={9}>
                               <Typography variant="subtitle1">
-                                {balanceOfStakedNft} NFT
+                                {state.get(KEY_STAKED_NFT_AMOUNT + nftInfo.nft_chain_id)} NFT
                               </Typography>
                             </Grid>
                           </Grid>
