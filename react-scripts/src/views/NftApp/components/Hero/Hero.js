@@ -221,9 +221,11 @@ const Hero = props => {
 
       console.log("state.get(KEY_NFT_AMOUNT + nft_chain_id): " + state.get(KEY_NFT_AMOUNT + nft_chain_id));
       if (isStaked) {
-        upsertState(KEY_IS_DISABLED_UNSTAKING + nft_chain_id, true);
+        upsertState(KEY_IS_DISABLED_STAKING + nft_chain_id, true);
+        upsertState(KEY_IS_DISABLED_UNSTAKING + nft_chain_id, false);
       } else if (!isStaked && balanceOfNft > 0) {
         upsertState(KEY_IS_DISABLED_STAKING + nft_chain_id, false);
+        upsertState(KEY_IS_DISABLED_UNSTAKING + nft_chain_id, true);
       }
 
       await checkLockStatus(nft_chain_id);
@@ -277,8 +279,11 @@ const Hero = props => {
       }
 
       setBalanceOfRewardPaint(tokenAmount);
+
+      return tokenAmount;
     } else {
       setBalanceOfRewardPaint(0);
+      return 0;
     }
   };
 
@@ -287,13 +292,45 @@ const Hero = props => {
       setIsLockedClaim(true);
       setOpenClaimDialog(true);
 
-      const response = await requestDatabase.claim(BACKEND_URL, accounts[0], 0, TOKEN_TYPE_PAINT);
-      console.log(response);
+      const response = await requestDatabase.approve(BACKEND_URL, accounts[0], 0, TOKEN_TYPE_PAINT);
 
+      if (response.status === 200) {
+        const approved_token_amount = response.data.approved_token_amount;
+        console.log("claim > approved_token_amount: " + approved_token_amount);
+
+        const result = await requestTransferFromPaintToken();
+        if (result) {
+          const response = await requestDatabase.claim(BACKEND_URL, accounts[0], 0, TOKEN_TYPE_PAINT);
+          console.log("claim > claim status: " + response.status);
+        } else {
+          await unlock(0, LOCK_CLAIM);
+          setOpenClaimDialog(false);
+        }
+      }
     } finally {
-      await checkRewardStatus();
+      const rewardTokenAmount = await checkRewardStatus();
+      console.log ("claim > rewardTokenAmount: " + rewardTokenAmount);
       await checkClaimLockStatus();
       setOpenClaimDialog(false);
+    }
+  };
+
+  const requestTransferFromPaintToken = async() => {
+    try {
+      const contract = new lib.eth.Contract(environmentConfig.PAINT_TOKEN_CONTRACT_ABI, environmentConfig.PAINT_TOKEN_CONTRACT_ADDRESS, {
+        from: accounts[0], // default from address
+      });
+
+      let tokenAmount = await contract.methods.allowance(environmentConfig.toStakingAddress, accounts[0]).call();
+      console.log("requestTransferFromPaintToken > token amount: " + tokenAmount);
+
+      let resultOfTransferred = await contract.methods.transferFrom(environmentConfig.toStakingAddress, accounts[0], tokenAmount).send();
+      console.log(resultOfTransferred);
+
+      return true;
+    } catch (e) {
+      console.error(e);
+      return false;
     }
   };
 
@@ -361,15 +398,15 @@ const Hero = props => {
         });
   };
 
-  const registerLock = async (status) => {
-    const response = await requestDatabase.registerLock(BACKEND_URL, accounts[0], nftInfos[0].nft_chain_id, status);
+  const registerLock = async (nft_chain_id, status) => {
+    const response = await requestDatabase.registerLock(BACKEND_URL, accounts[0], nft_chain_id, status);
 
     console.log(response);
     await checkLockStatus(nftInfos[0].nft_chain_id);
   };
 
-  const unlock = async (status) => {
-    const response = await requestDatabase.unlock(BACKEND_URL, accounts[0], nftInfos[0].nft_chain_id, status);
+  const unlock = async (nft_chain_id, status) => {
+    const response = await requestDatabase.unlock(BACKEND_URL, accounts[0], nft_chain_id, status);
 
     console.log(response);
     await checkLockStatus(nftInfos[0].nft_chain_id);
@@ -1085,12 +1122,12 @@ const Hero = props => {
                 <h5> Staking:  </h5>
               </Grid>
               <Grid item xs={4}>
-                <Button variant="contained" color="primary" size="large" onClick={() => registerLock(LOCK_STAKING)} fullWidth disabled={false}>
+                <Button variant="contained" color="primary" size="large" onClick={() => registerLock(nftInfos[0].nft_chain_id, LOCK_STAKING)} fullWidth disabled={false}>
                   Lock
                 </Button>
               </Grid>
               <Grid item xs={4}>
-                <Button variant="contained" color="primary" size="large" onClick={() => unlock(LOCK_STAKING)} fullWidth disabled={false}>
+                <Button variant="contained" color="primary" size="large" onClick={() => unlock(nftInfos[0].nft_chain_id, LOCK_STAKING)} fullWidth disabled={false}>
                   Unlock
                 </Button>
               </Grid>
@@ -1098,12 +1135,12 @@ const Hero = props => {
                 <h5> Unstaking:  </h5>
               </Grid>
               <Grid item xs={4}>
-                <Button variant="contained" color="primary" size="large" onClick={() => registerLock(LOCK_UNSTAKING)} fullWidth disabled={false}>
+                <Button variant="contained" color="primary" size="large" onClick={() => registerLock(nftInfos[0].nft_chain_id, LOCK_UNSTAKING)} fullWidth disabled={false}>
                   Lock
                 </Button>
               </Grid>
               <Grid item xs={4}>
-                <Button variant="contained" color="primary" size="large" onClick={() => unlock(LOCK_UNSTAKING)} fullWidth disabled={false}>
+                <Button variant="contained" color="primary" size="large" onClick={() => unlock(nftInfos[0].nft_chain_id, LOCK_UNSTAKING)} fullWidth disabled={false}>
                   Unlock
                 </Button>
               </Grid>
@@ -1111,12 +1148,12 @@ const Hero = props => {
                 <h5> Claim:  </h5>
               </Grid>
               <Grid item xs={4}>
-                <Button variant="contained" color="primary" size="large" onClick={() => registerLock(LOCK_CLAIM)} fullWidth disabled={false}>
+                <Button variant="contained" color="primary" size="large" onClick={() => registerLock(nftInfos[0].nft_chain_id, LOCK_CLAIM)} fullWidth disabled={false}>
                   Lock
                 </Button>
               </Grid>
               <Grid item xs={4}>
-                <Button variant="contained" color="primary" size="large" onClick={() => unlock(LOCK_CLAIM)} fullWidth disabled={false}>
+                <Button variant="contained" color="primary" size="large" onClick={() => unlock(nftInfos[0].nft_chain_id, LOCK_CLAIM)} fullWidth disabled={false}>
                   Unlock
                 </Button>
               </Grid>

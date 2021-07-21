@@ -98,10 +98,19 @@ export const getReward = async(db_host, my_account, token_type) => {
     return axios.get(`${db_host}/reward`, { params : params });
 };
 
-export const claim = async(db_host, my_account, nft_chain_id, token_type) => {
+export const approve = async(db_host, my_account, nft_chain_id, token_type) => {
     const data = {
         "address": my_account,
         "nft_chain_id": nft_chain_id,
+        "token_type": token_type
+    };
+
+    return axios.post(`${db_host}/reward/approve`, data);
+};
+
+export const claim = async(db_host, my_account, nft_chain_id, token_type) => {
+    const data = {
+        "address": my_account,
         "token_type": token_type
     };
 
