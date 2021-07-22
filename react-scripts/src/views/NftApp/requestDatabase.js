@@ -1,10 +1,11 @@
 import axios from "axios";
 
-export const registerStaking = async(db_host, my_account, nft_chain_id, nft_amount) => {
+export const registerStaking = async(db_host, my_account, nft_chain_id, nft_amount, transactionHash) => {
     const data = {
         "address": my_account,
         "nft_chain_id": nft_chain_id,
-        "nft_amount": nft_amount
+        "nft_amount": nft_amount,
+        "staking_transaction_hash": transactionHash
     };
 
     return axios.post(`${db_host}/staking/register`, data);
@@ -108,10 +109,11 @@ export const approve = async(db_host, my_account, nft_chain_id, token_type) => {
     return axios.post(`${db_host}/reward/approve`, data);
 };
 
-export const claim = async(db_host, my_account, nft_chain_id, token_type) => {
+export const claim = async(db_host, my_account, nft_chain_id, token_type, transactionHash) => {
     const data = {
         "address": my_account,
-        "token_type": token_type
+        "token_type": token_type,
+        "claimed_transaction_hash": transactionHash
     };
 
     return axios.post(`${db_host}/reward/claim`, data);

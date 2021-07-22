@@ -324,7 +324,7 @@ const Hero = props => {
           .on('transactionHash', function(hash){
             console.log("transactionHash: " + hash);
 
-            requestDatabase.claim(BACKEND_URL, accounts[0], 0, TOKEN_TYPE_PAINT)
+            requestDatabase.claim(BACKEND_URL, accounts[0], 0, TOKEN_TYPE_PAINT, hash)
                 .then(response => {
                   console.log("claim > claim status: " + response.status);
                   unlock(0, LOCK_CLAIM);
@@ -438,15 +438,27 @@ const Hero = props => {
       });
 
       if (amountOfNft <= 0) {
-        console.log("No found balanceOf");
+        console.log("staking > No found balanceOf");
         return;
       }
 
-      let resultOfTransferred = await nftContract.methods.safeTransferFrom(accounts[0], environmentConfig.toStakingAddress, nft_chain_id, amountOfNft, "0x00").send();
-      console.log(resultOfTransferred);
-      if (resultOfTransferred.status) {
-        await requestDatabase.registerStaking(BACKEND_URL, accounts[0], nft_chain_id, amountOfNft);
-      }
+      await nftContract.methods.safeTransferFrom(accounts[0], environmentConfig.toStakingAddress, nft_chain_id, amountOfNft, "0x00").send()
+          .on('transactionHash', function(hash){
+            console.log("staking > transactionHash: " + hash);
+
+            requestDatabase.registerStaking(BACKEND_URL, accounts[0], nft_chain_id, amountOfNft, hash)
+                .then(response => {
+                  console.log("staking > staking status: " + response.status);
+                  unlock(0, LOCK_STAKING);
+                });
+          })
+          .on('receipt', function(receipt){
+            console.log("staking > receipt: " + receipt);
+          })
+          .on('error', function(error, receipt) {
+            console.log("staking > error: " + error);
+            unlock(0, LOCK_STAKING);
+          });
     } catch (e) {
       console.error(e);
     } finally {
@@ -1087,6 +1099,7 @@ const Hero = props => {
         </Grid>
       </Grid>
 
+      <br/>
       <br/>
 
       <Grid
