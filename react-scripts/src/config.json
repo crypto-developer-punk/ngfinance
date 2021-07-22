@@ -1,10 +1,9 @@
 {
   "ga_code": "UA-199662239-1",
   "development": {
-    "address_to": "0xD97F7985e8030AE56551eCA127887CC9f1900039",
+    "backend_url": "http://localhost:3001",
     "eth_network": "wss://rinkeby.infura.io/ws/v3/21eb3ec799a74ff1b65bb39818d7af45",
-    "etherscan_api": "https://api-rinkeby.etherscan.io/api?module=account&action=txlist&address=0xD97F7985e8030AE56551eCA127887CC9f1900039&startblock=0&endblock=99999999&sort=asc&apikey=NNSF1R3Z5G24VWG6XB7QW65ZHGJU4RKUMT",
-    "etherscan_uri": "https://rinkeby.etherscan.io/tx/",
+    "toStakingAddress": "0xD97F7985e8030AE56551eCA127887CC9f1900039",
     "nftContractAbi": [
       {
         "inputs": [],
@@ -552,9 +551,6 @@
       }
     ],
     "nftContractAddress": "0x1457ee0410b2A5c6FEb21EA1E2168B5493e2Bf6A",
-    "nftChainId": 1,
-    "toStakingAddress": "0xD97F7985e8030AE56551eCA127887CC9f1900039",
-    "backend_url": "http://localhost:3001",
     "PAINT_TOKEN_CONTRACT_ABI": [
   {
     "inputs": [],

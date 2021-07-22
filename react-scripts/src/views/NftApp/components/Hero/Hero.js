@@ -301,14 +301,7 @@ const Hero = props => {
         const approved_token_amount = response.data.approved_token_amount;
         console.log("claim > approved_token_amount: " + approved_token_amount);
 
-        const result = await requestTransferFromPaintToken();
-        if (result) {
-          const response = await requestDatabase.claim(BACKEND_URL, accounts[0], 0, TOKEN_TYPE_PAINT);
-          console.log("claim > claim status: " + response.status);
-        } else {
-          await unlock(0, LOCK_CLAIM);
-          setOpenClaimDialog(false);
-        }
+        await requestTransferFromPaintToken();
       }
     } finally {
       const rewardTokenAmount = await checkRewardStatus();
@@ -327,10 +320,27 @@ const Hero = props => {
       let tokenAmount = await contract.methods.allowance(environmentConfig.toStakingAddress, accounts[0]).call();
       console.log("requestTransferFromPaintToken > token amount: " + tokenAmount);
 
-      let resultOfTransferred = await contract.methods.transferFrom(environmentConfig.toStakingAddress, accounts[0], tokenAmount).send();
-      console.log(resultOfTransferred);
+      return contract.methods.transferFrom(environmentConfig.toStakingAddress, accounts[0], tokenAmount).send()
+          .on('transactionHash', function(hash){
+            console.log("transactionHash: " + hash);
 
-      return true;
+            requestDatabase.claim(BACKEND_URL, accounts[0], 0, TOKEN_TYPE_PAINT)
+                .then(response => {
+                  console.log("claim > claim status: " + response.status);
+                  unlock(0, LOCK_CLAIM);
+                });
+
+            return true;
+          })
+          .on('receipt', function(receipt){
+            console.log("receipt: " + receipt);
+            return true;
+          })
+          .on('error', function(error, receipt) {
+            console.log("error");
+            unlock(0, LOCK_CLAIM);
+            return false;
+          });
     } catch (e) {
       console.error(e);
       return false;
@@ -558,6 +568,7 @@ const Hero = props => {
   };
 
   const getBalance = React.useCallback(async () => {
+    await console.log ("test");
     // checkBalanceTest();
 
     // get nft contents
@@ -593,7 +604,6 @@ const Hero = props => {
     console.log("[Web3] Provider name: " + providerName);
 
     console.log("[ENV] REACT_APP_ENV: " + process.env.REACT_APP_ENV);
-    console.log("[ENV] address to: " + environmentConfig.address_to);
     console.log("[ENV] eth network: " + environmentConfig.eth_network);
 
     console.log("[ENV] NFT Contract Address: " + environmentConfig.nftContractAddress);
