@@ -9,9 +9,8 @@ import GenesisNFT from '../../../../assets/images/main/genesis_nft.jpg';
 import {CardBase} from "../../../../components/organisms";
 import Eth from "../../../../assets/images/main/logo_eth.svg";
 import Rarible from "../../../../assets/images/main/logo_rarible.png";
-import PaintToken from "../../../../assets/images/main/paint_token.jpg";
-import CanvasToken from "../../../../assets/images/main/canvas_token.jpg";
-import Slider from '@material-ui/core/Slider';
+import PaintToken from "../../../../assets/images/main/logo_paint_token.svg";
+import CanvasToken from "../../../../assets/images/main/logo_canvas_token.svg";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
@@ -595,7 +594,7 @@ const Hero = props => {
     setConnectedWallet(connected);
 
     checkSnapshotStatus();
-    
+
     if (connected) {
       nftInfos.map(nftInfo => {
         checkBalanceOfNft(nftInfo.nft_chain_id)
