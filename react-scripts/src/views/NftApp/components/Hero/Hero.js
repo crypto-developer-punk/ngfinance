@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {makeStyles, withStyles} from '@material-ui/core/styles';
+import {makeStyles, withStyles, useTheme} from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import {Button, ButtonGroup, colors, Grid, Typography, Divider, Paper} from '@material-ui/core';
+import {Button, ButtonGroup, colors, Grid, Typography, Divider, Paper, useMediaQuery} from '@material-ui/core';
 import {Image} from 'components/atoms';
 import {SectionHeader} from 'components/molecules';
 import GenesisNFT from '../../../../assets/images/main/genesis_nft.jpg';
@@ -113,6 +113,11 @@ const sleep = (ms) => {
 };
 
 const Hero = props => {
+  const theme = useTheme();
+  const isMd = useMediaQuery(theme.breakpoints.up('md'), {
+    defaultMatches: true,
+  });
+
   const web3Context = useWeb3(environmentConfig.eth_network);
   const { networkId, networkName, accounts, providerName, lib } = web3Context;
 
@@ -580,7 +585,6 @@ const Hero = props => {
   };
 
   const getBalance = React.useCallback(async () => {
-    await console.log ("test");
     // checkBalanceTest();
 
     // get nft contents
@@ -590,6 +594,8 @@ const Hero = props => {
     let balance = connected ? lib.utils.fromWei(await lib.eth.getBalance(accounts[0]), 'ether') : 'Unknown';
     setConnectedWallet(connected);
 
+    checkSnapshotStatus();
+
     if (connected) {
       nftInfos.map(nftInfo => {
         checkBalanceOfNft(nftInfo.nft_chain_id)
@@ -598,7 +604,6 @@ const Hero = props => {
             });
       });
       await checkRewardStatus();
-      await checkSnapshotStatus();
     } else {
       nftInfos.map(nftInfo => {
         upsertState(KEY_NFT_AMOUNT + nftInfo.nft_chain_id, 0);
@@ -651,7 +656,7 @@ const Hero = props => {
           container
           justify="flex-start"
           alignItems="flex-start"
-          xs={8}
+          xs={6}
           md={6}
         >
         <SectionHeader
@@ -669,10 +674,10 @@ const Hero = props => {
             container
             justify="flex-end"
             alignItems="flex-end"
-            xs={4}
+            xs={6}
             md={6}
         >
-          <Button variant="contained" color="primary" size="large" onClick={connectToWallet} disabled={connectedWallet}>
+          <Button variant="contained" color="primary" size={isMd? "large":"small"} onClick={connectToWallet} disabled={connectedWallet}>
             Connect Wallet
           </Button>
         </Grid>
@@ -1006,7 +1011,7 @@ const Hero = props => {
         <Grid item xs={12}>
           <CardBase liftUp variant="outlined" align="left" withShadow
                     style={{ borderTop: `5px solid ${colors.blueGrey[500]}` }}>
-            <Grid container spacing={5}>
+            <Grid container spacing={isMd ? 5 : 1}>
               <Grid item xs={6} md={6} align={"left"}>
                 <Typography component="span" variant="h6">
                   Overview
@@ -1017,14 +1022,14 @@ const Hero = props => {
                   Claim
                 </Button>
               </Grid>
-              <Grid item xs={6} align="left">
+              <Grid item xs={12} md={6} align="left">
                 <Paper className={classes.paper}>
                   <Typography component="span" variant="subtitle1">
                     Next snapshot time : { snapshotStatus }
                   </Typography>
                 </Paper>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} md={6}>
                 <Paper className={classes.paper}>
                   <Typography component="span" variant="subtitle1">
                     Total value locked NFT : { balanceOfTotalStakedNft }
