@@ -931,8 +931,8 @@ const Hero = props => {
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12} md={9} >
-                                    <a href='https://rarible.com/token/0x6cff6eb6c7cc2409b48e6192f98914fd05aab4ba:2?tab=owners' target='_blank'>
-                                      https://rarible.com/token/0x6cff6eb6c7cc2409b48e6192f98914fd05aab4ba:2?tab=owners
+                                    <a href={nftInfo.nft_url} target='_blank'>
+                                      {nftInfo.nft_url}
                                     </a>
                                   </Grid>
                                 </Grid>
