@@ -611,7 +611,7 @@ const Hero = props => {
     // Logging
     console.log("[Web3] ETH network connected: " + connected);
     console.log("[Web3] Network id: " + networkId +", name: " + networkName);
-    console.log("[Web3] Connected account: " + accounts[0]);
+    // console.log("[Web3] Connected account: " + accounts[0]);
     console.log("[Web3] ETH Balance: " + balance);
     console.log("[Web3] Provider name: " + providerName);
 
@@ -645,14 +645,15 @@ const Hero = props => {
         container
         justify="space-between"
         spacing={4}
-      ><Grid
+      >
+        <Grid
           item
           container
           justify="flex-start"
           alignItems="flex-start"
-          xs={12}
+          xs={8}
           md={6}
-      >
+        >
         <SectionHeader
             title={
               <Typography variant="h5">
@@ -668,7 +669,7 @@ const Hero = props => {
             container
             justify="flex-end"
             alignItems="flex-end"
-            xs={12}
+            xs={4}
             md={6}
         >
           <Button variant="contained" color="primary" size="large" onClick={connectToWallet} disabled={connectedWallet}>
@@ -847,130 +848,133 @@ const Hero = props => {
           </Grid>
 
           <Grid item xs={12}>
-            <CardBase liftUp variant="outlined" align="left" withShadow
-                      style={{ borderTop: `5px solid ${colors.blueGrey[500]}` }}>
               {
                 nftInfos.map((nftInfo) =>
-                    <Grid container spacing={5}>
-                      <Grid
-                          item
-                          container
-                          justify="flex-start"
-                          alignItems="flex-start"
-                          xs={12} md={4}
-                          data-aos={'fade-up'}
-                      >
-                        <Image
-                            src={nftInfo.image_url}
-                            alt="Genesis NFT"
-                            className={classes.image}
-                            data-aos="flip-left"
-                            data-aos-easing="ease-out-cubic"
-                            data-aos-duration="2000"
-                        />
-                      </Grid>
-                      <Grid
-                          item
-                          container
-                          justify="flex-start"
-                          alignItems="flex-start"
-                          xs={12} md={8}
-                          data-aos={'fade-up'}
-                      >
-                        <Grid item xs={12}>
-                          <SectionHeader
-                              title={
-                                <span>
-                        <Typography variant="subtitle1" color={"textSecondary"} >
-                          Nostalgia Finance
-                        </Typography>
-                      </span>
-                              }
-                              align="left"
-                              disableGutter
-                          />
-                        </Grid>
-                        <Grid item xs={12}>
-                          <SectionHeader
-                              title={
-                                <Typography variant="h5" color="textPrimary" >
-                                  <strong>{nftInfo.subject}</strong>
-                                </Typography>
-                              }
-                              align="left"
-                              disableGutter
-                          />
-                          <Divider style={{marginTop: '20px'}} />
-                        </Grid>
-                        <Grid item xs={12} className={classes.gridItem}>
-                          <Grid container>
-                            <Grid item xs={12} md={3}>
-                              <Typography variant="subtitle1" color={"primary"}>
-                                PURCHASED
-                              </Typography>
+                    <Grid container spacing={3}>
+                      <Grid item xs={12}>
+                        <CardBase liftUp variant="outlined" align="left" withShadow>
+                          <Grid container spacing={5}>
+                            <Grid
+                                item
+                                container
+                                justify="flex-start"
+                                alignItems="flex-start"
+                                xs={12} md={4}
+                                data-aos={'fade-up'}
+                            >
+                              <Image
+                                  src={nftInfo.image_url}
+                                  alt="Genesis NFT"
+                                  className={classes.image}
+                                  data-aos="flip-left"
+                                  data-aos-easing="ease-out-cubic"
+                                  data-aos-duration="2000"
+                              />
                             </Grid>
-                            <Grid item xs={12} md={9}>
-                              <Typography variant="subtitle1">
-                                {state.get(KEY_NFT_AMOUNT + nftInfo.nft_chain_id)} NFT
+                            <Grid
+                                item
+                                container
+                                justify="flex-start"
+                                alignItems="flex-start"
+                                xs={12} md={8}
+                                data-aos={'fade-up'}
+                            >
+                              <Grid item xs={12}>
+                                <SectionHeader
+                                    title={
+                                      <span>
+                              <Typography variant="subtitle1" color={"textSecondary"} >
+                                Nostalgia Finance
                               </Typography>
+                            </span>
+                                    }
+                                    align="left"
+                                    disableGutter
+                                />
+                              </Grid>
+                              <Grid item xs={12}>
+                                <SectionHeader
+                                    title={
+                                      <Typography variant="h5" color="textPrimary" >
+                                        <strong>{nftInfo.subject}</strong>
+                                      </Typography>
+                                    }
+                                    align="left"
+                                    disableGutter
+                                />
+                                <Divider style={{marginTop: '20px'}} />
+                              </Grid>
+                              <Grid item xs={12} className={classes.gridItem}>
+                                <Grid container>
+                                  <Grid item xs={12} md={3}>
+                                    <Typography variant="subtitle1" color={"primary"}>
+                                      PURCHASED
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item xs={12} md={9}>
+                                    <Typography variant="subtitle1">
+                                      {state.get(KEY_NFT_AMOUNT + nftInfo.nft_chain_id)} NFT
+                                    </Typography>
+                                  </Grid>
+                                </Grid>
+                              </Grid>
+                              <Grid item xs={12} className={classes.gridItem}>
+                                <Grid container>
+                                  <Grid item xs={12} md={3}>
+                                    <Typography variant="subtitle1" color={"primary"}>
+                                      NFT URL
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item xs={12} md={9} >
+                                    <a href='https://rarible.com/token/0x6cff6eb6c7cc2409b48e6192f98914fd05aab4ba:2?tab=owners' target='_blank'>
+                                      https://rarible.com/token/0x6cff6eb6c7cc2409b48e6192f98914fd05aab4ba:2?tab=owners
+                                    </a>
+                                  </Grid>
+                                </Grid>
+                              </Grid>
+                              <Grid item xs={12} className={classes.gridItem}>
+                                <Grid container>
+                                  <Grid item xs={12} md={3}>
+                                    <Typography variant="subtitle1" color={"primary"}>
+                                      STAKING
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item xs={12} md={9} >
+                                    <ButtonGroup size="small" color="primary" aria-label="large outlined primary button group">
+                                      <Button onClick={() => requestStaking(nftInfo.nft_chain_id)}
+                                              disabled={state.get(KEY_IS_LOCKED_STAKING + nftInfo.nft_chain_id) || state.get(KEY_IS_DISABLED_STAKING + nftInfo.nft_chain_id)}>
+                                        staking
+                                      </Button>
+                                      {' '}
+                                      <Button onClick={() => requestUnstaking(nftInfo.nft_chain_id)}
+                                              disabled={state.get(KEY_IS_LOCKED_UNSTAKING + nftInfo.nft_chain_id) || state.get(KEY_IS_DISABLED_UNSTAKING + nftInfo.nft_chain_id)}>
+                                        unstaking
+                                      </Button>
+                                    </ButtonGroup>
+                                  </Grid>
+                                </Grid>
+                              </Grid>
+                              <Grid item xs={12} className={classes.gridItem}>
+                                <Grid container>
+                                  <Grid item xs={12} md={3}>
+                                    <Typography variant="subtitle1" color={"primary"}>
+                                      STAKED NFT
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item xs={12} md={9}>
+                                    <Typography variant="subtitle1">
+                                      {state.get(KEY_STAKED_NFT_AMOUNT + nftInfo.nft_chain_id)} NFT
+                                    </Typography>
+                                  </Grid>
+                                </Grid>
+                              </Grid>
                             </Grid>
                           </Grid>
-                        </Grid>
-                        <Grid item xs={12} className={classes.gridItem}>
-                          <Grid container>
-                            <Grid item xs={12} md={3}>
-                              <Typography variant="subtitle1" color={"primary"}>
-                                NFT URL
-                              </Typography>
-                            </Grid>
-                            <Grid item xs={12} md={9} >
-                              <a href='https://rarible.com/token/0x6cff6eb6c7cc2409b48e6192f98914fd05aab4ba:2?tab=owners' target='_blank'>
-                                https://rarible.com/token/0x6cff6eb6c7cc2409b48e6192f98914fd05aab4ba:2?tab=owners
-                              </a>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                        <Grid item xs={12} className={classes.gridItem}>
-                          <Grid container>
-                            <Grid item xs={12} md={3}>
-                              <Typography variant="subtitle1" color={"primary"}>
-                                STAKING
-                              </Typography>
-                            </Grid>
-                            <Grid item xs={12} md={9} >
-                              <ButtonGroup size="small" color="primary" aria-label="large outlined primary button group">
-                                <Button onClick={() => requestStaking(nftInfo.nft_chain_id)}
-                                        disabled={state.get(KEY_IS_LOCKED_STAKING + nftInfo.nft_chain_id) || state.get(KEY_IS_DISABLED_STAKING + nftInfo.nft_chain_id)}>
-                                  staking
-                                </Button>
-                                {' '}
-                                <Button onClick={() => requestUnstaking(nftInfo.nft_chain_id)}
-                                        disabled={state.get(KEY_IS_LOCKED_UNSTAKING + nftInfo.nft_chain_id) || state.get(KEY_IS_DISABLED_UNSTAKING + nftInfo.nft_chain_id)}>
-                                  unstaking
-                                </Button>
-                              </ButtonGroup>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                        <Grid item xs={12} className={classes.gridItem}>
-                          <Grid container>
-                            <Grid item xs={12} md={3}>
-                              <Typography variant="subtitle1" color={"primary"}>
-                                STAKED NFT
-                              </Typography>
-                            </Grid>
-                            <Grid item xs={12} md={9}>
-                              <Typography variant="subtitle1">
-                                {state.get(KEY_STAKED_NFT_AMOUNT + nftInfo.nft_chain_id)} NFT
-                              </Typography>
-                            </Grid>
-                          </Grid>
-                        </Grid>
+                        </CardBase>
                       </Grid>
                     </Grid>
                 )
               }
-            </CardBase>
           </Grid>
         </Grid>
       </Grid>
@@ -1002,36 +1006,13 @@ const Hero = props => {
         <Grid item xs={12}>
           <CardBase liftUp variant="outlined" align="left" withShadow
                     style={{ borderTop: `5px solid ${colors.blueGrey[500]}` }}>
-            <Grid container spacing={5} hidden={connectedWallet}>
-              <Grid
-                  item
-                  container
-                  justify="flex-start"
-                  alignItems="flex-start"
-                  xs={12}
-                  data-aos={'fade-up'}
-              >
-                <SectionHeader
-                    title={
-                      <span>
-                          <Typography variant="h6" color={"textSecondary"} >
-                            Please connect wallet
-                          </Typography>
-                        </span>
-                    }
-                    align="left"
-                    disableGutter
-                />
-              </Grid>
-            </Grid>
-
-            <Grid container spacing={5} hidden={!connectedWallet}>
-              <Grid item xs={9}>
+            <Grid container spacing={5}>
+              <Grid item xs={6} md={6} align={"left"}>
                 <Typography component="span" variant="h6">
                   Overview
                 </Typography>
               </Grid>
-              <Grid item xs={3} align="right">
+              <Grid item xs={6} md={6} align={"right"}>
                 <Button variant="outlined" color="primary" size="large" onClick={claim} disabled={isLockedClaim || isDisabledClaim}>
                   Claim
                 </Button>
@@ -1127,30 +1108,7 @@ const Hero = props => {
         <Grid item xs={12}>
           <CardBase liftUp variant="outlined" align="left" withShadow
                     style={{ borderTop: `5px solid ${colors.blueGrey[500]}` }}>
-            <Grid container spacing={5} hidden={connectedWallet}>
-              <Grid
-                  item
-                  container
-                  justify="flex-start"
-                  alignItems="flex-start"
-                  xs={12}
-                  data-aos={'fade-up'}
-              >
-                <SectionHeader
-                    title={
-                      <span>
-                          <Typography variant="h6" color={"textSecondary"} >
-                            Please connect wallet
-                          </Typography>
-                        </span>
-                    }
-                    align="left"
-                    disableGutter
-                />
-              </Grid>
-            </Grid>
-
-            <Grid container spacing={5} hidden={!connectedWallet}>
+            <Grid container spacing={5}>
               <Grid item xs={4}>
                 <h5> Staking:  </h5>
               </Grid>
