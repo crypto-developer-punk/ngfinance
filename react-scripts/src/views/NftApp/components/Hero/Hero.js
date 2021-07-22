@@ -353,7 +353,7 @@ const Hero = props => {
   };
 
   const checkSnapshotStatus = async () => {
-    const response = await requestDatabase.getSnapshot(BACKEND_URL, accounts[0], TOKEN_TYPE_PAINT);
+    const response = await requestDatabase.getSnapshot(BACKEND_URL, TOKEN_TYPE_PAINT);
 
     console.log(response);
     if (response.status === 200 && response.data.length > 0) {
@@ -595,7 +595,7 @@ const Hero = props => {
     setConnectedWallet(connected);
 
     checkSnapshotStatus();
-
+    
     if (connected) {
       nftInfos.map(nftInfo => {
         checkBalanceOfNft(nftInfo.nft_chain_id)

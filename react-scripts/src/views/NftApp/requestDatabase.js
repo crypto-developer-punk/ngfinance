@@ -119,7 +119,7 @@ export const claim = async(db_host, my_account, nft_chain_id, token_type, transa
     return axios.post(`${db_host}/reward/claim`, data);
 };
 
-export const getSnapshot = async(db_host, my_account, token_type) => {
+export const getSnapshot = async(db_host, token_type) => {
     const params = {
         "token_type": token_type
     };
