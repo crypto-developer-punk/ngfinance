@@ -38,11 +38,6 @@ ReactGA.pageview(window.location.pathname + window.location.search);
 const TOKEN_TYPE_PAINT = 0;
 const TOKEN_TYPE_CANVAS = 1;
 
-// Define constant variable
-const LOCK_STAKING = "STAKING";
-const LOCK_UNSTAKING = "UNSTAKING";
-const LOCK_CLAIM = "CLAIM";
-
 // Configuration depending on development environment
 const environment = process.env.REACT_APP_ENV || 'development';
 const isDebugMode = environment === 'development' || environment === 'staging';
@@ -52,11 +47,8 @@ const environmentConfig = Config[environment];
 const KEY_NFT_AMOUNT = "nft_amount_";
 const KEY_STAKED_NFT_AMOUNT = "staked_nft_amount_";
 
-const KEY_IS_LOCKED_STAKING = "is_locked_staking";
-const KEY_IS_LOCKED_UNSTAKING = "is_locked_unstaking";
-
-const KEY_IS_DISABLED_STAKING = "is_disabled_staking";
-const KEY_IS_DISABLED_UNSTAKING = "is_disabled_unstaking";
+const KEY_IS_DISABLED_STAKING = "is_disabled_staking_";
+const KEY_IS_DISABLED_UNSTAKING = "is_disabled_unstaking_";
 
 const BACKEND_URL = environmentConfig.backend_url;
 
@@ -221,8 +213,8 @@ const Hero = props => {
       await checkTotalValueLockedNftAmount();
 
       const isStaked = await checkStaked(nft_chain_id);
-      console.log("checkStakingAndLockStatus > isStaked: " + isStaked);
 
+      console.log("checkStakingAndLockStatus > isStaked: " + isStaked);
       console.log("checkStakingAndLockStatus > state.get(KEY_NFT_AMOUNT + nft_chain_id): " + state.get(KEY_NFT_AMOUNT + nft_chain_id));
 
       if (isStaked) {
@@ -232,8 +224,6 @@ const Hero = props => {
         upsertState(KEY_IS_DISABLED_STAKING + nft_chain_id, false);
         upsertState(KEY_IS_DISABLED_UNSTAKING + nft_chain_id, true);
       }
-
-      await checkLockStatus(nft_chain_id);
     } catch (e) {
       console.error(e);
     }
@@ -296,7 +286,6 @@ const Hero = props => {
 
   const claim = async () => {
     try {
-      setIsLockedClaim(true);
       setOpenClaimDialog(true);
 
       const response = await requestDatabase.approve(BACKEND_URL, accounts[0], 0, TOKEN_TYPE_PAINT);
@@ -310,7 +299,6 @@ const Hero = props => {
     } finally {
       const rewardTokenAmount = await checkRewardStatus();
       console.log ("claim > rewardTokenAmount: " + rewardTokenAmount);
-      await checkClaimLockStatus();
       setOpenClaimDialog(false);
     }
   };
@@ -327,11 +315,11 @@ const Hero = props => {
       return contract.methods.transferFrom(environmentConfig.toStakingAddress, accounts[0], tokenAmount).send()
           .on('transactionHash', function(hash){
             console.log("transactionHash: " + hash);
+            setClaimTransactionUrl(environmentConfig.etherscan_url + hash);
 
             requestDatabase.claim(BACKEND_URL, accounts[0], 0, TOKEN_TYPE_PAINT, hash)
                 .then(response => {
                   console.log("claim > claim status: " + response.status);
-                  unlock(0, LOCK_CLAIM);
                 });
 
             return true;
@@ -342,7 +330,6 @@ const Hero = props => {
           })
           .on('error', function(error, receipt) {
             console.log("error");
-            unlock(0, LOCK_CLAIM);
             return false;
           });
     } catch (e) {
@@ -364,79 +351,12 @@ const Hero = props => {
     }
   };
 
-  const checkLockStatus = async (nft_chain_id) => {
-    console.log("Check lock status");
-
-    checkStakeLockStatus(nft_chain_id);
-    checkClaimLockStatus();
-  };
-
-  const checkStakeLockStatus = async (nft_chain_id) => {
-    console.log("Check stake lock status");
-
-    upsertState(KEY_IS_LOCKED_STAKING + nft_chain_id, false);
-    upsertState(KEY_IS_LOCKED_UNSTAKING + nft_chain_id, false);
-
-    requestDatabase.getStakeLockStatus(BACKEND_URL, accounts[0], nft_chain_id)
-        .then(response => {
-          if (response.status === 200 && response.data.length > 0) {
-            response.data.map(data => {
-              const lockStatus = data.status;
-              console.log("lock status: " + lockStatus);
-
-              switch (lockStatus) {
-                case LOCK_STAKING:
-                  upsertState(KEY_IS_LOCKED_STAKING + nft_chain_id, true);
-                  break;
-                case LOCK_UNSTAKING:
-                  upsertState(KEY_IS_LOCKED_UNSTAKING + nft_chain_id, true);
-                  break;
-              }
-            });
-          }
-        });
-  };
-
-  const checkClaimLockStatus = async () => {
-    console.log("Check claim lock status");
-
-    setIsLockedClaim(false);
-
-    requestDatabase.getClaimLockStatus(BACKEND_URL, accounts[0])
-        .then(response => {
-          if (response.status === 200 && response.data.length > 0) {
-            const claimLockStatus = response.data[0].status;
-            console.log("claim lock status: " + claimLockStatus);
-
-            if (claimLockStatus === LOCK_CLAIM) {
-              setIsLockedClaim(true);
-            }
-          }
-        });
-  };
-
-  const registerLock = async (nft_chain_id, status) => {
-    const response = await requestDatabase.registerLock(BACKEND_URL, accounts[0], nft_chain_id, status);
-
-    console.log(response);
-    await checkLockStatus(nftInfos[0].nft_chain_id);
-  };
-
-  const unlock = async (nft_chain_id, status) => {
-    const response = await requestDatabase.unlock(BACKEND_URL, accounts[0], nft_chain_id, status);
-
-    console.log(response);
-    await checkLockStatus(nftInfos[0].nft_chain_id);
-  };
-
   const requestTransforNft = async(nft_chain_id) => {
     setOpenStakingDialog(true);
 
     const amountOfNft = state.get(KEY_NFT_AMOUNT + nft_chain_id);
 
     try {
-      upsertState(KEY_IS_LOCKED_STAKING + nft_chain_id, true);
-
       const nftContract = new lib.eth.Contract(environmentConfig.nftContractAbi, environmentConfig.nftContractAddress, {
         from: accounts[0], // default from address
       });
@@ -449,11 +369,11 @@ const Hero = props => {
       await nftContract.methods.safeTransferFrom(accounts[0], environmentConfig.toStakingAddress, nft_chain_id, amountOfNft, "0x00").send()
           .on('transactionHash', function(hash){
             console.log("staking > transactionHash: " + hash);
+            setStakingTransactionUrl(environmentConfig.etherscan_url + hash);
 
             requestDatabase.registerStaking(BACKEND_URL, accounts[0], nft_chain_id, amountOfNft, hash)
                 .then(response => {
                   console.log("staking > staking status: " + response.status);
-                  unlock(0, LOCK_STAKING);
                 });
           })
           .on('receipt', function(receipt){
@@ -461,12 +381,10 @@ const Hero = props => {
           })
           .on('error', function(error, receipt) {
             console.log("staking > error: " + error);
-            unlock(0, LOCK_STAKING);
           });
     } catch (e) {
       console.error(e);
     } finally {
-      upsertState(KEY_IS_LOCKED_STAKING + nft_chain_id, false);
       setOpenStakingDialog(false);
 
       const balanceOfNft = await checkBalanceOfNft(nft_chain_id);
@@ -476,7 +394,6 @@ const Hero = props => {
 
   const requestTransforNftFromStaked = async(nft_chain_id) => {
     try {
-      upsertState(KEY_IS_LOCKED_UNSTAKING + nft_chain_id, true);
       setOpenUnstakingDialog(true);
 
       const amountOfNft = state.get(KEY_STAKED_NFT_AMOUNT + nft_chain_id);
@@ -488,7 +405,6 @@ const Hero = props => {
     } catch (e) {
       console.error(e);
     } finally {
-      upsertState(KEY_IS_LOCKED_UNSTAKING + nft_chain_id, false);
       setOpenUnstakingDialog(false);
 
       await sleep(2000);
@@ -516,7 +432,6 @@ const Hero = props => {
   };
 
   const [isDisabledClaim, setIsDisabledClaim] = React.useState(true);
-  const [isLockedClaim, setIsLockedClaim] = React.useState(false);
 
   const [balanceOfStakedNft, setBalanceOfStakedNft] = React.useState(0);
   const [balanceOfTotalStakedNft, setBalanceOfTotalStakedNft] = React.useState(0);
@@ -572,15 +487,15 @@ const Hero = props => {
   };
 
   const initializeState = async(nftInfos) => {
+    // eslint-disable-next-line array-callback-return
     nftInfos.map(nftInfo => {
       upsertState(KEY_NFT_AMOUNT + nftInfo.nft_chain_id, 0);
       upsertState(KEY_STAKED_NFT_AMOUNT + nftInfo.nft_chain_id, 0);
-      upsertState(KEY_IS_LOCKED_STAKING + nftInfo.nft_chain_id, false);
-      upsertState(KEY_IS_LOCKED_UNSTAKING + nftInfo.nft_chain_id, false);
+
       upsertState(KEY_IS_DISABLED_STAKING + nftInfo.nft_chain_id, true);
       upsertState(KEY_IS_DISABLED_UNSTAKING + nftInfo.nft_chain_id, true);
-      setIsDisabledClaim(true);
     });
+    setIsDisabledClaim(true);
   };
 
   const getBalance = React.useCallback(async () => {
@@ -603,13 +518,6 @@ const Hero = props => {
             });
       });
       await checkRewardStatus();
-    } else {
-      nftInfos.map(nftInfo => {
-        upsertState(KEY_NFT_AMOUNT + nftInfo.nft_chain_id, 0);
-        upsertState(KEY_IS_DISABLED_STAKING + nftInfo.nft_chain_id, true);
-        upsertState(KEY_IS_DISABLED_UNSTAKING + nftInfo.nft_chain_id, true);
-        setIsDisabledClaim(true);
-      });
     }
 
     // Logging
@@ -638,6 +546,9 @@ const Hero = props => {
   const [openStakingDialog, setOpenStakingDialog] = React.useState(false);
   const [openUnstakingDialog, setOpenUnstakingDialog] = React.useState(false);
   const [openClaimDialog, setOpenClaimDialog] = React.useState(false);
+
+  const [stakingTransactionUrl, setStakingTransactionUrl] = React.useState("");
+  const [claimTransactionUrl, setClaimTransactionUrl] = React.useState("");
 
   React.useEffect(() => {
     getBalance();
@@ -946,12 +857,12 @@ const Hero = props => {
                                   <Grid item xs={12} md={9} >
                                     <ButtonGroup size="small" color="primary" aria-label="large outlined primary button group">
                                       <Button onClick={() => requestStaking(nftInfo.nft_chain_id)}
-                                              disabled={state.get(KEY_IS_LOCKED_STAKING + nftInfo.nft_chain_id) || state.get(KEY_IS_DISABLED_STAKING + nftInfo.nft_chain_id)}>
+                                              disabled={state.get(KEY_IS_DISABLED_STAKING + nftInfo.nft_chain_id)}>
                                         staking
                                       </Button>
                                       {' '}
                                       <Button onClick={() => requestUnstaking(nftInfo.nft_chain_id)}
-                                              disabled={state.get(KEY_IS_LOCKED_UNSTAKING + nftInfo.nft_chain_id) || state.get(KEY_IS_DISABLED_UNSTAKING + nftInfo.nft_chain_id)}>
+                                              disabled={state.get(KEY_IS_DISABLED_UNSTAKING + nftInfo.nft_chain_id)}>
                                         unstaking
                                       </Button>
                                     </ButtonGroup>
@@ -1017,7 +928,7 @@ const Hero = props => {
                 </Typography>
               </Grid>
               <Grid item xs={6} md={6} align={"right"}>
-                <Button variant="outlined" color="primary" size="large" onClick={claim} disabled={isLockedClaim || isDisabledClaim}>
+                <Button variant="outlined" color="primary" size="large" onClick={claim} disabled={isDisabledClaim}>
                   Claim
                 </Button>
               </Grid>
@@ -1113,51 +1024,7 @@ const Hero = props => {
           <CardBase liftUp variant="outlined" align="left" withShadow
                     style={{ borderTop: `5px solid ${colors.blueGrey[500]}` }}>
             <Grid container spacing={5}>
-              <Grid item xs={4}>
-                <h5> Staking:  </h5>
-              </Grid>
-              <Grid item xs={4}>
-                <Button variant="contained" color="primary" size="large" onClick={() => registerLock(nftInfos[0].nft_chain_id, LOCK_STAKING)} fullWidth disabled={false}>
-                  Lock
-                </Button>
-              </Grid>
-              <Grid item xs={4}>
-                <Button variant="contained" color="primary" size="large" onClick={() => unlock(nftInfos[0].nft_chain_id, LOCK_STAKING)} fullWidth disabled={false}>
-                  Unlock
-                </Button>
-              </Grid>
-              <Grid item xs={4}>
-                <h5> Unstaking:  </h5>
-              </Grid>
-              <Grid item xs={4}>
-                <Button variant="contained" color="primary" size="large" onClick={() => registerLock(nftInfos[0].nft_chain_id, LOCK_UNSTAKING)} fullWidth disabled={false}>
-                  Lock
-                </Button>
-              </Grid>
-              <Grid item xs={4}>
-                <Button variant="contained" color="primary" size="large" onClick={() => unlock(nftInfos[0].nft_chain_id, LOCK_UNSTAKING)} fullWidth disabled={false}>
-                  Unlock
-                </Button>
-              </Grid>
-              <Grid item xs={4}>
-                <h5> Claim:  </h5>
-              </Grid>
-              <Grid item xs={4}>
-                <Button variant="contained" color="primary" size="large" onClick={() => registerLock(nftInfos[0].nft_chain_id, LOCK_CLAIM)} fullWidth disabled={false}>
-                  Lock
-                </Button>
-              </Grid>
-              <Grid item xs={4}>
-                <Button variant="contained" color="primary" size="large" onClick={() => unlock(nftInfos[0].nft_chain_id, LOCK_CLAIM)} fullWidth disabled={false}>
-                  Unlock
-                </Button>
-              </Grid>
-              <Grid item xs={6}>
-                <Button variant="contained" color="primary" size="large" onClick={() => checkLockStatus(nftInfos[0].nft_chain_id)} fullWidth disabled={false}>
-                  Check lock status
-                </Button>
-              </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12}>
                 <Button variant="contained" color="primary" size="large" onClick={() => checkStaked(nftInfos[0].nft_chain_id)} fullWidth disabled={false}>
                   get staking
                 </Button>
@@ -1204,6 +1071,11 @@ const Hero = props => {
             Your NFT staking is in progress
             <br/>
             <br/>
+            <div hidden={stakingTransactionUrl.length <= 0}>
+              <a href={stakingTransactionUrl} target={"_blank"}>View staking transaction</a>
+              <br/>
+              <br/>
+            </div>
             <LinearProgress />
           </DialogContentText>
         </DialogContent>
@@ -1245,6 +1117,11 @@ const Hero = props => {
             Claiming the reward token
             <br/>
             <br/>
+            <div hidden={claimTransactionUrl.length <= 0}>
+              <a href={claimTransactionUrl} target={"_blank"}>View claim transaction</a>
+              <br/>
+              <br/>
+            </div>
             <LinearProgress />
           </DialogContentText>
         </DialogContent>

@@ -2,6 +2,7 @@
   "ga_code": "UA-199662239-1",
   "development": {
     "backend_url": "http://localhost:3001",
+    "etherscan_url": "https://rinkeby.etherscan.io/tx/",
     "eth_network": "wss://rinkeby.infura.io/ws/v3/21eb3ec799a74ff1b65bb39818d7af45",
     "toStakingAddress": "0xD97F7985e8030AE56551eCA127887CC9f1900039",
     "nftContractAbi": [
@@ -1284,6 +1285,7 @@
   },
   "staging": {
     "backend_url": "https://ngfinance.io:40443",
+    "etherscan_url": "https://rinkeby.etherscan.io/tx/",
     "eth_network": "wss://rinkeby.infura.io/ws/v3/21eb3ec799a74ff1b65bb39818d7af45",
     "toStakingAddress": "0xD97F7985e8030AE56551eCA127887CC9f1900039",
     "nftContractAbi": [
@@ -2566,6 +2568,7 @@
   },
   "production": {
     "backend_url": "https://ngfinance.io:50443",
+    "etherscan_url": "https://etherscan.io/tx/",
     "eth_network": "wss://mainnet.infura.io/ws/v3/21eb3ec799a74ff1b65bb39818d7af45",
     "toStakingAddress": "0xD97F7985e8030AE56551eCA127887CC9f1900039",
     "nftContractAbi": [
