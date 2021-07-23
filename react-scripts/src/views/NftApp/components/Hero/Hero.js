@@ -398,10 +398,20 @@ const Hero = props => {
 
       const amountOfNft = state.get(KEY_STAKED_NFT_AMOUNT + nft_chain_id);
 
-      await requestDatabase.unstaking(BACKEND_URL, accounts[0], nft_chain_id, amountOfNft);
+      await requestDatabase.unstaking(BACKEND_URL, accounts[0], nft_chain_id, amountOfNft)
+          .then(response => {
+            sleep(2000);
+            window.location.reload();
+          })
+          .catch(error => {
+            const message = error.response.data.message;
+            const dayOfLockUpNft = error.response.data.dayOfLockUpNft;
 
-      await sleep(2000);
-      window.location.reload();
+            setOpenUnstakingDialog(false);
+            setDayOfLockUpNft(dayOfLockUpNft);
+            setUnstakingMessage(message);
+            setOpenUnstakingMessageDialog(true);
+          });
     } catch (e) {
       console.error(e);
     } finally {
@@ -545,6 +555,11 @@ const Hero = props => {
   const [amountOfNft, setAmountNft] = React.useState(1);
   const [openStakingDialog, setOpenStakingDialog] = React.useState(false);
   const [openUnstakingDialog, setOpenUnstakingDialog] = React.useState(false);
+
+  const [openUnstakingMessageDialog, setOpenUnstakingMessageDialog] = React.useState(false);
+  const [dayOfLockUpNft, setDayOfLockUpNft] = React.useState(2);
+  const [unstakingMessage, setUnstakingMessage] = React.useState("");
+
   const [openClaimDialog, setOpenClaimDialog] = React.useState(false);
 
   const [stakingTransactionUrl, setStakingTransactionUrl] = React.useState("");
@@ -1079,11 +1094,6 @@ const Hero = props => {
             <LinearProgress />
           </DialogContentText>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenStakingDialog(false)} color="primary">
-            Close
-          </Button>
-        </DialogActions>
       </Dialog>
       <Dialog
           open={openUnstakingDialog}
@@ -1125,6 +1135,30 @@ const Hero = props => {
             <LinearProgress />
           </DialogContentText>
         </DialogContent>
+      </Dialog>
+      <Dialog
+          open={openUnstakingMessageDialog}
+          TransitionComponent={Transition}
+          keepMounted
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle id="alert-dialog-slide-title">{"Unstaking NFT"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            You can't unstaking your NFT.
+            <br/>
+            Unstaking is possible {dayOfLockUpNft} days after staking.
+            <br/>
+            <br/>
+            Remaining time: {unstakingMessage}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenUnstakingMessageDialog(false)} color="primary">
+            Close
+          </Button>
+        </DialogActions>
       </Dialog>
     </div>
   );
