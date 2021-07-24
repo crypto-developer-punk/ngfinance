@@ -52,7 +52,7 @@ const KEY_IS_DISABLED_UNSTAKING = "is_disabled_unstaking_";
 
 const BACKEND_URL = environmentConfig.backend_url;
 
-const requestDatabase = require("../../requestDatabase");
+const requestBackend = require("../../requestBackend");
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -133,6 +133,14 @@ const Hero = props => {
     console.log("web3 test - account: " + account +", balanceOf : " + balanceOfNft);
   };
 
+  const getConnectedAddress = () => {
+    if (isConnectedWallet) {
+      return accounts[0];
+    }
+
+    return undefined;
+  };
+
   const requestAuth = async web3Context => {
     try {
       const result = await web3Context.requestAuth();
@@ -175,7 +183,7 @@ const Hero = props => {
 
   const getNftContract = async() => {
     const nftContract = new lib.eth.Contract(environmentConfig.nftContractAbi, environmentConfig.nftContractAddress, {
-      from: accounts[0] // default from address
+      from: getConnectedAddress() // default from address
     });
 
     return nftContract;
@@ -186,7 +194,7 @@ const Hero = props => {
 
     const nftContract = await getNftContract();
 
-    let balanceOfNft = await nftContract.methods.balanceOf(accounts[0], nft_chain_id).call();
+    let balanceOfNft = await nftContract.methods.balanceOf(getConnectedAddress(), nft_chain_id).call();
 
     console.log("Check balance of nft: " + balanceOfNft);
     upsertState(KEY_NFT_AMOUNT + nft_chain_id, balanceOfNft);
@@ -195,7 +203,7 @@ const Hero = props => {
   };
 
   const checkTotalValueLockedNftAmount = async() => {
-    const response = await requestDatabase.getTotalValueLockedNftAmount(BACKEND_URL, accounts[0]);
+    const response = await requestBackend.getTotalValueLockedNftAmount(BACKEND_URL, getConnectedAddress());
     if (response.status === 200 && response.data.length > 0) {
       console.log(response.data);
       const result = response.data[0];
@@ -228,7 +236,7 @@ const Hero = props => {
   };
 
   const checkStaked = async (nft_chain_id) => {
-    const response = await requestDatabase.getStaked(BACKEND_URL, accounts[0], nft_chain_id);
+    const response = await requestBackend.getStaked(BACKEND_URL, getConnectedAddress(), nft_chain_id);
     let staked;
 
     if (response.status === 200 && response.data.length > 0) {
@@ -250,7 +258,7 @@ const Hero = props => {
   };
 
   const snapshotAndRewardToken = async () => {
-    const response = await requestDatabase.snapshotAndRewardPaintToken(BACKEND_URL, TOKEN_TYPE_PAINT, accounts[0]);
+    const response = await requestBackend.snapshotAndRewardPaintToken(BACKEND_URL, TOKEN_TYPE_PAINT, getConnectedAddress());
 
     console.log(response);
     await checkRewardStatus();
@@ -261,7 +269,7 @@ const Hero = props => {
 
     setIsDisabledClaim(true);
 
-    const response = await requestDatabase.getReward(BACKEND_URL, accounts[0], TOKEN_TYPE_PAINT);
+    const response = await requestBackend.getReward(BACKEND_URL, getConnectedAddress(), TOKEN_TYPE_PAINT);
 
     if (response.status === 200 && response.data.length > 0) {
       const result = response.data[0];
@@ -286,7 +294,7 @@ const Hero = props => {
     try {
       setOpenClaimDialog(true);
 
-      const response = await requestDatabase.approve(BACKEND_URL, accounts[0], 0, TOKEN_TYPE_PAINT);
+      const response = await requestBackend.approve(BACKEND_URL, getConnectedAddress(), 0, TOKEN_TYPE_PAINT);
 
       if (response.status === 200) {
         const approved_token_amount = response.data.approved_token_amount;
@@ -304,18 +312,18 @@ const Hero = props => {
   const requestTransferFromPaintToken = async() => {
     try {
       const contract = new lib.eth.Contract(environmentConfig.PAINT_TOKEN_CONTRACT_ABI, environmentConfig.PAINT_TOKEN_CONTRACT_ADDRESS, {
-        from: accounts[0], // default from address
+        from: getConnectedAddress(), // default from address
       });
 
-      let tokenAmount = await contract.methods.allowance(environmentConfig.toStakingAddress, accounts[0]).call();
+      let tokenAmount = await contract.methods.allowance(environmentConfig.toStakingAddress, getConnectedAddress()).call();
       console.log("requestTransferFromPaintToken > token amount: " + tokenAmount);
 
-      return contract.methods.transferFrom(environmentConfig.toStakingAddress, accounts[0], tokenAmount).send()
+      return contract.methods.transferFrom(environmentConfig.toStakingAddress, getConnectedAddress(), tokenAmount).send()
           .on('transactionHash', function(hash){
             console.log("transactionHash: " + hash);
             setClaimTransactionUrl(environmentConfig.etherscan_url + hash);
 
-            requestDatabase.claim(BACKEND_URL, accounts[0], 0, TOKEN_TYPE_PAINT, hash)
+            requestBackend.claim(BACKEND_URL, getConnectedAddress(), 0, TOKEN_TYPE_PAINT, hash)
                 .then(response => {
                   console.log("claim > claim status: " + response.status);
                 });
@@ -337,7 +345,7 @@ const Hero = props => {
   };
 
   const checkSnapshotStatus = async () => {
-    const response = await requestDatabase.getSnapshot(BACKEND_URL, TOKEN_TYPE_PAINT, accounts[0]);
+    const response = await requestBackend.getSnapshot(BACKEND_URL, TOKEN_TYPE_PAINT, getConnectedAddress());
 
     console.log(response);
     if (response.status === 200 && response.data.length > 0) {
@@ -356,7 +364,7 @@ const Hero = props => {
 
     try {
       const nftContract = new lib.eth.Contract(environmentConfig.nftContractAbi, environmentConfig.nftContractAddress, {
-        from: accounts[0], // default from address
+        from: getConnectedAddress(), // default from address
       });
 
       if (amountOfNft <= 0) {
@@ -364,12 +372,12 @@ const Hero = props => {
         return;
       }
 
-      await nftContract.methods.safeTransferFrom(accounts[0], environmentConfig.toStakingAddress, nft_chain_id, amountOfNft, "0x00").send()
+      await nftContract.methods.safeTransferFrom(getConnectedAddress(), environmentConfig.toStakingAddress, nft_chain_id, amountOfNft, "0x00").send()
           .on('transactionHash', function(hash){
             console.log("staking > transactionHash: " + hash);
             setStakingTransactionUrl(environmentConfig.etherscan_url + hash);
 
-            requestDatabase.registerStaking(BACKEND_URL, accounts[0], nft_chain_id, amountOfNft, hash)
+            requestBackend.registerStaking(BACKEND_URL, getConnectedAddress(), nft_chain_id, amountOfNft, hash)
                 .then(response => {
                   console.log("staking > staking status: " + response.status);
                 });
@@ -395,7 +403,7 @@ const Hero = props => {
     try {
       setOpenUnstakingDialog(true);
 
-      await requestDatabase.unstaking(BACKEND_URL, accounts[0], nft_chain_id)
+      await requestBackend.unstaking(BACKEND_URL, getConnectedAddress(), nft_chain_id)
           .then(response => {
             sleep(2000);
             window.location.reload();
@@ -472,9 +480,9 @@ const Hero = props => {
   };
 
   const getNftInfo = async() => {
-    console.log("Get NFT Info ");
+    console.log("Get NFT Info");
 
-    const response = await requestDatabase.getNftInfo(BACKEND_URL, accounts[0]);
+    const response = await requestBackend.getNftInfo(BACKEND_URL, getConnectedAddress());
     const nftInfos = response.data;
 
     // todo - check response
@@ -487,7 +495,7 @@ const Hero = props => {
   };
 
   const isConnectedWallet = () => {
-    if (accounts && accounts.length > 0) {
+    if ((typeof accounts !== 'undefined') && accounts && accounts.length > 0) {
       return true;
     }
 
@@ -515,7 +523,7 @@ const Hero = props => {
     checkTotalValueLockedNftAmount();
 
     let connected = isConnectedWallet();
-    let balance = connected ? lib.utils.fromWei(await lib.eth.getBalance(accounts[0]), 'ether') : 'Unknown';
+    let balance = connected ? lib.utils.fromWei(await lib.eth.getBalance(getConnectedAddress()), 'ether') : 'Unknown';
 
     setConnectedWallet(connected);
     if (connected) {
@@ -531,7 +539,7 @@ const Hero = props => {
     // Logging
     console.log("[Web3] ETH network connected: " + connected);
     console.log("[Web3] Network id: " + networkId +", name: " + networkName);
-    // console.log("[Web3] Connected account: " + accounts[0]);
+    // console.log("[Web3] Connected account: " + getConnectedAddress());
     console.log("[Web3] ETH Balance: " + balance);
     console.log("[Web3] Provider name: " + providerName);
 
