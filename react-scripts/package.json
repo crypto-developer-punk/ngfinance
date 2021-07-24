@@ -9,6 +9,7 @@
     "start:development": "cross-env REACT_APP_ENV=development react-scripts start",
     "start:production": "cross-env REACT_APP_ENV=production react-scripts start",
     "build": "cross-env GENERATE_SOURCEMAP=false react-scripts build'",
+    "build:development": "cross-env REACT_APP_ENV=development cross-env GENERATE_SOURCEMAP=false react-scripts build",
     "build:staging": "cross-env REACT_APP_ENV=staging cross-env GENERATE_SOURCEMAP=false react-scripts build",
     "build:production": "cross-env REACT_APP_ENV=production cross-env GENERATE_SOURCEMAP=false react-scripts build",
     "prettier": "prettier --write '**/*.{js,css,html}'",
