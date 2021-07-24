@@ -925,7 +925,6 @@ const Hero = props => {
           xs={12}
           md={12}
           data-aos={'fade-up'}
-          hidden={!isDebugMode}
       >
         <Grid item xs={12} style={{marginBottom: '15px'}}>
           <SectionHeader
