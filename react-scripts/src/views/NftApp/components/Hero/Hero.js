@@ -40,7 +40,7 @@ const TOKEN_TYPE_CANVAS = 1;
 
 // Configuration depending on development environment
 const environment = process.env.REACT_APP_ENV || 'development';
-const isDebugMode = environment === 'development' || environment === 'staging';
+const isDebugMode = environment === 'development';
 const environmentConfig = Config[environment];
 
 // Lock key
