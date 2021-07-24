@@ -195,7 +195,7 @@ const Hero = props => {
   };
 
   const checkTotalValueLockedNftAmount = async() => {
-    const response = await requestDatabase.getTotalValueLockedNftAmount(BACKEND_URL);
+    const response = await requestDatabase.getTotalValueLockedNftAmount(BACKEND_URL, accounts[0]);
     if (response.status === 200 && response.data.length > 0) {
       console.log(response.data);
       const result = response.data[0];
@@ -250,7 +250,7 @@ const Hero = props => {
   };
 
   const snapshotAndRewardToken = async () => {
-    const response = await requestDatabase.snapshotAndRewardPaintToken(BACKEND_URL, TOKEN_TYPE_PAINT);
+    const response = await requestDatabase.snapshotAndRewardPaintToken(BACKEND_URL, TOKEN_TYPE_PAINT, accounts[0]);
 
     console.log(response);
     await checkRewardStatus();
@@ -337,7 +337,7 @@ const Hero = props => {
   };
 
   const checkSnapshotStatus = async () => {
-    const response = await requestDatabase.getSnapshot(BACKEND_URL, TOKEN_TYPE_PAINT);
+    const response = await requestDatabase.getSnapshot(BACKEND_URL, TOKEN_TYPE_PAINT, accounts[0]);
 
     console.log(response);
     if (response.status === 200 && response.data.length > 0) {
@@ -395,9 +395,7 @@ const Hero = props => {
     try {
       setOpenUnstakingDialog(true);
 
-      const amountOfNft = state.get(KEY_STAKED_NFT_AMOUNT + nft_chain_id);
-
-      await requestDatabase.unstaking(BACKEND_URL, accounts[0], nft_chain_id, amountOfNft)
+      await requestDatabase.unstaking(BACKEND_URL, accounts[0], nft_chain_id)
           .then(response => {
             sleep(2000);
             window.location.reload();
@@ -476,7 +474,7 @@ const Hero = props => {
   const getNftInfo = async() => {
     console.log("Get NFT Info ");
 
-    const response = await requestDatabase.getNftInfo(BACKEND_URL);
+    const response = await requestDatabase.getNftInfo(BACKEND_URL, accounts[0]);
     const nftInfos = response.data;
 
     // todo - check response
