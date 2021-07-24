@@ -6,6 +6,7 @@
   "private": true,
   "scripts": {
     "start": "react-scripts start'",
+    "start:local": "cross-env REACT_APP_ENV=local react-scripts start",
     "start:development": "cross-env REACT_APP_ENV=development react-scripts start",
     "start:production": "cross-env REACT_APP_ENV=production react-scripts start",
     "build": "cross-env GENERATE_SOURCEMAP=false react-scripts build'",
