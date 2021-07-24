@@ -210,8 +210,6 @@ const Hero = props => {
 
   const checkStakingAndLockStatus = async(balanceOfNft, nft_chain_id) => {
     try {
-      await checkTotalValueLockedNftAmount();
-
       const isStaked = await checkStaked(nft_chain_id);
 
       console.log("checkStakingAndLockStatus > isStaked: " + isStaked);
@@ -389,6 +387,7 @@ const Hero = props => {
 
       const balanceOfNft = await checkBalanceOfNft(nft_chain_id);
       await checkStakingAndLockStatus(balanceOfNft, nft_chain_id);
+      await checkTotalValueLockedNftAmount();
     }
   };
 
@@ -420,6 +419,7 @@ const Hero = props => {
       await sleep(2000);
       await checkBalanceOfNft(nft_chain_id);
       await checkStakingAndLockStatus(0, nft_chain_id);
+      await checkTotalValueLockedNftAmount();
     }
   };
 
@@ -513,13 +513,13 @@ const Hero = props => {
 
     // get nft contents
     const nftInfos = await getNftInfo();
+    checkSnapshotStatus();
+    checkTotalValueLockedNftAmount();
 
     let connected = isConnectedWallet();
     let balance = connected ? lib.utils.fromWei(await lib.eth.getBalance(accounts[0]), 'ether') : 'Unknown';
+
     setConnectedWallet(connected);
-
-    checkSnapshotStatus();
-
     if (connected) {
       nftInfos.map(nftInfo => {
         checkBalanceOfNft(nftInfo.nft_chain_id)
