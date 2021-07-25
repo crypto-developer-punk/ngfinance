@@ -5,12 +5,12 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import {Button, ButtonGroup, colors, Grid, Typography, Divider, Paper, useMediaQuery} from '@material-ui/core';
 import {Image} from 'components/atoms';
 import {SectionHeader} from 'components/molecules';
-import GenesisNFT from '../../../../assets/images/main/genesis_nft.jpg';
 import {CardBase} from "../../../../components/organisms";
 import Eth from "../../../../assets/images/main/logo_eth.svg";
 import Rarible from "../../../../assets/images/main/logo_rarible.png";
 import PaintToken from "../../../../assets/images/main/logo_paint_token.svg";
 import CanvasToken from "../../../../assets/images/main/logo_canvas_token.svg";
+import NextSaleNft from "../../../../assets/images/main/next_sale_nft.jpg";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
@@ -562,7 +562,7 @@ const Hero = props => {
   const classes = useStyles();
 
   const PRICE_ETH_PER_NFT = 0.13;
-  const [amountOfNft, setAmountNft] = React.useState(1);
+  const [amountOfNft, setAmountNft] = React.useState(30);
   const [openStakingDialog, setOpenStakingDialog] = React.useState(false);
   const [openUnstakingDialog, setOpenUnstakingDialog] = React.useState(false);
 
@@ -597,7 +597,7 @@ const Hero = props => {
         <SectionHeader
             title={
               <Typography variant="h5">
-                Now open sale
+                Next Our NFT
               </Typography>
             }
             align="left"
@@ -626,8 +626,9 @@ const Hero = props => {
             data-aos={'fade-up'}
         >
           <Image
-              src={GenesisNFT}
+              src={NextSaleNft}
               alt="Genesis NFT"
+              style={{ width: '100%', height:'700px' }}
               className={classes.image}
               data-aos="flip-left"
               data-aos-easing="ease-out-cubic"
@@ -652,7 +653,10 @@ const Hero = props => {
                       <span>
                         <div>
                           <Typography variant="caption" className={classes.tag} >
-                            Genesis
+                            Nostalgia Artist
+                          </Typography>
+                          <Typography variant="caption" className={classes.tag} >
+                            Paint token
                           </Typography>
                           <Typography variant="caption" className={classes.tag} >
                             NFT
@@ -675,7 +679,7 @@ const Hero = props => {
                     title={
                       <span>
                         <Typography component="span" variant="h5" color="textPrimary" >
-                          <strong>Beginning of Nostalgia</strong>
+                          <strong>London</strong>
                         </Typography>
                       </span>
                     }
@@ -692,7 +696,7 @@ const Hero = props => {
                   </Grid>
                   <Grid item xs={12} md={9}>
                     <Typography variant="subtitle1">
-                      NG.finance Genesis NFT
+                      London
                     </Typography>
                   </Grid>
                 </Grid>
@@ -706,7 +710,7 @@ const Hero = props => {
                   </Grid>
                   <Grid item xs={12} md={9}>
                     <Typography variant="subtitle1">
-                      It will be minted at July 11, 2021
+                      The nft will be released within August, 2021
                     </Typography>
                   </Grid>
                 </Grid>
@@ -719,7 +723,7 @@ const Hero = props => {
                           On sale
                         </Typography>{' '}
                         <Typography component="span" variant="h6" color="textPrimary">
-                          <strong>{PRICE_ETH_PER_NFT}</strong>
+                          <strong>-</strong>
                         </Typography>{' '}
                         <Typography component="span" variant="body1" color="textSecondary">
                           ETH
@@ -740,7 +744,8 @@ const Hero = props => {
               <Grid item xs={12}>
                 <span>
                   <Typography id="discrete-slider-small-steps" gutterBottom>
-                    Total amount : {amountOfNft} NFT
+                    {/*Total amount : {amountOfNft} NFT*/}
+                    Total amount : TBA
                   </Typography>
                 </span>
               </Grid>
@@ -751,8 +756,9 @@ const Hero = props => {
                           e.preventDefault();
                           window.open("https://rarible.com/collection/0x6cff6eb6c7cc2409b48e6192f98914fd05aab4ba?tab=owned", '_blank');
                         }}
-                        fullWidth>
-                  Buy NFT
+                        fullWidth
+                        disabled={true}>
+                  To be opened
                 </Button>
               </Grid>
                 {
@@ -979,39 +985,50 @@ const Hero = props => {
                 </Typography>
               </Grid>
               <Grid
-                  container
-                  xs={6}
-                  alignContent="flex-start"
-                  justify="flex-start"
-                  alignItems="center"
+                  item xs={6}
               >
-                <Grid item>
-                  <Image src={PaintToken}
-                         style={{ width: '120px', height:'120px' }}/>
-                </Grid>
-                <Grid item
-                      alignItems=""
-                      justify="center">
-                  <Typography component="span" variant="subtitle1">
-                    Paint Token : { balanceOfRewardPaint }
-                  </Typography>
+                <Grid
+                    container
+                    xs={12}
+                    alignContent="flex-start"
+                    justify="flex-start"
+                    alignItems="center"
+                    spacing={2}
+                  >
+                  <Grid item>
+                    <Image src={PaintToken}
+                           style={{ width: '120px', height:'120px' }}/>
+                  </Grid>
+                  <Grid item
+                        alignItems=""
+                        justify="center">
+                    <Typography component="span" variant="subtitle1">
+                      Paint Token : { balanceOfRewardPaint }
+                    </Typography>
+                  </Grid>
                 </Grid>
               </Grid>
+
               <Grid
-                  container
-                  xs={6}
-                  alignContent="flex-start"
-                  justify="flex-start"
-                  alignItems="center"
+                  item xs={6}
               >
-                <Grid item>
-                  <Image src={CanvasToken}
-                         style={{ width: '120px', height:'120px' }}/>
-                </Grid>
-                <Grid item>
-                  <Typography component="span" variant="subtitle1">
-                    Canvas Token : { 0 }
-                  </Typography>
+                <Grid
+                    container
+                    xs={12}
+                    alignContent="flex-start"
+                    justify="flex-start"
+                    alignItems="center"
+                    spacing={2}
+                >
+                  <Grid item>
+                    <Image src={CanvasToken}
+                           style={{ width: '120px', height:'120px' }}/>
+                  </Grid>
+                  <Grid item>
+                    <Typography component="span" variant="subtitle1">
+                      Canvas Token : { 0 }
+                    </Typography>
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
