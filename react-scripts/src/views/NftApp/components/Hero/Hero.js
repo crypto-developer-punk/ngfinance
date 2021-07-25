@@ -112,25 +112,29 @@ const Hero = props => {
   const web3Context = useWeb3(environmentConfig.eth_network);
   const { networkId, networkName, accounts, providerName, lib } = web3Context;
 
-  const checkBalanceTest = async() => {
-    const Web3 = require('web3');
-    let web3 = new Web3(Config["production"].eth_network);
-
-    const account = "0x0440A262C4C02904D40F90a160041999823e6B56";
+  const checkMainnetNetworkTest = async() => {
+    // Test - NFT contract
+    const ethNetwork = Config["production"].eth_network;
+    const account = "0x63D3C9753C13Dc72E6468c217aE6E268471033bF";
     const nftContractAbi = Config["production"].nftContractAbi;
     const nftContractAddress = Config["production"].nftContractAddress;
+
+    const Web3 = require('web3');
+    const web3 = new Web3(ethNetwork);
+
     const nft_chain_id = 2;
 
-    console.log("web3 test - web3ContextTest: " + Config["production"].eth_network);
-    console.log("web3 test - nftContractAbi: " + nftContractAbi);
-    console.log("web3 test - nftContractAddress: " + nftContractAddress);
+    console.log("[PROD] web3 test - web3ContextTest: " + ethNetwork);
+    console.log("[PROD] web3 test - nftContractAbi: " + nftContractAbi);
+    console.log("[PROD] web3 test - nftContractAddress: " + nftContractAddress);
+    console.log("[PROD] web3 test - nft chain id: " + nft_chain_id);
 
     const nftContract = new web3.eth.Contract(nftContractAbi, nftContractAddress, {
       from: account // default from address
     });
 
     const balanceOfNft = await nftContract.methods.balanceOf(account, nft_chain_id).call();
-    console.log("web3 test - account: " + account +", balanceOf : " + balanceOfNft);
+    console.log("[PROD] web3 test - account: " + account +", balanceOf : " + balanceOfNft);
   };
 
   const getConnectedAddress = () => {
@@ -515,7 +519,7 @@ const Hero = props => {
   };
 
   const getBalance = React.useCallback(async () => {
-    // checkBalanceTest();
+    // checkMainnetNetworkTest();
 
     // get nft contents
     const nftInfos = await getNftInfo();
