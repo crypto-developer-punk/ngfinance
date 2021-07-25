@@ -40,7 +40,7 @@ const TOKEN_TYPE_CANVAS = 1;
 
 // Configuration depending on development environment
 const environment = process.env.REACT_APP_ENV || 'development';
-const isDebugMode = environment === 'development';
+const isDebugMode = (environment === 'development') || (environment === 'local');
 const environmentConfig = Config[environment];
 
 // Lock key
@@ -297,6 +297,7 @@ const Hero = props => {
   const claim = async () => {
     try {
       setOpenClaimDialog(true);
+      setClaimTransactionUrl("");
 
       const response = await requestBackend.approve(BACKEND_URL, getConnectedAddress(), 0, TOKEN_TYPE_PAINT);
 
@@ -363,6 +364,7 @@ const Hero = props => {
 
   const requestTransforNft = async(nft_chain_id) => {
     setOpenStakingDialog(true);
+    setStakingTransactionUrl("");
 
     const amountOfNft = state.get(KEY_NFT_AMOUNT + nft_chain_id);
 
