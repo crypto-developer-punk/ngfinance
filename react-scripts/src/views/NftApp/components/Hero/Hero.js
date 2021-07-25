@@ -597,7 +597,7 @@ const Hero = props => {
         <SectionHeader
             title={
               <Typography variant="h5">
-                Next Our NFT
+                Our next NFT
               </Typography>
             }
             align="left"
