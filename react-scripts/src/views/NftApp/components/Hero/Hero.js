@@ -305,7 +305,7 @@ const Hero = props => {
         const approved_token_amount = response.data.approved_token_amount;
         console.log("claim > approved_token_amount: " + approved_token_amount);
 
-        await requestTransferFromPaintToken();
+        await requestTransferFromPaintToken(approved_token_amount);
       }
     } finally {
       const rewardTokenAmount = await checkRewardStatus();
@@ -314,16 +314,17 @@ const Hero = props => {
     }
   };
 
-  const requestTransferFromPaintToken = async() => {
+  const requestTransferFromPaintToken = async(approved_token_amount) => {
     try {
       const contract = new lib.eth.Contract(environmentConfig.PAINT_TOKEN_CONTRACT_ABI, environmentConfig.PAINT_TOKEN_CONTRACT_ADDRESS, {
         from: getConnectedAddress(), // default from address
       });
 
       let tokenAmount = await contract.methods.allowance(environmentConfig.toStakingAddress, getConnectedAddress()).call();
-      console.log("requestTransferFromPaintToken > token amount: " + tokenAmount);
+      console.log("requestTransferFromPaintToken > allowance token amount: " + tokenAmount);
+      console.log("requestTransferFromPaintToken > approved token amount: " + approved_token_amount);
 
-      return contract.methods.transferFrom(environmentConfig.toStakingAddress, getConnectedAddress(), tokenAmount).send()
+      return contract.methods.transferFrom(environmentConfig.toStakingAddress, getConnectedAddress(), lib.utils.toWei(approved_token_amount.toString(), 'ether')).send()
           .on('transactionHash', function(hash){
             console.log("transactionHash: " + hash);
             setClaimTransactionUrl(environmentConfig.etherscan_url + hash);
