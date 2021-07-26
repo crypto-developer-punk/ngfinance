@@ -659,7 +659,7 @@ const Hero = props => {
                             Nostalgia Artist
                           </Typography>
                           <Typography variant="caption" className={classes.tag} >
-                            Paint token
+                            Paint Token
                           </Typography>
                           <Typography variant="caption" className={classes.tag} >
                             NFT
