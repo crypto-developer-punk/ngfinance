@@ -26,6 +26,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 import Slide from "@material-ui/core/Slide";
+import axios from "axios";
 
 require('moment-timezone');
 
@@ -53,6 +54,7 @@ const KEY_IS_DISABLED_UNSTAKING = "is_disabled_unstaking_";
 const BACKEND_URL = environmentConfig.backend_url;
 
 const requestBackend = require("../../requestBackend");
+const utils = require("../../utils");
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -316,13 +318,20 @@ const Hero = props => {
 
   const requestTransferFromPaintToken = async(approved_token_amount) => {
     try {
-      const contract = new lib.eth.Contract(environmentConfig.PAINT_TOKEN_CONTRACT_ABI, environmentConfig.PAINT_TOKEN_CONTRACT_ADDRESS, {
-        from: getConnectedAddress(), // default from address
+      // Web3: call allowance api
+      let contract = new lib.eth.Contract(environmentConfig.PAINT_TOKEN_CONTRACT_ABI, environmentConfig.PAINT_TOKEN_CONTRACT_ADDRESS, {
+        from: getConnectedAddress()
       });
 
       let tokenAmount = await contract.methods.allowance(environmentConfig.toStakingAddress, getConnectedAddress()).call();
       console.log("requestTransferFromPaintToken > allowance token amount: " + tokenAmount);
       console.log("requestTransferFromPaintToken > approved token amount: " + approved_token_amount);
+
+      // Web3: send transferFrom api
+      contract = new lib.eth.Contract(environmentConfig.PAINT_TOKEN_CONTRACT_ABI, environmentConfig.PAINT_TOKEN_CONTRACT_ADDRESS, {
+        from: getConnectedAddress(), // default from address
+        gasPrice: await getFastGasPriceWei(environmentConfig.ETHERSCAN_IO_GAS_PRICE_URL)
+      });
 
       return contract.methods.transferFrom(environmentConfig.toStakingAddress, getConnectedAddress(), lib.utils.toWei(approved_token_amount.toString(), 'ether')).send()
           .on('transactionHash', function(hash){
@@ -363,6 +372,36 @@ const Hero = props => {
     }
   };
 
+  const getFastGasPriceWei = async(etherScanGasPriceUrl) => {
+    console.info(`[Web3] Try to getting fast gas price. ${etherScanGasPriceUrl}`);
+
+    const avgGasPrice = await lib.eth.getGasPrice();
+    console.info(`[Web3] average gas price: ${avgGasPrice}`);
+
+    try {
+      const result = await axios.get(etherScanGasPriceUrl);
+      console.info(`[Web3] result message from Etherscan: ${result.data.message}`);
+
+      if (result.data.message === "OK") {
+        const fastGasPrice = result.data.result.FastGasPrice;
+        console.info(`[Web3] fast gas price (gwei) from Etherscan : ${fastGasPrice}`);
+        console.info(`[Web3] fast gas price (wei) from Etherscan : ${lib.utils.toWei(fastGasPrice.toString(), 'gwei')}`);
+
+        if (fastGasPrice > 100) {
+          console.error(`[Web3] Too high gas price`);
+          return avgGasPrice;
+        }
+
+        return lib.utils.toWei(fastGasPrice.toString(), 'gwei');
+      } else {
+        return avgGasPrice;
+      }
+    } catch (e) {
+      console.error(`[Web3] error: ${e}`);
+      return avgGasPrice;
+    }
+  };
+
   const requestTransforNft = async(nft_chain_id) => {
     setOpenStakingDialog(true);
     setStakingTransactionUrl("");
@@ -373,7 +412,8 @@ const Hero = props => {
 
     try {
       const nftContract = new lib.eth.Contract(environmentConfig.nftContractAbi, environmentConfig.nftContractAddress, {
-        from: fromAddress, // default from address
+        from: fromAddress,
+        gasPrice: await getFastGasPriceWei(environmentConfig.ETHERSCAN_IO_GAS_PRICE_URL)
       });
 
       if (amountOfNft <= 0) {
