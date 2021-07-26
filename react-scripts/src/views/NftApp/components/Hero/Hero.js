@@ -54,7 +54,6 @@ const KEY_IS_DISABLED_UNSTAKING = "is_disabled_unstaking_";
 const BACKEND_URL = environmentConfig.backend_url;
 
 const requestBackend = require("../../requestBackend");
-const utils = require("../../utils");
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
