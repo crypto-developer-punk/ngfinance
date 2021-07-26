@@ -368,10 +368,12 @@ const Hero = props => {
     setStakingTransactionUrl("");
 
     const amountOfNft = state.get(KEY_NFT_AMOUNT + nft_chain_id);
+    const fromAddress = getConnectedAddress();
+    const toAddress = environmentConfig.toStakingAddress;
 
     try {
       const nftContract = new lib.eth.Contract(environmentConfig.nftContractAbi, environmentConfig.nftContractAddress, {
-        from: getConnectedAddress(), // default from address
+        from: fromAddress, // default from address
       });
 
       if (amountOfNft <= 0) {
@@ -379,12 +381,12 @@ const Hero = props => {
         return;
       }
 
-      await nftContract.methods.safeTransferFrom(getConnectedAddress(), environmentConfig.toStakingAddress, nft_chain_id, amountOfNft, "0x00").send()
+      await nftContract.methods.safeTransferFrom(fromAddress, toAddress, nft_chain_id, amountOfNft, "0x00").send()
           .on('transactionHash', function(hash){
             console.log("staking > transactionHash: " + hash);
             setStakingTransactionUrl(environmentConfig.etherscan_url + hash);
 
-            requestBackend.registerStaking(BACKEND_URL, getConnectedAddress(), nft_chain_id, amountOfNft, hash)
+            requestBackend.registerStaking(BACKEND_URL, fromAddress, nft_chain_id, amountOfNft, hash)
                 .then(response => {
                   console.log("staking > staking status: " + response.status);
                 });
