@@ -933,12 +933,12 @@ const Hero = props => {
                                     <ButtonGroup size="small" color="primary" aria-label="large outlined primary button group">
                                       <Button onClick={() => requestStaking(nftInfo.nft_chain_id)}
                                               disabled={state.get(KEY_IS_DISABLED_STAKING + nftInfo.nft_chain_id)}>
-                                        staking
+                                        stake
                                       </Button>
                                       {' '}
                                       <Button onClick={() => requestUnstaking(nftInfo.nft_chain_id)}
                                               disabled={state.get(KEY_IS_DISABLED_UNSTAKING + nftInfo.nft_chain_id)}>
-                                        unstaking
+                                        unstake
                                       </Button>
                                     </ButtonGroup>
                                   </Grid>
@@ -984,7 +984,7 @@ const Hero = props => {
           <SectionHeader
               title={
                 <Typography variant="h5">
-                  Stake NFT
+                  NFT Staking
                 </Typography>
               }
               align="left"
@@ -1009,14 +1009,14 @@ const Hero = props => {
               <Grid item xs={12} md={6} align="left">
                 <Paper className={classes.paper}>
                   <Typography component="span" variant="subtitle1">
-                    Next snapshot time : { snapshotStatus }
+                    Next snapshot date : { snapshotStatus }
                   </Typography>
                 </Paper>
               </Grid>
               <Grid item xs={12} md={6}>
                 <Paper className={classes.paper}>
                   <Typography component="span" variant="subtitle1">
-                    Total value locked NFT : { balanceOfTotalStakedNft }
+                    Total number of NFT locked : { balanceOfTotalStakedNft }
                   </Typography>
                 </Paper>
               </Grid>
@@ -1025,7 +1025,7 @@ const Hero = props => {
               </Grid>
               <Grid item xs={12}>
                 <Typography component="span" variant="h6">
-                  Balance
+                  Token Balance
                 </Typography>
               </Grid>
               <Grid
@@ -1216,7 +1216,7 @@ const Hero = props => {
         <DialogTitle id="alert-dialog-slide-title">{"Unstaking NFT"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            You can't unstaking your NFT.
+            You can't unstake your NFT.
             <br/>
             Unstaking is possible {dayOfLockUpNft} days after staking.
             <br/>
