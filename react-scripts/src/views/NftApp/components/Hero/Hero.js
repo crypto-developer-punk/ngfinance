@@ -672,7 +672,7 @@ const Hero = props => {
           <Image
               src={NextSaleNft}
               alt="Genesis NFT"
-              style={{ width: '100%', height:'700px' }}
+              style={{ width: '100%', height:'100%' }}
               className={classes.image}
               data-aos="flip-left"
               data-aos-easing="ease-out-cubic"
@@ -754,7 +754,7 @@ const Hero = props => {
                   </Grid>
                   <Grid item xs={12} md={9}>
                     <Typography variant="subtitle1">
-                      The nft will be released within August, 2021
+                      The nft will be on August 4, 2021 at 21:00 (KST)
                     </Typography>
                   </Grid>
                 </Grid>
@@ -767,7 +767,7 @@ const Hero = props => {
                           On sale
                         </Typography>{' '}
                         <Typography component="span" variant="h6" color="textPrimary">
-                          <strong>-</strong>
+                          <strong>0.25</strong>
                         </Typography>{' '}
                         <Typography component="span" variant="body1" color="textSecondary">
                           ETH
@@ -789,7 +789,7 @@ const Hero = props => {
                 <span>
                   <Typography id="discrete-slider-small-steps" gutterBottom>
                     {/*Total amount : {amountOfNft} NFT*/}
-                    Total amount : TBA
+                    Total amount : 30
                   </Typography>
                 </span>
               </Grid>
