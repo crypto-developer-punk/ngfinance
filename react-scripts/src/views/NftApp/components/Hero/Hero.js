@@ -798,7 +798,7 @@ const Hero = props => {
                 <Button variant="contained" color="primary" size="large"
                         onClick={(e) => {
                           e.preventDefault();
-                          window.open("https://rarible.com/collection/0x6cff6eb6c7cc2409b48e6192f98914fd05aab4ba?tab=owned", '_blank');
+                          window.open("https://rarible.com/token/0x6cff6eb6c7cc2409b48e6192f98914fd05aab4ba:3", '_blank');
                         }}
                         fullWidth
                         disabled={true}>
