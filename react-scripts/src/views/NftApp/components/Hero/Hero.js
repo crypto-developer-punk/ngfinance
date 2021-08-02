@@ -754,7 +754,7 @@ const Hero = props => {
                   </Grid>
                   <Grid item xs={12} md={9}>
                     <Typography variant="subtitle1">
-                      The nft will be on August 4, 2021 at 21:00 (KST)
+                      The nft will be released on August 4, 2021 at 21:00 (KST)
                     </Typography>
                   </Grid>
                 </Grid>
