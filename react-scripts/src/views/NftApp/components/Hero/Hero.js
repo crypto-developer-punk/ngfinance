@@ -854,6 +854,7 @@ const Hero = props => {
                             >
                               <Image
                                   src={nftInfo.image_url}
+                                  style={{height:'100%', width: '100%'}}
                                   alt="Genesis NFT"
                                   className={classes.image}
                                   data-aos="flip-left"
