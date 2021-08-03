@@ -1076,6 +1076,24 @@ const Hero = props => {
                   </Grid>
                 </Grid>
               </Grid>
+              <Grid item xs={12}>
+                <Divider />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography component="span" variant="h6">
+                  Token Address
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography component="span" variant="subtitle1">
+                  Paint Token : 0x83e031005ecb771b7ff900b3c7b0bdde7f521c08
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography component="span" variant="subtitle1">
+                  Canvas Token : 0x863ad391091ae0e87b850c2bb7bfc7597c79c93f
+                </Typography>
+              </Grid>
             </Grid>
           </CardBase>
         </Grid>
