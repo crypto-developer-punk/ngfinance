@@ -228,12 +228,15 @@ const Hero = props => {
       console.log("checkStakingAndLockStatus > isStaked: " + isStaked);
       console.log("checkStakingAndLockStatus > state.get(KEY_NFT_AMOUNT + nft_chain_id): " + state.get(KEY_NFT_AMOUNT + nft_chain_id));
 
-      if (isStaked) {
+      if (isStaked && balanceOfNft <= 0) {
         upsertState(KEY_IS_DISABLED_STAKING + nft_chain_id, true);
         upsertState(KEY_IS_DISABLED_UNSTAKING + nft_chain_id, false);
       } else if (!isStaked && balanceOfNft > 0) {
         upsertState(KEY_IS_DISABLED_STAKING + nft_chain_id, false);
         upsertState(KEY_IS_DISABLED_UNSTAKING + nft_chain_id, true);
+      } else if (isStaked && balanceOfNft >0) {
+        upsertState(KEY_IS_DISABLED_STAKING + nft_chain_id, false);
+        upsertState(KEY_IS_DISABLED_UNSTAKING + nft_chain_id, false);
       }
     } catch (e) {
       console.error(e);
