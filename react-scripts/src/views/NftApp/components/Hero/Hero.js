@@ -234,7 +234,7 @@ const Hero = props => {
       } else if (!isStaked && balanceOfNft > 0) {
         upsertState(KEY_IS_DISABLED_STAKING + nft_chain_id, false);
         upsertState(KEY_IS_DISABLED_UNSTAKING + nft_chain_id, true);
-      } else if (isStaked && balanceOfNft >0) {
+      } else if (isStaked && balanceOfNft > 0) {
         upsertState(KEY_IS_DISABLED_STAKING + nft_chain_id, false);
         upsertState(KEY_IS_DISABLED_UNSTAKING + nft_chain_id, false);
       }
