@@ -247,8 +247,8 @@ const Hero = props => {
     const response = await requestBackend.getStaked(BACKEND_URL, getConnectedAddress(), nft_chain_id);
     let staked;
 
-    if (response.status === 200 && response.data.length > 0) {
-      const result = response.data[0];
+    if (response.status === 200) {
+      const result = response.data;
       const nft_amount = result.nft_amount;
 
       console.log("checkStaked > staked nft_amount: " + nft_amount);
