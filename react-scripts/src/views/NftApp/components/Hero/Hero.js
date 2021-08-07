@@ -804,7 +804,7 @@ const Hero = props => {
                           window.open("https://rarible.com/token/0x6cff6eb6c7cc2409b48e6192f98914fd05aab4ba:3", '_blank');
                         }}
                         fullWidth
-                        disabled={false}>
+                        disabled={true}>
                   Buy NFT
                 </Button>
               </Grid>
