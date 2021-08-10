@@ -51,6 +51,8 @@ const KEY_STAKED_NFT_AMOUNT = "staked_nft_amount_";
 const KEY_IS_DISABLED_STAKING = "is_disabled_staking_";
 const KEY_IS_DISABLED_UNSTAKING = "is_disabled_unstaking_";
 
+const KEY_IN_PROGRESS_UNSTAKING_NFT_CHAIN_ID = "in_progress_unstaking_nft_chain_id";
+
 const BACKEND_URL = environmentConfig.backend_url;
 
 const requestBackend = require("../../requestBackend");
@@ -172,6 +174,11 @@ const Hero = props => {
     }
   };
 
+  const confirmtUnstaking = (nft_chain_id) => {
+    setOpenUnstakingConfirmDialog(true);
+    upsertState(KEY_IN_PROGRESS_UNSTAKING_NFT_CHAIN_ID, nft_chain_id);
+  };
+
   const requestUnstaking = (nft_chain_id) => {
     if (!isValidNetwork()) {
       return;
@@ -226,7 +233,7 @@ const Hero = props => {
       const isStaked = await checkStaked(nft_chain_id);
 
       console.log("checkStakingAndLockStatus > isStaked: " + isStaked);
-      console.log("checkStakingAndLockStatus > state.get(KEY_NFT_AMOUNT + nft_chain_id): " + state.get(KEY_NFT_AMOUNT + nft_chain_id));
+      console.log("checkStakingAndLockStatus > state.get(KEY_NFT_AMOUNT + nft_chain_id): " + state.get(KEY_NFT_AMOUNT + nft_chain_id) + ", nft chain id: " + nft_chain_id);
 
       if (isStaked && balanceOfNft <= 0) {
         upsertState(KEY_IS_DISABLED_STAKING + nft_chain_id, true);
@@ -452,6 +459,7 @@ const Hero = props => {
 
   const requestTransforNftFromStaked = async(nft_chain_id) => {
     try {
+      console.log("request unstaking. nft chain id: " + nft_chain_id);
       setOpenUnstakingDialog(true);
 
       await requestBackend.unstaking(BACKEND_URL, getConnectedAddress(), nft_chain_id)
@@ -618,6 +626,8 @@ const Hero = props => {
   const [unstakingMessage, setUnstakingMessage] = React.useState("");
 
   const [openClaimDialog, setOpenClaimDialog] = React.useState(false);
+
+  const [openUnstakingConfirmDialog, setOpenUnstakingConfirmDialog] = React.useState(false);
 
   const [stakingTransactionUrl, setStakingTransactionUrl] = React.useState("");
   const [claimTransactionUrl, setClaimTransactionUrl] = React.useState("");
@@ -940,7 +950,7 @@ const Hero = props => {
                                         stake
                                       </Button>
                                       {' '}
-                                      <Button onClick={() => requestUnstaking(nftInfo.nft_chain_id)}
+                                      <Button onClick={() => confirmtUnstaking(nftInfo.nft_chain_id)}
                                               disabled={state.get(KEY_IS_DISABLED_UNSTAKING + nftInfo.nft_chain_id)}>
                                         unstake
                                       </Button>
@@ -1251,6 +1261,32 @@ const Hero = props => {
             Close
           </Button>
         </DialogActions>
+      </Dialog>
+      <Dialog
+          open={openUnstakingConfirmDialog}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={() => setOpenUnstakingConfirmDialog(false)}
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle id="alert-dialog-slide-title">{"Confirm unstaking your NFT "}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            Are you sure you want to unstaking?
+          </DialogContentText>
+          <DialogActions>
+            <Button onClick={() => {
+              requestUnstaking(state.get(KEY_IN_PROGRESS_UNSTAKING_NFT_CHAIN_ID));
+              setOpenUnstakingConfirmDialog(false);
+            }} color="primary">
+              Confirm
+            </Button>
+            <Button onClick={() => setOpenUnstakingConfirmDialog(false)} color="primary">
+              Close
+            </Button>
+          </DialogActions>
+        </DialogContent>
       </Dialog>
     </div>
   );
