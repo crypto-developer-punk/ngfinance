@@ -736,7 +736,7 @@ const Hero = props => {
                     title={
                       <span>
                         <Typography component="span" variant="h5" color="textPrimary" >
-                          <strong>London</strong>
+                          <strong>Play to Earn</strong>
                         </Typography>
                       </span>
                     }
@@ -753,7 +753,7 @@ const Hero = props => {
                   </Grid>
                   <Grid item xs={12} md={9}>
                     <Typography variant="subtitle1">
-                      London
+                      Play to Earn
                     </Typography>
                   </Grid>
                 </Grid>
@@ -767,7 +767,7 @@ const Hero = props => {
                   </Grid>
                   <Grid item xs={12} md={9}>
                     <Typography variant="subtitle1">
-                      The nft will be released on August 4, 2021 at 21:00 (KST)
+                      The nft will be mint on August 14, 2021 (KST)
                     </Typography>
                   </Grid>
                 </Grid>
@@ -780,7 +780,7 @@ const Hero = props => {
                           On sale
                         </Typography>{' '}
                         <Typography component="span" variant="h6" color="textPrimary">
-                          <strong>0.25</strong>
+                          <strong>TBA</strong>
                         </Typography>{' '}
                         <Typography component="span" variant="body1" color="textSecondary">
                           ETH
@@ -802,7 +802,7 @@ const Hero = props => {
                 <span>
                   <Typography id="discrete-slider-small-steps" gutterBottom>
                     {/*Total amount : {amountOfNft} NFT*/}
-                    Total amount : 30
+                    Total amount : TBA
                   </Typography>
                 </span>
               </Grid>
