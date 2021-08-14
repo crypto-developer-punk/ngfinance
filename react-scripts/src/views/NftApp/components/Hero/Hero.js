@@ -353,7 +353,6 @@ const Hero = props => {
             requestBackend.claim(BACKEND_URL, getConnectedAddress(), 0, TOKEN_TYPE_PAINT, hash)
                 .then(response => {
                   console.log("claim > claim status: " + response.status);
-
                   callback();
                 });
           })
@@ -362,7 +361,7 @@ const Hero = props => {
           })
           .on('error', function(error, receipt) {
             console.log("error");
-            throw new Error("transferFromPaintToken is failed");
+            callback();
           });
     } catch (e) {
       console.error(e);
