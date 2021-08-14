@@ -141,7 +141,8 @@ const Hero = props => {
   };
 
   const getConnectedAddress = () => {
-    if (isConnectedWallet) {
+    console.log("check connected address. accounts: " + accounts);
+    if (isConnectedWallet && accounts !== null && accounts.length > 0) {
       return accounts[0];
     }
 
@@ -316,21 +317,18 @@ const Hero = props => {
         const approved_token_amount = response.data.approved_token_amount;
         console.log("claim > approved_token_amount: " + approved_token_amount);
 
-       const receipt = await requestTransferFromPaintToken(approved_token_amount);
-
-       await requestBackend.claim(BACKEND_URL, getConnectedAddress(), 0, TOKEN_TYPE_PAINT, receipt.transactionHash)
-           .then(response => {
-             console.log("claim > claim status: " + response.status);
-           });
+       requestTransferFromPaintToken(approved_token_amount, function() {
+         const rewardTokenAmount = checkRewardStatus();
+         console.log("claim > rewardTokenAmount: " + rewardTokenAmount);
+         setOpenClaimDialog(false);
+       });
       }
-    } finally {
-      const rewardTokenAmount = await checkRewardStatus();
-      console.log("claim > rewardTokenAmount: " + rewardTokenAmount);
-      setOpenClaimDialog(false);
+    } catch {
+      window.location.reload();
     }
   };
 
-  const requestTransferFromPaintToken = async(approved_token_amount) => {
+  const requestTransferFromPaintToken = async(approved_token_amount, callback) => {
     try {
       // Web3: call allowance api
       let contract = new lib.eth.Contract(environmentConfig.PAINT_TOKEN_CONTRACT_ABI, environmentConfig.PAINT_TOKEN_CONTRACT_ADDRESS, {
@@ -347,10 +345,17 @@ const Hero = props => {
         gasPrice: await getFastGasPriceWei(environmentConfig.ETHERSCAN_IO_GAS_PRICE_URL)
       });
 
-      return contract.methods.transferFrom(environmentConfig.toStakingAddress, getConnectedAddress(), lib.utils.toWei(approved_token_amount.toString(), 'ether')).send()
+      contract.methods.transferFrom(environmentConfig.toStakingAddress, getConnectedAddress(), lib.utils.toWei(approved_token_amount.toString(), 'ether')).send()
           .on('transactionHash', function(hash){
             console.log("transactionHash: " + hash);
             setClaimTransactionUrl(environmentConfig.etherscan_url + hash);
+
+            requestBackend.claim(BACKEND_URL, getConnectedAddress(), 0, TOKEN_TYPE_PAINT, hash)
+                .then(response => {
+                  console.log("claim > claim status: " + response.status);
+
+                  callback();
+                });
           })
           .on('receipt', function(receipt){
             console.log("receipt: " + receipt);
@@ -435,6 +440,12 @@ const Hero = props => {
             requestBackend.registerStaking(BACKEND_URL, fromAddress, nft_chain_id, amountOfNft, hash)
                 .then(response => {
                   console.log("staking > staking status: " + response.status);
+
+                  setOpenStakingDialog(false);
+
+                  const balanceOfNft = checkBalanceOfNft(nft_chain_id);
+                  checkStakingAndLockStatus(balanceOfNft, nft_chain_id);
+                  checkTotalValueLockedNftAmount();
                 });
           })
           .on('receipt', function(receipt){
@@ -444,13 +455,7 @@ const Hero = props => {
             console.log("staking > error: " + error);
           });
     } catch (e) {
-      console.error(e);
-    } finally {
-      setOpenStakingDialog(false);
-
-      const balanceOfNft = await checkBalanceOfNft(nft_chain_id);
-      await checkStakingAndLockStatus(balanceOfNft, nft_chain_id);
-      await checkTotalValueLockedNftAmount();
+      window.location.reload();
     }
   };
 
