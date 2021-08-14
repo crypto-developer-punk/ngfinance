@@ -316,11 +316,16 @@ const Hero = props => {
         const approved_token_amount = response.data.approved_token_amount;
         console.log("claim > approved_token_amount: " + approved_token_amount);
 
-        await requestTransferFromPaintToken(approved_token_amount);
+       const receipt = await requestTransferFromPaintToken(approved_token_amount);
+
+       await requestBackend.claim(BACKEND_URL, getConnectedAddress(), 0, TOKEN_TYPE_PAINT, receipt.transactionHash)
+           .then(response => {
+             console.log("claim > claim status: " + response.status);
+           });
       }
     } finally {
       const rewardTokenAmount = await checkRewardStatus();
-      console.log ("claim > rewardTokenAmount: " + rewardTokenAmount);
+      console.log("claim > rewardTokenAmount: " + rewardTokenAmount);
       setOpenClaimDialog(false);
     }
   };
@@ -346,25 +351,17 @@ const Hero = props => {
           .on('transactionHash', function(hash){
             console.log("transactionHash: " + hash);
             setClaimTransactionUrl(environmentConfig.etherscan_url + hash);
-
-            requestBackend.claim(BACKEND_URL, getConnectedAddress(), 0, TOKEN_TYPE_PAINT, hash)
-                .then(response => {
-                  console.log("claim > claim status: " + response.status);
-                });
-
-            return true;
           })
           .on('receipt', function(receipt){
             console.log("receipt: " + receipt);
-            return true;
           })
           .on('error', function(error, receipt) {
             console.log("error");
-            return false;
+            throw new Error("transferFromPaintToken is failed");
           });
     } catch (e) {
       console.error(e);
-      return false;
+      throw new Error("transferFromPaintToken is failed");
     }
   };
 
