@@ -443,9 +443,14 @@ const Hero = props => {
 
                   setOpenStakingDialog(false);
 
-                  const balanceOfNft = checkBalanceOfNft(nft_chain_id);
-                  checkStakingAndLockStatus(balanceOfNft, nft_chain_id);
-                  checkTotalValueLockedNftAmount();
+                  window.location.reload();
+
+                  // fixme: 자신의 NFT 수량이 업데이트가 바로 되지 않는 문제가 있음. 추후 확인이 필요함.
+                  // checkBalanceOfNft(nft_chain_id)
+                  //     .then(balanceOfNft => {
+                  //       checkStakingAndLockStatus(balanceOfNft, nft_chain_id);
+                  //       checkTotalValueLockedNftAmount();
+                  //     });
                 });
           })
           .on('receipt', function(receipt){
