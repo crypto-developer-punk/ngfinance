@@ -8,12 +8,12 @@ import {About, Hero, Partners, Roadmap, Team, Tokeneconomics} from './components
 import {backer, partners, team, services} from './data';
 import Backer from "./components/Backer";
 import EndHero from "./components/EndHero";
-import Config from '../../config.json';
-import ReactGA from 'react-ga';
+// import Config from '../../config.json';
+// import ReactGA from 'react-ga';
 import WhatWeDo from "./components/WhatWeDo";
 
-ReactGA.initialize(Config.ga_code);
-ReactGA.pageview(window.location.pathname + window.location.search);
+// ReactGA.initialize(Config.ga_code);
+// ReactGA.pageview(window.location.pathname + window.location.search);
 
 const useStyles = makeStyles(theme => ({
   hero: {
