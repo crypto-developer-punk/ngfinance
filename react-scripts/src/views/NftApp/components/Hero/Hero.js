@@ -768,12 +768,12 @@ const Hero = props => {
                 <Grid container>
                   <Grid item xs={12} md={3}>
                     <Typography variant="subtitle1" color={"primary"}>
-                      ISSUE DATE
+                      RELEASE DATE
                     </Typography>
                   </Grid>
                   <Grid item xs={12} md={9}>
                     <Typography variant="subtitle1">
-                      The nft will be mint on August 14, 2021 (KST)
+                      The nft sale will starts at 21 PM on August 17th (KST)
                     </Typography>
                   </Grid>
                 </Grid>
@@ -786,7 +786,7 @@ const Hero = props => {
                           On sale
                         </Typography>{' '}
                         <Typography component="span" variant="h6" color="textPrimary">
-                          <strong>TBA</strong>
+                          <strong>0.25</strong>
                         </Typography>{' '}
                         <Typography component="span" variant="body1" color="textSecondary">
                           ETH
@@ -808,7 +808,7 @@ const Hero = props => {
                 <span>
                   <Typography id="discrete-slider-small-steps" gutterBottom>
                     {/*Total amount : {amountOfNft} NFT*/}
-                    Total amount : TBA
+                    Total amount : 30
                   </Typography>
                 </span>
               </Grid>
@@ -817,10 +817,10 @@ const Hero = props => {
                 <Button variant="contained" color="primary" size="large"
                         onClick={(e) => {
                           e.preventDefault();
-                          window.open("https://rarible.com/token/0x6cff6eb6c7cc2409b48e6192f98914fd05aab4ba:3", '_blank');
+                          window.open("https://rarible.com/token/0x6cff6eb6c7cc2409b48e6192f98914fd05aab4ba:6", '_blank');
                         }}
                         fullWidth
-                        disabled={true}>
+                        disabled={false}>
                   Buy NFT
                 </Button>
               </Grid>
