@@ -29,11 +29,15 @@ export const getStaked = async(backend_url, my_address, nft_chain_id) => {
     return axios.get(`${backend_url}/staking`, { params : params, headers: setRequestHeaders(my_address) });
 };
 
-export const getTotalValueLockedNftAmount = async(backend_url, my_address) => {
-    return axios.get(`${backend_url}/staking/getTotalValueLockedNftAmount`, {headers: setRequestHeaders(my_address)});
+export const getTotalValueLockedNftAmount = async(backend_url, my_address, token_type) => {
+    const params = {
+        "token_type": token_type
+    };
+
+    return axios.get(`${backend_url}/staking/getTotalValueLockedNftAmount`, { params : params, headers: setRequestHeaders(my_address)});
 };
 
-export const snapshotAndRewardPaintToken = async(backend_url, token_type, my_address) => {
+export const snapshotAndRewardToken = async(backend_url, token_type, my_address) => {
     const data = {
         "token_type": token_type
     };
@@ -50,17 +54,16 @@ export const getReward = async(backend_url, my_address, token_type) => {
     return axios.get(`${backend_url}/reward`, { params : params, headers: setRequestHeaders(my_address) });
 };
 
-export const approve = async(backend_url, my_address, nft_chain_id, token_type) => {
+export const approve = async(backend_url, my_address, token_type) => {
     const data = {
         "address": my_address,
-        "nft_chain_id": nft_chain_id,
         "token_type": token_type
     };
 
     return axios.post(`${backend_url}/reward/approve`, data, {headers: setRequestHeaders(my_address)});
 };
 
-export const claim = async(backend_url, my_address, nft_chain_id, token_type, transactionHash) => {
+export const claim = async(backend_url, my_address, token_type, transactionHash) => {
     const data = {
         "address": my_address,
         "token_type": token_type,
