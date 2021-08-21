@@ -1198,7 +1198,7 @@ const Hero = props => {
           <SectionHeader
               title={
                 <Typography variant="h5">
-                  NFT Staking
+                  Staking
                 </Typography>
               }
               align="left"
@@ -1211,7 +1211,7 @@ const Hero = props => {
             <Grid container spacing={isMd ? 5 : 1}>
               <Grid item xs={6} md={6} align={"left"}>
                 <Typography component="span" variant="h5" style={{color: `${colors.deepOrange[900]}`}}>
-                  PAINT Token Staking
+                  NFT Staking
                 </Typography>
               </Grid>
               <Grid item xs={6} md={6} align={"right"}>
