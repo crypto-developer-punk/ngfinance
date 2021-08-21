@@ -459,16 +459,18 @@ const Hero = props => {
         console.log("claim > approved_token_amount: " + approved_token_amount);
 
         let rewardTokenAmount = 0;
-       requestTransferFromPaintToken(tokenType, approved_token_amount, function() {
-         switch (tokenType) {
-           case TOKEN_TYPE_PAINT_NFT:
-             rewardTokenAmount = checkRewardStatusPaint();
-           case TOKEN_TYPE_CANVAS_PAINT_ETH_LP:
-             rewardTokenAmount = checkRewardStatusPaintEthLp();
-         }
-         console.log("claim > rewardTokenAmount: " + rewardTokenAmount);
-         setOpenClaimDialog(false);
-       });
+        requestTransferFromPaintToken(tokenType, approved_token_amount, function () {
+          switch (tokenType) {
+            case TOKEN_TYPE_PAINT_NFT:
+              rewardTokenAmount = checkRewardStatusPaint();
+              break;
+            case TOKEN_TYPE_CANVAS_PAINT_ETH_LP:
+              rewardTokenAmount = checkRewardStatusPaintEthLp();
+              break;
+          }
+          console.log("claim > rewardTokenAmount: " + rewardTokenAmount);
+          setOpenClaimDialog(false);
+        });
       }
     } catch {
       window.location.reload();
@@ -485,9 +487,11 @@ const Hero = props => {
         case TOKEN_TYPE_PAINT_NFT:
           contractAbi = environmentConfig.PAINT_TOKEN_CONTRACT_ABI;
           contractAddress = environmentConfig.PAINT_TOKEN_CONTRACT_ADDRESS;
+          break;
         case TOKEN_TYPE_CANVAS_PAINT_ETH_LP:
           contractAbi = environmentConfig.CANVAS_TOKEN_CONTRACT_ABI;
           contractAddress = environmentConfig.CANVAS_TOKEN_CONTRACT_ADDRESS;
+          break;
       }
 
       let contract = new lib.eth.Contract(contractAbi, contractAddress, {
@@ -495,6 +499,7 @@ const Hero = props => {
       });
 
       let tokenAmount = await contract.methods.allowance(environmentConfig.toStakingAddress, getConnectedAddress()).call();
+      console.log("requestTransferFromPaintToken > contractAddress: " + contractAddress);
       console.log("requestTransferFromPaintToken > allowance token amount: " + tokenAmount);
       console.log("requestTransferFromPaintToken > approved token amount: " + approved_token_amount);
 
