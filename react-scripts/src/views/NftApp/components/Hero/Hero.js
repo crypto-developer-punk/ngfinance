@@ -1447,7 +1447,7 @@ const Hero = props => {
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle id="alert-dialog-slide-title">{"Staking NFT"}</DialogTitle>
+        <DialogTitle id="alert-dialog-slide-title">{"Staking"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
             { stakingDialogContext }
