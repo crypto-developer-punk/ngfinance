@@ -1470,10 +1470,10 @@ const Hero = props => {
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle id="alert-dialog-slide-title">{"Unstaking NFT"}</DialogTitle>
+        <DialogTitle id="alert-dialog-slide-title">{"Unstaking"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Your NFT unstaking is in progress
+            Unstaking is in progress
             <br/>
             <br/>
             <LinearProgress />
