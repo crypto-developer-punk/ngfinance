@@ -1278,7 +1278,7 @@ const Hero = props => {
             </Grid>
           </CardBase>
         </Grid>
-        <Grid item xs={12} hidden={!isDebugMode}>
+        <Grid item xs={12}>
           <CardBase liftUp variant="outlined" align="left" withShadow
                     style={{ borderTop: `5px solid ${colors.deepPurple[900]}` }}>
             <Grid container spacing={isMd ? 5 : 1}>
