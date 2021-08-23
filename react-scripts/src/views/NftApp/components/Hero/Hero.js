@@ -1320,7 +1320,7 @@ const Hero = props => {
               <Grid item xs={12} md={12}>
                 <Paper className={classes.paper}>
                   <Typography component="span" variant="subtitle1">
-                    CANVAS : 0x83e031005ecb771b7ff900b3c7b0bdde7f521c08
+                    CANVAS : 0x863ad391091ae0e87b850c2bb7bfc7597c79c93f
                   </Typography>
                 </Paper>
               </Grid>
