@@ -3,16 +3,12 @@ import PropTypes from 'prop-types';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import {
   useMediaQuery,
-  colors,
   Grid,
-  FormControl,
-  OutlinedInput,
-  InputAdornment,
-  Button,
   Typography,
 } from '@material-ui/core';
 import { Image, Icon } from 'components/atoms';
 import { SectionHeader } from 'components/molecules';
+import { Section } from "components/organisms";
 import ComingSoon from "../../../../assets/images/main/coming_soon.svg";
 
 const useStyles = makeStyles(theme => ({
@@ -70,7 +66,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const EndHero = props => {
+const ComingNextSection = props => {
   const { data, className, ...rest } = props;
   const classes = useStyles();
 
@@ -80,7 +76,7 @@ const EndHero = props => {
   });
 
   return (
-    <div className={className} {...rest}>
+    <Section className={className} {...rest}>
       <Grid container justify="space-between" spacing={isMd ? 4 : 2} data-aos={'fade-up'}>
         <Grid
           item
@@ -113,15 +109,15 @@ const EndHero = props => {
           />
         </Grid>
       </Grid>
-    </div>
+    </Section>
   );
 };
 
-EndHero.propTypes = {
+ComingNextSection.propTypes = {
   /**
    * External classes
    */
   className: PropTypes.string,
 };
 
-export default EndHero;
+export default ComingNextSection;

@@ -3,7 +3,6 @@ const sleep = (ms) => {
 };
 
 export const timeout = (target, ms) => {
-    console.log('aaa', target, ms);
     return Promise.race([
         target,
         (async () => {

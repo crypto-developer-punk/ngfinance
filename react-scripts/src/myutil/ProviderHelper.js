@@ -59,6 +59,8 @@ class ProviderHelper {
             case 42:
               return 'Kovan';
             // 60: GoChain, the GoChain networks mainnet
+            case 56:
+              return 'BinanceSmartChain';
             case 60:
               return 'GoChain';
             // 77: Sokol, the public POA Network testnet

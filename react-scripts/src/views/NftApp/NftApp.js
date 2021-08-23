@@ -1,9 +1,9 @@
 import React from 'react';
+import { inject, observer } from "mobx-react";
 import {makeStyles} from '@material-ui/core/styles';
 import {colors} from '@material-ui/core';
-import {Section} from 'components/organisms';
-import {Hero,} from './components';
-import EndHero from "../NostalgiaIndex/components/EndHero";
+import {NextNftSection, ComingNextSection, OurNtfSection} from './sections';
+import WithBase from 'with/WithBase';
 
 const useStyles = makeStyles(theme => ({
   pagePaddingTop: {
@@ -22,21 +22,32 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const NftApp = () => {
+const NftApp = props => {
   const classes = useStyles();
+
+  React.useEffect(() => {
+    async function initStore() {
+      try {
+        await props.store.asyncInitWebThreeContext();
+        await props.store.asyncInitNftInfos(props.store.webThreeContext);
+      } catch (err) {
+        props.showErrorDialog(err);
+      }
+    }
+    initStore();
+  }, []);
 
   return (
     <div>
       <div className={classes.shape}>
-        <Section className={classes.pagePaddingTop}>
-          <Hero />
-        </Section>
-        <Section className={classes.pagePaddingTop}>
-          <EndHero />
-        </Section>
+        <NextNftSection className={classes.pagePaddingTop} {...props}/>
+        <OurNtfSection className={classes.sectionNoPaddingTop} {...props} />
+        <ComingNextSection className={classes.pagePaddingTop} {...props}/>
       </div>
     </div>
   );
 };
 
-export default NftApp;
+export default inject(({store}) => ({
+  store: store,
+}))(observer(WithBase(NftApp)));

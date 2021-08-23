@@ -14,7 +14,7 @@ class RequestBackend {
             "staking_transaction_hash": transactionHash
         };
     
-        return axios.post(`${this.backend_url}/staking/register`, data, {headers: this.getRequestHeaders(my_address)});
+        return axios.post(`${this.backend_url}/staking/register`, data, {headers: this.#getRequestHeaders(my_address)});
     };
 
     unstaking = async(my_address, nft_chain_id) => {
@@ -23,7 +23,7 @@ class RequestBackend {
             "nft_chain_id": nft_chain_id
         };
     
-        return axios.post(`${this.backend_url}/staking/unstaking`, data, {headers: this.getRequestHeaders(my_address)});
+        return axios.post(`${this.backend_url}/staking/unstaking`, data, {headers: this.#getRequestHeaders(my_address)});
     };
 
     getStaked = async(my_address, nft_chain_id) => {
@@ -32,11 +32,11 @@ class RequestBackend {
             "nft_chain_id": nft_chain_id
         };
     
-        return axios.get(`${this.backend_url}/staking`, { params : params, headers: this.getRequestHeaders(my_address) });
+        return axios.get(`${this.backend_url}/staking`, { params : params, headers: this.#getRequestHeaders(my_address) });
     };
     
     getTotalValueLockedNftAmount = async(my_address) => {
-        return axios.get(`${this.backend_url}/staking/getTotalValueLockedNftAmount`, {headers: this.getRequestHeaders(my_address)});
+        return axios.get(`${this.backend_url}/staking/getTotalValueLockedNftAmount`, {headers: this.#getRequestHeaders(my_address)});
     };
     
     snapshotAndRewardPaintToken = async(token_type, my_address) => {
@@ -44,7 +44,7 @@ class RequestBackend {
             "token_type": token_type
         };
     
-        return axios.post(`${this.backend_url}/reward/register/allBySnapshot`, data, {headers: this.getRequestHeaders(my_address)});
+        return axios.post(`${this.backend_url}/reward/register/allBySnapshot`, data, {headers: this.#getRequestHeaders(my_address)});
     };
 
     getReward = async(my_address, token_type) => {
@@ -53,7 +53,7 @@ class RequestBackend {
             "token_type": token_type
         };
     
-        return axios.get(`${this.backend_url}/reward`, { params : params, headers: this.getRequestHeaders(my_address) });
+        return axios.get(`${this.backend_url}/reward`, { params : params, headers: this.#getRequestHeaders(my_address) });
     };
 
     approve = async(my_address, nft_chain_id, token_type) => {
@@ -63,7 +63,7 @@ class RequestBackend {
             "token_type": token_type
         };
     
-        return axios.post(`${this.backend_url}/reward/approve`, data, {headers: this.getRequestHeaders(my_address)});
+        return axios.post(`${this.backend_url}/reward/approve`, data, {headers: this.#getRequestHeaders(my_address)});
     };
 
     claim = async(my_address, nft_chain_id, token_type, transactionHash) => {
@@ -73,7 +73,7 @@ class RequestBackend {
             "claimed_transaction_hash": transactionHash
         };
     
-        return axios.post(`${this.backend_url}/reward/claim`, data, {headers: this.getRequestHeaders(my_address)});
+        return axios.post(`${this.backend_url}/reward/claim`, data, {headers: this.#getRequestHeaders(my_address)});
     };
 
     getSnapshot = async(token_type, my_address) => {
@@ -81,14 +81,14 @@ class RequestBackend {
             "token_type": token_type
         };
     
-        return axios.get(`${this.backend_url}/snapshot/latest`, { params : params , headers: this.getRequestHeaders(my_address)});
+        return axios.get(`${this.backend_url}/snapshot/latest`, { params : params , headers: this.#getRequestHeaders(my_address)});
     };
 
     getNftInfo = async(my_address) => {
-        return axios.get(`${this.backend_url}/nft/all`, {headers: this.getRequestHeaders(my_address)});
+        return axios.get(`${this.backend_url}/nft/all`, {headers: this.#getRequestHeaders(my_address)});
     };
 
-    getRequestHeaders = (address) => {
+    #getRequestHeaders = (address) => {
         return {"x-ngf-address": address};
     };
 };

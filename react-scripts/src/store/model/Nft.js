@@ -1,13 +1,16 @@
 import {types} from 'mobx-state-tree';
 
-const Locking = types.model('Locking', {
-    id: types.identifierNumber,
-    nft_chain_id: types.optional(types.number, -1),   
-    token_type: types.optional(types.number, -1),
-    subject: types.optional(types.string, '')
+const Nft = types.model('Nft', {
+  id: types.identifierNumber,
+  nft_chain_id: types.optional(types.number, -1),   
+  token_type: types.optional(types.number, -1),
+  subject: types.optional(types.string, ''),
+  description: types.maybeNull(types.string),
+  image_url: types.optional(types.string, ''),
+  nft_url: types.optional(types.string, ''),    
 });
 
-export default Locking;
+export default Nft;
 
 /*
 CREATE TABLE IF NOT EXISTS `ngfinance_test`.`nft` (

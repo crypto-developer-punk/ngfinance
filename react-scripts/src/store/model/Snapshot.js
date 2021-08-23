@@ -1,6 +1,6 @@
 import {types} from 'mobx-state-tree';
 
-const Snapshot = types.model('Staking', {
+const Snapshot = types.model('Snapshot', {
     id: types.identifierNumber,
     snapshot_time: types.Date,
     token_type: types.optional(types.number, -1),
