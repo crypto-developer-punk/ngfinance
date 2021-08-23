@@ -28,6 +28,10 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Slide from "@material-ui/core/Slide";
 import axios from "axios";
 
+import {isMobile} from 'react-device-detect';
+
+console.log("isMobile? " + isMobile);
+
 require('moment-timezone');
 
 Moment.tz.setDefault("Asia/Seoul");
@@ -44,6 +48,11 @@ const TOKEN_TYPE_CANVAS_NFT = 2;
 const environment = process.env.REACT_APP_ENV || 'development';
 const isDebugMode = (environment === 'staging') || (environment === 'development') || (environment === 'local');
 const environmentConfig = Config[environment];
+
+let isDisabledLP = false;
+if (!isDebugMode && isMobile) {
+  isDisabledLP = true;
+}
 
 // Lock key
 const KEY_NFT_AMOUNT = "nft_amount_";
@@ -1288,7 +1297,7 @@ const Hero = props => {
                 </Typography>
               </Grid>
               <Grid item xs={6} md={6} align={"right"}>
-                <ButtonGroup size="small" color="primary" aria-label="large outlined primary button group">
+                <ButtonGroup size="small" color="primary" aria-label="large outlined primary button group" disabled={isDisabledLP}>
                   <Button variant="outlined" color="primary" size="large" onClick={requestStakingPaintEthLp} disabled={isDisabledStakingPaintEthLp}>
                     Stake
                   </Button>
@@ -1299,6 +1308,13 @@ const Hero = props => {
                     Claim
                   </Button>
                 </ButtonGroup>
+              </Grid>
+              <Grid item xs={12} md={12} align={"left"}>
+                <Typography component="span" variant="overline" color="error">
+                  The mobile meta mask is currently under maintenance.
+                  <br/>
+                  Currently, only desktop meta mask is available.
+                </Typography>
               </Grid>
               <Grid item xs={12}>
                 <Divider />
