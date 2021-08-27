@@ -945,7 +945,7 @@ const Hero = props => {
                     title={
                       <span>
                         <Typography component="span" variant="h5" color="textPrimary" >
-                          <strong>Play to Earn</strong>
+                          <strong>The Great Pengu</strong>
                         </Typography>
                       </span>
                     }
@@ -962,7 +962,7 @@ const Hero = props => {
                   </Grid>
                   <Grid item xs={12} md={9}>
                     <Typography variant="subtitle1">
-                      Play to Earn
+                      The Great Pengu
                     </Typography>
                   </Grid>
                 </Grid>
@@ -976,7 +976,7 @@ const Hero = props => {
                   </Grid>
                   <Grid item xs={12} md={9}>
                     <Typography variant="subtitle1">
-                      The nft sale will starts at 21 PM on August 17th (KST)
+                      The NFT will be minted on August 30th. (KST)
                     </Typography>
                   </Grid>
                 </Grid>
@@ -989,7 +989,7 @@ const Hero = props => {
                           On sale
                         </Typography>{' '}
                         <Typography component="span" variant="h6" color="textPrimary">
-                          <strong>0.25</strong>
+                          <strong>TBA</strong>
                         </Typography>{' '}
                         <Typography component="span" variant="body1" color="textSecondary">
                           ETH
@@ -1011,7 +1011,7 @@ const Hero = props => {
                 <span>
                   <Typography id="discrete-slider-small-steps" gutterBottom>
                     {/*Total amount : {amountOfNft} NFT*/}
-                    Total amount : 30
+                    Total amount : TBA
                   </Typography>
                 </span>
               </Grid>
@@ -1024,7 +1024,7 @@ const Hero = props => {
                         }}
                         fullWidth
                         disabled={true}>
-                  SOLD OUT
+                  It will be open
                 </Button>
               </Grid>
                 {
