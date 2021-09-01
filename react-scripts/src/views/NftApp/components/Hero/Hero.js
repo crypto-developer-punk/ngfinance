@@ -1024,7 +1024,7 @@ const Hero = props => {
                         }}
                         fullWidth
                         disabled={true}>
-                  Buy
+                  Sold out
                 </Button>
               </Grid>
                 {
