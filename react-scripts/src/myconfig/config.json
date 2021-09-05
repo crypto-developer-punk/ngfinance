@@ -2569,7 +2569,7 @@
     "ETHERSCAN_IO_GAS_PRICE_URL":  "https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=NNSF1R3Z5G24VWG6XB7QW65ZHGJU4RKUMT"
   },
   "staging": {
-    "backend_url": "https://ngfinance.io:21443",
+    "backend_url": "https://ngfinance.io:11443",
     "etherscan_url": "https://etherscan.io/tx/",
     "eth_network": "wss://mainnet.infura.io/ws/v3/21eb3ec799a74ff1b65bb39818d7af45",
     "toStakingAddress": "0xa19e3f9Ca2d706666243A5454115f1e6e2D8B3E1",
@@ -2580,7 +2580,7 @@
     "ETHERSCAN_IO_GAS_PRICE_URL":  "https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=NNSF1R3Z5G24VWG6XB7QW65ZHGJU4RKUMT"
   },
   "production": {
-    "backend_url": "https://ngfinance.io:21443",
+    "backend_url": "https://ngfinance.io:11443",
     "etherscan_url": "https://etherscan.io/tx/",
     "eth_network": "wss://mainnet.infura.io/ws/v3/21eb3ec799a74ff1b65bb39818d7af45",
     "toStakingAddress": "0xa19e3f9Ca2d706666243A5454115f1e6e2D8B3E1",
