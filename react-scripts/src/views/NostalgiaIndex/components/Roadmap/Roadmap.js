@@ -65,7 +65,7 @@ const Roadmap = props => {
                     </Typography>
                 </TimelineOppositeContent>
                 <TimelineSeparator>
-                    <TimelineDot>
+                    <TimelineDot color="primary">
                     </TimelineDot>
                     <TimelineConnector />
                 </TimelineSeparator>

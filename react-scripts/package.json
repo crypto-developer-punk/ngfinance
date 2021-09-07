@@ -8,6 +8,7 @@
     "start": "react-scripts start'",
     "start:local": "cross-env REACT_APP_ENV=local react-scripts start",
     "start:development": "cross-env REACT_APP_ENV=development react-scripts start",
+    "start:staging": "cross-env REACT_APP_ENV=staging react-scripts start",
     "start:production": "cross-env REACT_APP_ENV=production react-scripts start",
     "build": "cross-env GENERATE_SOURCEMAP=false react-scripts build'",
     "build:development": "cross-env REACT_APP_ENV=development cross-env GENERATE_SOURCEMAP=false react-scripts build",
@@ -59,11 +60,13 @@
     "react-bootstrap": "^1.6.1",
     "react-countdown": "^2.3.2",
     "react-countup": "^4.3.3",
+    "react-device-detect": "^1.17.0",
     "react-dom": "^16.8.6",
     "react-flag-icon-css": "^1.0.25",
     "react-ga": "^3.3.0",
     "react-lazy-load-image-component": "^1.5.0",
     "react-leaflet": "^2.7.0",
+    "react-player": "^2.9.0",
     "react-router-dom": "^5.0.1",
     "react-scripts": "^4.0.0",
     "react-syntax-highlighter": "^15.4.3",
@@ -73,7 +76,9 @@
     "start": "^5.1.0",
     "swiper": "^5.4.1",
     "validate.js": "^0.13.1",
-    "web3": "^1.3.6"
+    "video-react": "^0.14.1",
+    "web3": "^1.3.6",
+    "yarn": "^1.22.11"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.14.0",

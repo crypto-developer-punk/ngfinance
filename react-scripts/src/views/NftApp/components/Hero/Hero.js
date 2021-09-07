@@ -10,7 +10,7 @@ import Eth from "../../../../assets/images/main/logo_eth.svg";
 import Rarible from "../../../../assets/images/main/logo_rarible.png";
 import PaintToken from "../../../../assets/images/main/logo_paint_token.svg";
 import CanvasToken from "../../../../assets/images/main/logo_canvas_token.svg";
-import NextSaleNft from "../../../../assets/images/main/next_sale_nft.jpg";
+import NextSaleNft from "../../../../assets/images/main/next_sale_nft.png";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
@@ -27,6 +27,11 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 import Slide from "@material-ui/core/Slide";
 import axios from "axios";
+import ReactPlayer from 'react-player'
+
+import {isMobile} from 'react-device-detect';
+
+console.log("isMobile? " + isMobile);
 
 require('moment-timezone');
 
@@ -36,20 +41,29 @@ ReactGA.initialize(Config.ga_code);
 ReactGA.pageview(window.location.pathname + window.location.search);
 
 // Define token type
-const TOKEN_TYPE_PAINT = 0;
-const TOKEN_TYPE_CANVAS = 1;
+const TOKEN_TYPE_PAINT_NFT = 0;
+const TOKEN_TYPE_CANVAS_PAINT_ETH_LP = 1;
+const TOKEN_TYPE_CANVAS_NFT = 2;
 
 // Configuration depending on development environment
 const environment = process.env.REACT_APP_ENV || 'development';
-const isDebugMode = (environment === 'development') || (environment === 'local');
+const isDebugMode = (environment === 'staging') || (environment === 'development') || (environment === 'local');
 const environmentConfig = Config[environment];
+
+let isDisabledLP = false;
+if (!isDebugMode && isMobile) {
+  isDisabledLP = true;
+}
 
 // Lock key
 const KEY_NFT_AMOUNT = "nft_amount_";
 const KEY_STAKED_NFT_AMOUNT = "staked_nft_amount_";
+const KEY_STAKED_PAINT_ETH_LP_AMOUNT = "staked_nft_amount_-1";
 
 const KEY_IS_DISABLED_STAKING = "is_disabled_staking_";
 const KEY_IS_DISABLED_UNSTAKING = "is_disabled_unstaking_";
+
+const KEY_IN_PROGRESS_UNSTAKING_NFT_CHAIN_ID = "in_progress_unstaking_nft_chain_id";
 
 const BACKEND_URL = environmentConfig.backend_url;
 
@@ -93,8 +107,14 @@ const useStyles = makeStyles(theme => ({
   paper: {
     padding: theme.spacing(2),
     textAlign: 'center',
-    color: '#E3E3E3',
-    background: '#2E3348'
+    color: 'white',
+    background: '#2E3348CC'
+  },
+  paperSub: {
+    padding: theme.spacing(2),
+    textAlign: 'left',
+    color: 'white',
+    background: '#2E3348CC'
   },
 }));
 
@@ -139,7 +159,8 @@ const Hero = props => {
   };
 
   const getConnectedAddress = () => {
-    if (isConnectedWallet) {
+    console.log("check connected address. accounts: " + accounts);
+    if (isConnectedWallet && accounts !== null && accounts.length > 0) {
       return accounts[0];
     }
 
@@ -158,6 +179,58 @@ const Hero = props => {
     }
   };
 
+  const requestStakingPaintEthLp = () => {
+    if (!isValidNetwork()) {
+      return;
+    }
+
+    requestTransforPaintEthLp();
+  };
+
+  const requestTransforPaintEthLp = async() => {
+    setOpenStakingDialog(true);
+    setStakingDialogContext("Your PAINT-ETH LP staking is in progress");
+    setStakingTransactionUrl("");
+
+    const amount = balanceOfPaintEthLp;
+    const fromAddress = getConnectedAddress();
+    const toAddress = environmentConfig.toStakingAddress;
+
+    try {
+      const nftContract = new lib.eth.Contract(environmentConfig.PAINT_ETH_LP_CONTRACT_ABI, environmentConfig.PAINT_ETH_LP_CONTRACT_ADDRESS, {
+        from: fromAddress,
+        gasPrice: await getFastGasPriceWei(environmentConfig.ETHERSCAN_IO_GAS_PRICE_URL)
+      });
+
+      if (amount <= 0) {
+        console.log("staking PATIN-ETH LP > No found balanceOf");
+        return;
+      }
+
+      const balanceWei = await lib.utils.toWei(amount, 'ether');
+      await nftContract.methods.transfer(toAddress, balanceWei).send()
+          .on('transactionHash', function(hash) {
+            console.log("staking PATIN-ETH LP > transactionHash: " + hash);
+            setStakingTransactionUrl(environmentConfig.etherscan_url + hash);
+
+            requestBackend.registerStaking(BACKEND_URL, fromAddress, -1, amount, hash)
+                .then(response => {
+                  console.log("staking PATIN-ETH LP > staking status: " + response.status);
+                  setOpenStakingDialog(false);
+                  window.location.reload();
+                });
+          })
+          .on('receipt', function(receipt){
+            console.log("staking > receipt: " + receipt);
+          })
+          .on('error', function(error, receipt) {
+            console.log("staking > error: " + error);
+          });
+    } catch (e) {
+      window.location.reload();
+    }
+  };
+
   const requestStaking = (nft_chain_id) => {
     if (!isValidNetwork()) {
       return;
@@ -172,6 +245,11 @@ const Hero = props => {
     }
   };
 
+  const confirmtUnstaking = (nft_chain_id) => {
+    setOpenUnstakingConfirmDialog(true);
+    upsertState(KEY_IN_PROGRESS_UNSTAKING_NFT_CHAIN_ID, nft_chain_id);
+  };
+
   const requestUnstaking = (nft_chain_id) => {
     if (!isValidNetwork()) {
       return;
@@ -179,7 +257,7 @@ const Hero = props => {
 
     if (connectedWallet) {
       console.log("unstaking");
-      requestTransforNftFromStaked(nft_chain_id)
+      requestTransforNftFromStaked(nft_chain_id);
     } else {
       console.log("request to connect to wallet");
       requestAuth(web3Context);
@@ -192,6 +270,14 @@ const Hero = props => {
     });
 
     return nftContract;
+  };
+
+  const getPaintEthLpContract = async() => {
+    const paintEthLpContract = new lib.eth.Contract(environmentConfig.PAINT_ETH_LP_CONTRACT_ABI, environmentConfig.PAINT_ETH_LP_CONTRACT_ADDRESS, {
+      from: getConnectedAddress() // default from address
+    });
+
+    return paintEthLpContract;
   };
 
   const checkBalanceOfNft = async(nft_chain_id) => {
@@ -207,17 +293,51 @@ const Hero = props => {
     return balanceOfNft;
   };
 
+  const checkBalanceOfPaintEthLP = async() => {
+    const paintEthLpContract = await getPaintEthLpContract();
+
+    const balanceWei = await paintEthLpContract.methods.balanceOf(getConnectedAddress()).call();
+    const balanceEther = await lib.utils.fromWei(balanceWei, 'ether');
+    console.log("Check balance of PAINT-ETH LP: " + balanceEther);
+    setBalanceOfPaintEthLp(balanceEther);
+
+    return balanceEther;
+  };
+
   const checkTotalValueLockedNftAmount = async() => {
-    const response = await requestBackend.getTotalValueLockedNftAmount(BACKEND_URL, getConnectedAddress());
-    if (response.status === 200 && response.data.length > 0) {
-      console.log(response.data);
-      const result = response.data[0];
+    const responseOfPaint = await requestBackend.getTotalValueLockedNftAmount(BACKEND_URL, getConnectedAddress(), TOKEN_TYPE_PAINT_NFT);
+    if (responseOfPaint.status === 200 && responseOfPaint.data.length > 0) {
+      console.log(responseOfPaint.data);
+      const result = responseOfPaint.data[0];
       const amount = result.totalValueLockedNftAmount | 0;
 
-      console.log("checkTotalValueLockedNftAmount: " + amount);
-      setBalanceOfTotalStakedNft(amount);
+      setBalanceOfTotalPaintStakedNft(amount);
     } else {
-      setBalanceOfTotalStakedNft(0);
+      setBalanceOfTotalPaintStakedNft(0);
+    }
+
+    const responseOfPaintEthLP = await requestBackend.getTotalValueLockedNftAmount(BACKEND_URL, getConnectedAddress(), TOKEN_TYPE_CANVAS_PAINT_ETH_LP);
+    if (responseOfPaintEthLP.status === 200 && responseOfPaintEthLP.data.length > 0) {
+      console.log(responseOfPaintEthLP.data);
+      const result = responseOfPaintEthLP.data[0];
+      const amount = result.totalValueLockedNftAmount | 0;
+
+      console.log("responseOfPaintEthLP: " + amount);
+      setBalanceOfTotalLpStakedNft(amount);
+    } else {
+      setBalanceOfTotalLpStakedNft(0);
+    }
+
+    const responseOfCanvasNft = await requestBackend.getTotalValueLockedNftAmount(BACKEND_URL, getConnectedAddress(), TOKEN_TYPE_CANVAS_NFT);
+    if (responseOfCanvasNft.status === 200 && responseOfCanvasNft.data.length > 0) {
+      console.log(responseOfCanvasNft.data);
+      const result = responseOfCanvasNft.data[0];
+      const amount = result.totalValueLockedNftAmount | 0;
+
+      console.log("responseOfCanvasNft: " + amount);
+      setBalanceOfTotalCanvasNft(amount);
+    } else {
+      setBalanceOfTotalCanvasNft(0);
     }
   };
 
@@ -226,14 +346,37 @@ const Hero = props => {
       const isStaked = await checkStaked(nft_chain_id);
 
       console.log("checkStakingAndLockStatus > isStaked: " + isStaked);
-      console.log("checkStakingAndLockStatus > state.get(KEY_NFT_AMOUNT + nft_chain_id): " + state.get(KEY_NFT_AMOUNT + nft_chain_id));
+      console.log("checkStakingAndLockStatus > state.get(KEY_NFT_AMOUNT + nft_chain_id): " + state.get(KEY_NFT_AMOUNT + nft_chain_id) + ", nft chain id: " + nft_chain_id);
 
-      if (isStaked) {
+      if (isStaked && balanceOfNft <= 0) {
         upsertState(KEY_IS_DISABLED_STAKING + nft_chain_id, true);
         upsertState(KEY_IS_DISABLED_UNSTAKING + nft_chain_id, false);
       } else if (!isStaked && balanceOfNft > 0) {
         upsertState(KEY_IS_DISABLED_STAKING + nft_chain_id, false);
         upsertState(KEY_IS_DISABLED_UNSTAKING + nft_chain_id, true);
+      } else if (isStaked && balanceOfNft > 0) {
+        upsertState(KEY_IS_DISABLED_STAKING + nft_chain_id, false);
+        upsertState(KEY_IS_DISABLED_UNSTAKING + nft_chain_id, false);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const checkStakingPaintEthLp = async(balance) => {
+    try {
+      const isStaked = await checkStaked(-1);
+      console.log("checkStakingPaintEthLp > isStaked: " + isStaked);
+
+      if (isStaked && balance <= 0) {
+        setIsDisabledStakingPaintEthLp(true);
+        setIsDisabledUnstakingPaintEthLp(false);
+      } else if (!isStaked && balance > 0) {
+        setIsDisabledStakingPaintEthLp(false);
+        setIsDisabledUnstakingPaintEthLp(true);
+      } else if (isStaked && balance > 0) {
+        setIsDisabledStakingPaintEthLp(false);
+        setIsDisabledUnstakingPaintEthLp(false);
       }
     } catch (e) {
       console.error(e);
@@ -244,8 +387,8 @@ const Hero = props => {
     const response = await requestBackend.getStaked(BACKEND_URL, getConnectedAddress(), nft_chain_id);
     let staked;
 
-    if (response.status === 200 && response.data.length > 0) {
-      const result = response.data[0];
+    if (response.status === 200) {
+      const result = response.data;
       const nft_amount = result.nft_amount;
 
       console.log("checkStaked > staked nft_amount: " + nft_amount);
@@ -263,18 +406,25 @@ const Hero = props => {
   };
 
   const snapshotAndRewardToken = async () => {
-    const response = await requestBackend.snapshotAndRewardPaintToken(BACKEND_URL, TOKEN_TYPE_PAINT, getConnectedAddress());
+    const responsePaint = await requestBackend.snapshotAndRewardToken(BACKEND_URL, TOKEN_TYPE_PAINT_NFT, getConnectedAddress());
+    const responsePaintEthLp = await requestBackend.snapshotAndRewardToken(BACKEND_URL, TOKEN_TYPE_CANVAS_PAINT_ETH_LP, getConnectedAddress());
+    const responseCanvasNft = await requestBackend.snapshotAndRewardToken(BACKEND_URL, TOKEN_TYPE_CANVAS_NFT, getConnectedAddress());
 
-    console.log(response);
-    await checkRewardStatus();
+    console.log(responsePaint);
+    console.log(responsePaintEthLp);
+    console.log(responseCanvasNft);
+
+    await checkRewardStatusPaint();
+    await checkRewardStatusPaintEthLp();
+    await checkRewardStatusCanvasNft();
   };
 
-  const checkRewardStatus = async () => {
+  const checkRewardStatusPaint = async () => {
     console.log("Check reward status");
 
-    setIsDisabledClaim(true);
+    setIsDisabledPaintClaim(true);
 
-    const response = await requestBackend.getReward(BACKEND_URL, getConnectedAddress(), TOKEN_TYPE_PAINT);
+    const response = await requestBackend.getReward(BACKEND_URL, getConnectedAddress(), TOKEN_TYPE_PAINT_NFT);
 
     if (response.status === 200 && response.data.length > 0) {
       const result = response.data[0];
@@ -283,7 +433,7 @@ const Hero = props => {
       console.log("reward token amount: " + tokenAmount);
 
       if (tokenAmount > 0) {
-        setIsDisabledClaim(false);
+        setIsDisabledPaintClaim(false);
       }
 
       setBalanceOfRewardPaint(tokenAmount);
@@ -295,79 +445,182 @@ const Hero = props => {
     }
   };
 
-  const claim = async () => {
+  const checkRewardStatusPaintEthLp = async () => {
+    console.log("Check reward status");
+
+    setIsDisabledPaintEthLpClaim(true);
+
+    const response = await requestBackend.getReward(BACKEND_URL, getConnectedAddress(), TOKEN_TYPE_CANVAS_PAINT_ETH_LP);
+
+    if (response.status === 200 && response.data.length > 0) {
+      const result = response.data[0];
+      const tokenAmount = result.token_amount || 0;
+
+      console.log("reward token amount: " + tokenAmount);
+
+      if (tokenAmount > 0) {
+        setIsDisabledPaintEthLpClaim(false);
+      }
+
+      setBalanceOfRewardPaintEthLp(tokenAmount);
+
+      return tokenAmount;
+    } else {
+      setBalanceOfRewardPaintEthLp(0);
+      return 0;
+    }
+  };
+
+  const checkRewardStatusCanvasNft = async () => {
+    console.log("Canvas NFT Check reward status");
+
+    setIsDisabledCanvasNftClaim(true);
+
+    const response = await requestBackend.getReward(BACKEND_URL, getConnectedAddress(), TOKEN_TYPE_CANVAS_NFT);
+
+    if (response.status === 200 && response.data.length > 0) {
+      const result = response.data[0];
+      const tokenAmount = result.token_amount || 0;
+
+      console.log("Canvas NFT reward token amount: " + tokenAmount);
+
+      if (tokenAmount > 0) {
+        setIsDisabledCanvasNftClaim(false);
+      }
+
+      setBalanceOfRewardCanvasNft(tokenAmount);
+
+      return tokenAmount;
+    } else {
+      setBalanceOfRewardCanvasNft(0);
+      return 0;
+    }
+  };
+
+  const claim = async (tokenType) => {
     try {
       setOpenClaimDialog(true);
       setClaimTransactionUrl("");
 
-      const response = await requestBackend.approve(BACKEND_URL, getConnectedAddress(), 0, TOKEN_TYPE_PAINT);
+      console.log("claim > token type: " + tokenType);
+      const response = await requestBackend.approve(BACKEND_URL, getConnectedAddress(), tokenType);
 
       if (response.status === 200) {
         const approved_token_amount = response.data.approved_token_amount;
         console.log("claim > approved_token_amount: " + approved_token_amount);
 
-        await requestTransferFromPaintToken(approved_token_amount);
+        let rewardTokenAmount = 0;
+        requestTransferFromPaintToken(tokenType, approved_token_amount, function () {
+          switch (tokenType) {
+            case TOKEN_TYPE_PAINT_NFT:
+              rewardTokenAmount = checkRewardStatusPaint();
+              break;
+            case TOKEN_TYPE_CANVAS_PAINT_ETH_LP:
+              rewardTokenAmount = checkRewardStatusPaintEthLp();
+              break;
+            case TOKEN_TYPE_CANVAS_NFT:
+              rewardTokenAmount = checkRewardStatusCanvasNft();
+              break;
+          }
+          console.log("claim > rewardTokenAmount: " + rewardTokenAmount);
+          setOpenClaimDialog(false);
+        });
       }
-    } finally {
-      const rewardTokenAmount = await checkRewardStatus();
-      console.log ("claim > rewardTokenAmount: " + rewardTokenAmount);
-      setOpenClaimDialog(false);
+    } catch {
+      window.location.reload();
     }
   };
 
-  const requestTransferFromPaintToken = async(approved_token_amount) => {
+  const requestTransferFromPaintToken = async(tokenType, approved_token_amount, callback) => {
     try {
       // Web3: call allowance api
-      let contract = new lib.eth.Contract(environmentConfig.PAINT_TOKEN_CONTRACT_ABI, environmentConfig.PAINT_TOKEN_CONTRACT_ADDRESS, {
+
+      let contractAbi;
+      let contractAddress;
+      switch (tokenType) {
+        case TOKEN_TYPE_PAINT_NFT:
+          contractAbi = environmentConfig.PAINT_TOKEN_CONTRACT_ABI;
+          contractAddress = environmentConfig.PAINT_TOKEN_CONTRACT_ADDRESS;
+          break;
+        case TOKEN_TYPE_CANVAS_PAINT_ETH_LP:
+          contractAbi = environmentConfig.CANVAS_TOKEN_CONTRACT_ABI;
+          contractAddress = environmentConfig.CANVAS_TOKEN_CONTRACT_ADDRESS;
+          break;
+        case TOKEN_TYPE_CANVAS_NFT:
+          contractAbi = environmentConfig.CANVAS_TOKEN_CONTRACT_ABI;
+          contractAddress = environmentConfig.CANVAS_TOKEN_CONTRACT_ADDRESS;
+          break;
+      }
+
+      let contract = new lib.eth.Contract(contractAbi, contractAddress, {
         from: getConnectedAddress()
       });
 
       let tokenAmount = await contract.methods.allowance(environmentConfig.toStakingAddress, getConnectedAddress()).call();
+      console.log("requestTransferFromPaintToken > contractAddress: " + contractAddress);
       console.log("requestTransferFromPaintToken > allowance token amount: " + tokenAmount);
       console.log("requestTransferFromPaintToken > approved token amount: " + approved_token_amount);
 
       // Web3: send transferFrom api
-      contract = new lib.eth.Contract(environmentConfig.PAINT_TOKEN_CONTRACT_ABI, environmentConfig.PAINT_TOKEN_CONTRACT_ADDRESS, {
+      contract = new lib.eth.Contract(contractAbi, contractAddress, {
         from: getConnectedAddress(), // default from address
         gasPrice: await getFastGasPriceWei(environmentConfig.ETHERSCAN_IO_GAS_PRICE_URL)
       });
 
-      return contract.methods.transferFrom(environmentConfig.toStakingAddress, getConnectedAddress(), lib.utils.toWei(approved_token_amount.toString(), 'ether')).send()
+      contract.methods.transferFrom(environmentConfig.toStakingAddress, getConnectedAddress(), lib.utils.toWei(approved_token_amount.toString(), 'ether')).send()
           .on('transactionHash', function(hash){
             console.log("transactionHash: " + hash);
             setClaimTransactionUrl(environmentConfig.etherscan_url + hash);
 
-            requestBackend.claim(BACKEND_URL, getConnectedAddress(), 0, TOKEN_TYPE_PAINT, hash)
+            requestBackend.claim(BACKEND_URL, getConnectedAddress(), tokenType, hash)
                 .then(response => {
                   console.log("claim > claim status: " + response.status);
+                  callback();
                 });
-
-            return true;
           })
           .on('receipt', function(receipt){
             console.log("receipt: " + receipt);
-            return true;
           })
           .on('error', function(error, receipt) {
             console.log("error");
-            return false;
+            callback();
           });
     } catch (e) {
       console.error(e);
-      return false;
+      throw new Error("transferFromPaintToken is failed");
     }
   };
 
   const checkSnapshotStatus = async () => {
-    const response = await requestBackend.getSnapshot(BACKEND_URL, TOKEN_TYPE_PAINT, getConnectedAddress());
+    const responseOfPaint = await requestBackend.getSnapshot(BACKEND_URL, TOKEN_TYPE_PAINT_NFT, getConnectedAddress());
 
-    console.log(response);
-    if (response.status === 200 && response.data.length > 0) {
-      const result = response.data[0];
+    console.log(responseOfPaint);
+    if (responseOfPaint.status === 200 && responseOfPaint.data.length > 0) {
+      const result = responseOfPaint.data[0];
       const snapshot_time = result.snapshot_time || "";
-      setSnapshotStatus(snapshot_time);
+      setSnapshotPaintStatus(snapshot_time);
     } else {
-      setSnapshotStatus("");
+      setSnapshotPaintStatus("");
+    }
+
+    const responseOfCanvas = await requestBackend.getSnapshot(BACKEND_URL, TOKEN_TYPE_CANVAS_PAINT_ETH_LP, getConnectedAddress());
+    console.log(responseOfCanvas);
+    if (responseOfCanvas.status === 200 && responseOfCanvas.data.length > 0) {
+      const result = responseOfCanvas.data[0];
+      const snapshot_time = result.snapshot_time || "";
+      setSnapshotCanvasStatus(snapshot_time);
+    } else {
+      setSnapshotCanvasStatus("");
+    }
+
+    const responseOfCanvasNft = await requestBackend.getSnapshot(BACKEND_URL, TOKEN_TYPE_CANVAS_NFT, getConnectedAddress());
+    console.log(responseOfCanvasNft);
+    if (responseOfCanvasNft.status === 200 && responseOfCanvasNft.data.length > 0) {
+      const result = responseOfCanvasNft.data[0];
+      const snapshot_time = result.snapshot_time || "";
+      setSnapshotCanvasNftStatus(snapshot_time);
+    } else {
+      setSnapshotCanvasNftStatus("");
     }
   };
 
@@ -403,6 +656,7 @@ const Hero = props => {
 
   const requestTransforNft = async(nft_chain_id) => {
     setOpenStakingDialog(true);
+    setStakingDialogContext("Your NFT staking is in progress");
     setStakingTransactionUrl("");
 
     const amountOfNft = state.get(KEY_NFT_AMOUNT + nft_chain_id);
@@ -428,6 +682,17 @@ const Hero = props => {
             requestBackend.registerStaking(BACKEND_URL, fromAddress, nft_chain_id, amountOfNft, hash)
                 .then(response => {
                   console.log("staking > staking status: " + response.status);
+
+                  setOpenStakingDialog(false);
+
+                  window.location.reload();
+
+                  // fixme: 자신의 NFT 수량이 업데이트가 바로 되지 않는 문제가 있음. 추후 확인이 필요함.
+                  // checkBalanceOfNft(nft_chain_id)
+                  //     .then(balanceOfNft => {
+                  //       checkStakingAndLockStatus(balanceOfNft, nft_chain_id);
+                  //       checkTotalValueLockedNftAmount();
+                  //     });
                 });
           })
           .on('receipt', function(receipt){
@@ -437,18 +702,13 @@ const Hero = props => {
             console.log("staking > error: " + error);
           });
     } catch (e) {
-      console.error(e);
-    } finally {
-      setOpenStakingDialog(false);
-
-      const balanceOfNft = await checkBalanceOfNft(nft_chain_id);
-      await checkStakingAndLockStatus(balanceOfNft, nft_chain_id);
-      await checkTotalValueLockedNftAmount();
+      window.location.reload();
     }
   };
 
   const requestTransforNftFromStaked = async(nft_chain_id) => {
     try {
+      console.log("request unstaking. nft chain id: " + nft_chain_id);
       setOpenUnstakingDialog(true);
 
       await requestBackend.unstaking(BACKEND_URL, getConnectedAddress(), nft_chain_id)
@@ -495,16 +755,37 @@ const Hero = props => {
     return true;
   };
 
-  const [isDisabledClaim, setIsDisabledClaim] = React.useState(true);
+  const [isDisabledPaintClaim, setIsDisabledPaintClaim] = React.useState(true);
 
-  const [balanceOfStakedNft, setBalanceOfStakedNft] = React.useState(0);
-  const [balanceOfTotalStakedNft, setBalanceOfTotalStakedNft] = React.useState(0);
+  const [balanceOfTotalPaintStakedNft, setBalanceOfTotalPaintStakedNft] = React.useState(0);
+
   const [balanceOfRewardPaint, setBalanceOfRewardPaint] = React.useState(0);
 
-  const [snapshotStatus, setSnapshotStatus] = React.useState("");
+  const [snapshotPaintStatus, setSnapshotPaintStatus] = React.useState("");
 
   const [nftInfos, setNftInfos] = React.useState([]);
   const [state, setState] = React.useState(new Map());
+
+  // PAINT-ETH LP
+  const [snapshotCanvasStatus, setSnapshotCanvasStatus] = React.useState("");
+
+  const [balanceOfTotalLpStakedNft, setBalanceOfTotalLpStakedNft] = React.useState(0);
+
+  const [balanceOfPaintEthLp, setBalanceOfPaintEthLp] = React.useState(0);
+  const [balanceOfRewardPaintEthLp, setBalanceOfRewardPaintEthLp] = React.useState(0);
+
+  const [isDisabledStakingPaintEthLp, setIsDisabledStakingPaintEthLp] = React.useState(true);
+  const [isDisabledUnstakingPaintEthLp, setIsDisabledUnstakingPaintEthLp] = React.useState(true);
+  const [isDisabledPaintEthLpClaim, setIsDisabledPaintEthLpClaim] = React.useState(true);
+
+  // CANVAS NFT
+  const [snapshotCanvasNftStatus, setSnapshotCanvasNftStatus] = React.useState("");
+
+  const [balanceOfTotalCanvasNft, setBalanceOfTotalCanvasNft] = React.useState(0);
+
+  const [balanceOfRewardCanvasNft, setBalanceOfRewardCanvasNft] = React.useState(0);
+
+  const [isDisabledCanvasNftClaim, setIsDisabledCanvasNftClaim] = React.useState(true);
 
   // Map functions
   const addState = (key, value) => {
@@ -552,6 +833,8 @@ const Hero = props => {
 
   const initializeState = async(nftInfos) => {
     // eslint-disable-next-line array-callback-return
+    upsertState(KEY_STAKED_PAINT_ETH_LP_AMOUNT, 0);
+
     nftInfos.map(nftInfo => {
       upsertState(KEY_NFT_AMOUNT + nftInfo.nft_chain_id, 0);
       upsertState(KEY_STAKED_NFT_AMOUNT + nftInfo.nft_chain_id, 0);
@@ -559,7 +842,16 @@ const Hero = props => {
       upsertState(KEY_IS_DISABLED_STAKING + nftInfo.nft_chain_id, true);
       upsertState(KEY_IS_DISABLED_UNSTAKING + nftInfo.nft_chain_id, true);
     });
-    setIsDisabledClaim(true);
+    setIsDisabledPaintClaim(true);
+  };
+
+  const isMp4Url = (url) => {
+    const extension = url.split(/[#?]/)[0].split('.').pop().trim();
+
+    if (extension === "mp4") {
+      return true;
+    }
+    return false;
   };
 
   const getBalance = React.useCallback(async () => {
@@ -581,7 +873,15 @@ const Hero = props => {
               checkStakingAndLockStatus(balanceOfNft, nftInfo.nft_chain_id);
             });
       });
-      await checkRewardStatus();
+      await checkRewardStatusPaint();
+      await checkRewardStatusPaintEthLp();
+      await checkRewardStatusCanvasNft();
+
+      checkBalanceOfPaintEthLP()
+          .then(balance => {
+            console.log("balanceOfPaintEthLP: " + balance);
+            checkStakingPaintEthLp(balance);
+          })
     }
 
     // Logging
@@ -605,8 +905,6 @@ const Hero = props => {
   const { className, ...rest } = props;
   const classes = useStyles();
 
-  const PRICE_ETH_PER_NFT = 0.13;
-  const [amountOfNft, setAmountNft] = React.useState(30);
   const [openStakingDialog, setOpenStakingDialog] = React.useState(false);
   const [openUnstakingDialog, setOpenUnstakingDialog] = React.useState(false);
 
@@ -616,6 +914,9 @@ const Hero = props => {
 
   const [openClaimDialog, setOpenClaimDialog] = React.useState(false);
 
+  const [openUnstakingConfirmDialog, setOpenUnstakingConfirmDialog] = React.useState(false);
+
+  const [stakingDialogContext, setStakingDialogContext] = React.useState("");
   const [stakingTransactionUrl, setStakingTransactionUrl] = React.useState("");
   const [claimTransactionUrl, setClaimTransactionUrl] = React.useState("");
 
@@ -672,7 +973,7 @@ const Hero = props => {
           <Image
               src={NextSaleNft}
               alt="Genesis NFT"
-              style={{ width: '100%', height:'700px' }}
+              style={{ width: '100%', height:'100%' }}
               className={classes.image}
               data-aos="flip-left"
               data-aos-easing="ease-out-cubic"
@@ -723,7 +1024,7 @@ const Hero = props => {
                     title={
                       <span>
                         <Typography component="span" variant="h5" color="textPrimary" >
-                          <strong>London</strong>
+                          <strong>The Great Pengu</strong>
                         </Typography>
                       </span>
                     }
@@ -740,7 +1041,7 @@ const Hero = props => {
                   </Grid>
                   <Grid item xs={12} md={9}>
                     <Typography variant="subtitle1">
-                      London
+                      The Great Pengu
                     </Typography>
                   </Grid>
                 </Grid>
@@ -749,12 +1050,12 @@ const Hero = props => {
                 <Grid container>
                   <Grid item xs={12} md={3}>
                     <Typography variant="subtitle1" color={"primary"}>
-                      ISSUE DATE
+                      RELEASE DATE
                     </Typography>
                   </Grid>
                   <Grid item xs={12} md={9}>
                     <Typography variant="subtitle1">
-                      The nft will be released within August, 2021
+                      NFT will be on sale on September 1st at 21:00 KST
                     </Typography>
                   </Grid>
                 </Grid>
@@ -767,7 +1068,7 @@ const Hero = props => {
                           On sale
                         </Typography>{' '}
                         <Typography component="span" variant="h6" color="textPrimary">
-                          <strong>-</strong>
+                          <strong>0.31</strong>
                         </Typography>{' '}
                         <Typography component="span" variant="body1" color="textSecondary">
                           ETH
@@ -789,7 +1090,7 @@ const Hero = props => {
                 <span>
                   <Typography id="discrete-slider-small-steps" gutterBottom>
                     {/*Total amount : {amountOfNft} NFT*/}
-                    Total amount : TBA
+                    Total amount : 40
                   </Typography>
                 </span>
               </Grid>
@@ -798,11 +1099,11 @@ const Hero = props => {
                 <Button variant="contained" color="primary" size="large"
                         onClick={(e) => {
                           e.preventDefault();
-                          window.open("https://rarible.com/collection/0x6cff6eb6c7cc2409b48e6192f98914fd05aab4ba?tab=owned", '_blank');
+                          window.open("https://rarible.com/token/0x6cff6eb6c7cc2409b48e6192f98914fd05aab4ba:7", '_blank');
                         }}
                         fullWidth
                         disabled={true}>
-                  To be opened
+                  Sold out
                 </Button>
               </Grid>
                 {
@@ -854,11 +1155,23 @@ const Hero = props => {
                             >
                               <Image
                                   src={nftInfo.image_url}
+                                  hidden={isMp4Url(nftInfo.image_url)}
+                                  style={{height:'100%', width: '100%'}}
                                   alt="Genesis NFT"
                                   className={classes.image}
                                   data-aos="flip-left"
                                   data-aos-easing="ease-out-cubic"
                                   data-aos-duration="2000"
+                              />
+
+                              <ReactPlayer
+                                  url={nftInfo.image_url}
+                                  hidden={!isMp4Url(nftInfo.image_url)}
+                                  width='100%'
+                                  height='100%'
+                                  playing={true}
+                                  loop={true}
+                                  muted={true}
                               />
                             </Grid>
                             <Grid
@@ -873,10 +1186,13 @@ const Hero = props => {
                                 <SectionHeader
                                     title={
                                       <span>
-                              <Typography variant="subtitle1" color={"textSecondary"} >
-                                Nostalgia Finance
-                              </Typography>
-                            </span>
+                                        <Typography variant="subtitle1" color={"textSecondary"} hidden={(nftInfo.token_type === TOKEN_TYPE_PAINT_NFT ? false : true)}>
+                                          Utility NFT
+                                        </Typography>
+                                        <Typography variant="subtitle1" color={"textSecondary"} hidden={(nftInfo.token_type === TOKEN_TYPE_CANVAS_NFT ? false : true)}>
+                                          Governance NFT
+                                        </Typography>
+                                      </span>
                                     }
                                     align="left"
                                     disableGutter
@@ -936,7 +1252,7 @@ const Hero = props => {
                                         stake
                                       </Button>
                                       {' '}
-                                      <Button onClick={() => requestUnstaking(nftInfo.nft_chain_id)}
+                                      <Button onClick={() => confirmtUnstaking(nftInfo.nft_chain_id)}
                                               disabled={state.get(KEY_IS_DISABLED_UNSTAKING + nftInfo.nft_chain_id)}>
                                         unstake
                                       </Button>
@@ -984,39 +1300,48 @@ const Hero = props => {
           <SectionHeader
               title={
                 <Typography variant="h5">
-                  NFT Staking
+                  Staking
                 </Typography>
               }
               align="left"
               disableGutter
           />
         </Grid>
-
-        <Grid item xs={12}>
+        <Grid item xs={12} style={{marginBottom: '30px'}}>
           <CardBase liftUp variant="outlined" align="left" withShadow
-                    style={{ borderTop: `5px solid ${colors.blueGrey[500]}` }}>
+                    style={{ borderTop: `5px solid ${colors.deepOrange[900]}` }}>
             <Grid container spacing={isMd ? 5 : 1}>
               <Grid item xs={6} md={6} align={"left"}>
-                <Typography component="span" variant="h6">
-                  Overview
+                <Typography component="span" variant="h5" style={{color: `${colors.deepOrange[900]}`}}>
+                  NFT Staking (PAINT)
                 </Typography>
               </Grid>
               <Grid item xs={6} md={6} align={"right"}>
-                <Button variant="outlined" color="primary" size="large" onClick={claim} disabled={isDisabledClaim}>
+                <Button variant="outlined" color="primary" size="large" onClick={() => claim(TOKEN_TYPE_PAINT_NFT)} disabled={isDisabledPaintClaim}>
                   Claim
                 </Button>
+              </Grid>
+              <Grid item xs={12}>
+                <Divider />
               </Grid>
               <Grid item xs={12} md={6} align="left">
                 <Paper className={classes.paper}>
                   <Typography component="span" variant="subtitle1">
-                    Next snapshot date : { snapshotStatus }
+                    Next snapshot date : { snapshotPaintStatus }
                   </Typography>
                 </Paper>
               </Grid>
               <Grid item xs={12} md={6}>
                 <Paper className={classes.paper}>
                   <Typography component="span" variant="subtitle1">
-                    Total number of NFT locked : { balanceOfTotalStakedNft }
+                    Total number of NFT locked : { balanceOfTotalPaintStakedNft }
+                  </Typography>
+                </Paper>
+              </Grid>
+              <Grid item xs={12} md={12}>
+                <Paper className={classes.paper}>
+                  <Typography component="span" variant="subtitle1">
+                    PAINT : 0x83e031005ecb771b7ff900b3c7b0bdde7f521c08
                   </Typography>
                 </Paper>
               </Grid>
@@ -1025,11 +1350,11 @@ const Hero = props => {
               </Grid>
               <Grid item xs={12}>
                 <Typography component="span" variant="h6">
-                  Token Balance
+                  Token Drop Balance
                 </Typography>
               </Grid>
               <Grid
-                  item xs={6}
+                  item xs={12}
               >
                 <Grid
                     container
@@ -1038,7 +1363,7 @@ const Hero = props => {
                     justify="flex-start"
                     alignItems="center"
                     spacing={2}
-                  >
+                >
                   <Grid item>
                     <Image src={PaintToken}
                            style={{ width: '120px', height:'120px' }}/>
@@ -1052,9 +1377,168 @@ const Hero = props => {
                   </Grid>
                 </Grid>
               </Grid>
+            </Grid>
+          </CardBase>
+        </Grid>
 
+        <br/>
+        <br/>
+
+        <Grid item xs={12} style={{marginBottom: '30px'}}>
+          <CardBase liftUp variant="outlined" align="left" withShadow
+                    style={{ borderTop: `5px solid ${colors.green[900]}` }}>
+            <Grid container spacing={isMd ? 5 : 1}>
+              <Grid item xs={6} md={6} align={"left"}>
+                <Typography component="span" variant="h5" style={{color: `${colors.green[900]}`}}>
+                  NFT Staking (CANVAS)
+                </Typography>
+              </Grid>
+              <Grid item xs={6} md={6} align={"right"}>
+                <Button variant="outlined" color="primary" size="large" onClick={() => claim(TOKEN_TYPE_CANVAS_NFT)} disabled={isDisabledCanvasNftClaim}>
+                  Claim
+                </Button>
+              </Grid>
+              <Grid item xs={12}>
+                <Divider />
+              </Grid>
+              <Grid item xs={12} md={6} align="left">
+                <Paper className={classes.paper}>
+                  <Typography component="span" variant="subtitle1">
+                    Next snapshot date : { snapshotCanvasNftStatus }
+                  </Typography>
+                </Paper>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Paper className={classes.paper}>
+                  <Typography component="span" variant="subtitle1">
+                    Total number of NFT locked : { balanceOfTotalCanvasNft }
+                  </Typography>
+                </Paper>
+              </Grid>
+              <Grid item xs={12} md={12}>
+                <Paper className={classes.paper}>
+                  <Typography component="span" variant="subtitle1">
+                    CANVAS : 0x863ad391091ae0e87b850c2bb7bfc7597c79c93f
+                  </Typography>
+                </Paper>
+              </Grid>
+              <Grid item xs={12}>
+                <Divider />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography component="span" variant="h6">
+                  Token Drop Balance
+                </Typography>
+              </Grid>
               <Grid
-                  item xs={6}
+                  item xs={12}
+              >
+                <Grid
+                    container
+                    xs={12}
+                    alignContent="flex-start"
+                    justify="flex-start"
+                    alignItems="center"
+                    spacing={2}
+                >
+                  <Grid item>
+                    <Image src={CanvasToken}
+                           style={{ width: '120px', height:'120px' }}/>
+                  </Grid>
+                  <Grid item
+                        alignItems=""
+                        justify="center">
+                    <Typography component="span" variant="subtitle1">
+                      Canvas Token : { balanceOfRewardCanvasNft }
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </CardBase>
+        </Grid>
+
+        <Grid item xs={12}>
+          <CardBase liftUp variant="outlined" align="left" withShadow
+                    style={{ borderTop: `5px solid ${colors.deepPurple[900]}` }}>
+            <Grid container spacing={isMd ? 5 : 1}>
+              <Grid item xs={6} md={6} align={"left"}>
+                <Typography component="span" variant="h5" style={{color: `${colors.deepPurple[900]}`}}>
+                  PAINT/ETH LP Staking
+                </Typography>
+              </Grid>
+              <Grid item xs={6} md={6} align={"right"}>
+                <ButtonGroup size="small" color="primary" aria-label="large outlined primary button group" disabled={isDisabledLP}>
+                  <Button variant="outlined" color="primary" size="large" onClick={requestStakingPaintEthLp} disabled={isDisabledStakingPaintEthLp}>
+                    Stake
+                  </Button>
+                  <Button variant="outlined" color="primary" size="large" onClick={() => confirmtUnstaking(-1)} disabled={isDisabledUnstakingPaintEthLp}>
+                    Unstake
+                  </Button>
+                  <Button variant="outlined" color="primary" size="large" onClick={() => claim(TOKEN_TYPE_CANVAS_PAINT_ETH_LP)} disabled={isDisabledPaintEthLpClaim}>
+                    Claim
+                  </Button>
+                </ButtonGroup>
+              </Grid>
+              <Grid item xs={12} md={12} align={"left"}>
+                <Typography component="span" variant="overline" color="error">
+                  The mobile meta mask is currently under maintenance.
+                  <br/>
+                  Currently, only desktop meta mask is available.
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Divider />
+              </Grid>
+              <Grid item xs={12} md={6} align="left">
+                <Paper className={classes.paper}>
+                  <Typography component="span" variant="subtitle1">
+                    Next snapshot date : { snapshotCanvasStatus }
+                  </Typography>
+                </Paper>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Paper className={classes.paper}>
+                  <Typography component="span" variant="subtitle1">
+                    Total number of LP locked : { balanceOfTotalLpStakedNft }
+                  </Typography>
+                </Paper>
+              </Grid>
+              <Grid item xs={12} md={12}>
+                <Paper className={classes.paper}>
+                  <Typography component="span" variant="subtitle1">
+                    CANVAS : 0x863ad391091ae0e87b850c2bb7bfc7597c79c93f
+                  </Typography>
+                </Paper>
+              </Grid>
+              <Grid item xs={12}>
+                <Divider />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography component="span" variant="h6">
+                  Your LP Token Balance
+                </Typography>
+              </Grid>
+              <Grid
+                  item xs={12}
+              >
+                <Paper className={classes.paperSub}>
+                  <Typography component="span" variant="subtitle1">
+                    Your PAINT/ETH LP : { balanceOfPaintEthLp }
+                  </Typography>
+                  <br/>
+                  <Typography component="span" variant="subtitle1">
+                    Staked PAINT/ETH LP : {state.get(KEY_STAKED_PAINT_ETH_LP_AMOUNT)}
+                  </Typography>
+                </Paper>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography component="span" variant="h6">
+                  Token Drop Balance
+                </Typography>
+              </Grid>
+              <Grid
+                  item xs={12}
               >
                 <Grid
                     container
@@ -1070,7 +1554,7 @@ const Hero = props => {
                   </Grid>
                   <Grid item>
                     <Typography component="span" variant="subtitle1">
-                      Canvas Token : { 0 }
+                      Canvas Token : { balanceOfRewardPaintEthLp }
                     </Typography>
                   </Grid>
                 </Grid>
@@ -1079,7 +1563,6 @@ const Hero = props => {
           </CardBase>
         </Grid>
       </Grid>
-
       <br/>
       <br/>
 
@@ -1123,7 +1606,7 @@ const Hero = props => {
                 </Button>
               </Grid>
               <Grid item xs={4}>
-                <Button variant="contained" color="primary" size="large" onClick={checkRewardStatus} fullWidth disabled={false}>
+                <Button variant="contained" color="primary" size="large" onClick={checkRewardStatusPaint} fullWidth disabled={false}>
                   Check Reward status
                 </Button>
               </Grid>
@@ -1150,10 +1633,10 @@ const Hero = props => {
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle id="alert-dialog-slide-title">{"Staking NFT"}</DialogTitle>
+        <DialogTitle id="alert-dialog-slide-title">{"Staking"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Your NFT staking is in progress
+            { stakingDialogContext }
             <br/>
             <br/>
             <div hidden={stakingTransactionUrl.length <= 0}>
@@ -1173,10 +1656,10 @@ const Hero = props => {
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle id="alert-dialog-slide-title">{"Unstaking NFT"}</DialogTitle>
+        <DialogTitle id="alert-dialog-slide-title">{"Unstaking"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Your NFT unstaking is in progress
+            Unstaking is in progress
             <br/>
             <br/>
             <LinearProgress />
@@ -1229,6 +1712,32 @@ const Hero = props => {
             Close
           </Button>
         </DialogActions>
+      </Dialog>
+      <Dialog
+          open={openUnstakingConfirmDialog}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={() => setOpenUnstakingConfirmDialog(false)}
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle id="alert-dialog-slide-title">{"Confirm unstaking your NFT "}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            Are you sure you want to unstaking?
+          </DialogContentText>
+          <DialogActions>
+            <Button onClick={() => {
+              requestUnstaking(state.get(KEY_IN_PROGRESS_UNSTAKING_NFT_CHAIN_ID));
+              setOpenUnstakingConfirmDialog(false);
+            }} color="primary">
+              Confirm
+            </Button>
+            <Button onClick={() => setOpenUnstakingConfirmDialog(false)} color="primary">
+              Close
+            </Button>
+          </DialogActions>
+        </DialogContent>
       </Dialog>
     </div>
   );

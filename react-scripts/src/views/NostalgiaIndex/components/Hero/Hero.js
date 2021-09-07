@@ -126,7 +126,7 @@ const Hero = props => {
                             e.preventDefault();
                             window.location.href="app";
                         }}>
-                    Genesis NFT
+                    Launch App
                 </Button>,
                 <Button color="default" variant="contained" size="large"
                         onClick={(e) => {
