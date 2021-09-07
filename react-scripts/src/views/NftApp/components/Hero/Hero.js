@@ -617,10 +617,10 @@ const Hero = props => {
     console.log(responseOfCanvasNft);
     if (responseOfCanvasNft.status === 200 && responseOfCanvasNft.data.length > 0) {
       const result = responseOfCanvasNft.data[0];
-      const snapshot_time = result.snapshot_time || "";
+      const snapshot_time = result.snapshot_time || "TBA";
       setSnapshotCanvasNftStatus(snapshot_time);
     } else {
-      setSnapshotCanvasNftStatus("");
+      setSnapshotCanvasNftStatus("TBA");
     }
   };
 
@@ -779,7 +779,7 @@ const Hero = props => {
   const [isDisabledPaintEthLpClaim, setIsDisabledPaintEthLpClaim] = React.useState(true);
 
   // CANVAS NFT
-  const [snapshotCanvasNftStatus, setSnapshotCanvasNftStatus] = React.useState("");
+  const [snapshotCanvasNftStatus, setSnapshotCanvasNftStatus] = React.useState("TBA");
 
   const [balanceOfTotalCanvasNft, setBalanceOfTotalCanvasNft] = React.useState(0);
 
