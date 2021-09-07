@@ -334,7 +334,7 @@ const Hero = props => {
       const result = responseOfCanvasNft.data[0];
       const amount = result.totalValueLockedNftAmount | 0;
 
-      console.log("responseOfPaintEthLP: " + amount);
+      console.log("responseOfCanvasNft: " + amount);
       setBalanceOfTotalCanvasNft(amount);
     } else {
       setBalanceOfTotalCanvasNft(0);
@@ -1386,7 +1386,7 @@ const Hero = props => {
 
         <Grid item xs={12} style={{marginBottom: '30px'}}>
           <CardBase liftUp variant="outlined" align="left" withShadow
-                    style={{ borderTop: `5px solid ${colors.deepOrange[900]}` }}>
+                    style={{ borderTop: `5px solid ${colors.green[900]}` }}>
             <Grid container spacing={isMd ? 5 : 1}>
               <Grid item xs={6} md={6} align={"left"}>
                 <Typography component="span" variant="h5" style={{color: `${colors.green[900]}`}}>
