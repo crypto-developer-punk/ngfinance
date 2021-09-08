@@ -10,7 +10,7 @@ import Eth from "../../../../assets/images/main/logo_eth.svg";
 import Rarible from "../../../../assets/images/main/logo_rarible.png";
 import PaintToken from "../../../../assets/images/main/logo_paint_token.svg";
 import CanvasToken from "../../../../assets/images/main/logo_canvas_token.svg";
-import NextSaleNft from "../../../../assets/images/main/next_sale_nft.png";
+import NextSaleNft from "../../../../assets/images/main/next_sale_nft.jpg";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
@@ -1024,7 +1024,7 @@ const Hero = props => {
                     title={
                       <span>
                         <Typography component="span" variant="h5" color="textPrimary" >
-                          <strong>The Great Pengu</strong>
+                          <strong>Jackson hole</strong>
                         </Typography>
                       </span>
                     }
@@ -1041,7 +1041,7 @@ const Hero = props => {
                   </Grid>
                   <Grid item xs={12} md={9}>
                     <Typography variant="subtitle1">
-                      The Great Pengu
+                      Jackson hole
                     </Typography>
                   </Grid>
                 </Grid>
@@ -1055,7 +1055,7 @@ const Hero = props => {
                   </Grid>
                   <Grid item xs={12} md={9}>
                     <Typography variant="subtitle1">
-                      NFT will be on sale on September 1st at 21:00 KST
+                      The NFT will be minted on September 9th. (KST)
                     </Typography>
                   </Grid>
                 </Grid>
@@ -1068,7 +1068,7 @@ const Hero = props => {
                           On sale
                         </Typography>{' '}
                         <Typography component="span" variant="h6" color="textPrimary">
-                          <strong>0.31</strong>
+                          <strong>TBA</strong>
                         </Typography>{' '}
                         <Typography component="span" variant="body1" color="textSecondary">
                           ETH
@@ -1090,7 +1090,7 @@ const Hero = props => {
                 <span>
                   <Typography id="discrete-slider-small-steps" gutterBottom>
                     {/*Total amount : {amountOfNft} NFT*/}
-                    Total amount : 40
+                    Total amount : TBA
                   </Typography>
                 </span>
               </Grid>
@@ -1103,7 +1103,7 @@ const Hero = props => {
                         }}
                         fullWidth
                         disabled={true}>
-                  Sold out
+                  It will be open
                 </Button>
               </Grid>
                 {
