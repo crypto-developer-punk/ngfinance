@@ -10,7 +10,7 @@ import Eth from "../../../../assets/images/main/logo_eth.svg";
 import Rarible from "../../../../assets/images/main/logo_rarible.png";
 import PaintToken from "../../../../assets/images/main/logo_paint_token.svg";
 import CanvasToken from "../../../../assets/images/main/logo_canvas_token.svg";
-import NextSaleNft from "../../../../assets/images/main/next_sale_nft.jpg";
+import NextSaleNft from "../../../../assets/images/main/next_sale_nft.png";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
@@ -1055,7 +1055,7 @@ const Hero = props => {
                   </Grid>
                   <Grid item xs={12} md={9}>
                     <Typography variant="subtitle1">
-                      The NFT will be minted on September 9th. (KST)
+                      NFT will be on sale on September 10st at 21:00 KST
                     </Typography>
                   </Grid>
                 </Grid>
@@ -1068,7 +1068,7 @@ const Hero = props => {
                           On sale
                         </Typography>{' '}
                         <Typography component="span" variant="h6" color="textPrimary">
-                          <strong>TBA</strong>
+                          <strong>0.3</strong>
                         </Typography>{' '}
                         <Typography component="span" variant="body1" color="textSecondary">
                           ETH
@@ -1090,7 +1090,7 @@ const Hero = props => {
                 <span>
                   <Typography id="discrete-slider-small-steps" gutterBottom>
                     {/*Total amount : {amountOfNft} NFT*/}
-                    Total amount : TBA
+                    Total amount : 45
                   </Typography>
                 </span>
               </Grid>
@@ -1099,11 +1099,11 @@ const Hero = props => {
                 <Button variant="contained" color="primary" size="large"
                         onClick={(e) => {
                           e.preventDefault();
-                          window.open("https://rarible.com/token/0x6cff6eb6c7cc2409b48e6192f98914fd05aab4ba:7", '_blank');
+                          window.open("https://rarible.com/token/0x6cff6eb6c7cc2409b48e6192f98914fd05aab4ba:9", '_blank');
                         }}
                         fullWidth
-                        disabled={true}>
-                  It will be open
+                        disabled={false}>
+                  Buy
                 </Button>
               </Grid>
                 {
