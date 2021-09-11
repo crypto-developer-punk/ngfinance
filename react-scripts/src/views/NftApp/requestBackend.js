@@ -1,8 +1,9 @@
 import axios from "axios";
 
-export const registerStaking = async(backend_url, my_address, nft_chain_id, nft_amount, transactionHash) => {
+export const registerStaking = async(backend_url, my_address, contract_type, nft_chain_id, nft_amount, transactionHash) => {
     const data = {
         "address": my_address,
+        "contract_type": contract_type,
         "nft_chain_id": nft_chain_id,
         "nft_amount": nft_amount,
         "staking_transaction_hash": transactionHash
@@ -11,18 +12,20 @@ export const registerStaking = async(backend_url, my_address, nft_chain_id, nft_
     return axios.post(`${backend_url}/staking/register`, data, {headers: setRequestHeaders(my_address)});
 };
 
-export const unstaking = async(backend_url, my_address, nft_chain_id) => {
+export const unstaking = async(backend_url, my_address, contract_type, nft_chain_id) => {
     const data = {
         "address": my_address,
+        "contract_type": contract_type,
         "nft_chain_id": nft_chain_id
     };
 
     return axios.post(`${backend_url}/staking/unstaking`, data, {headers: setRequestHeaders(my_address)});
 };
 
-export const getStaked = async(backend_url, my_address, nft_chain_id) => {
+export const getStaked = async(backend_url, my_address, contract_type, nft_chain_id) => {
     const params = {
         "address": my_address,
+        "contract_type": contract_type,
         "nft_chain_id": nft_chain_id
     };
 

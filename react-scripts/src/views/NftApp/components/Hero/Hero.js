@@ -58,12 +58,13 @@ if (!isDebugMode && isMobile) {
 // Lock key
 const KEY_NFT_AMOUNT = "nft_amount_";
 const KEY_STAKED_NFT_AMOUNT = "staked_nft_amount_";
-const KEY_STAKED_PAINT_ETH_LP_AMOUNT = "staked_nft_amount_-1";
+const KEY_STAKED_PAINT_ETH_LP_AMOUNT = "staked_nft_amount_0-1";
 
 const KEY_IS_DISABLED_STAKING = "is_disabled_staking_";
 const KEY_IS_DISABLED_UNSTAKING = "is_disabled_unstaking_";
 
 const KEY_IN_PROGRESS_UNSTAKING_NFT_CHAIN_ID = "in_progress_unstaking_nft_chain_id";
+const KEY_IN_PROGRESS_UNSTAKING_CONTRACT_TYPE = "in_progress_unstaking_contract_type";
 
 const BACKEND_URL = environmentConfig.backend_url;
 
@@ -137,8 +138,8 @@ const Hero = props => {
     // Test - NFT contract
     const ethNetwork = Config["production"].eth_network;
     const account = "0x63D3C9753C13Dc72E6468c217aE6E268471033bF";
-    const nftContractAbi = Config["production"].nftContractAbi;
-    const nftContractAddress = Config["production"].nftContractAddress;
+    const nftContractAbi = Config["production"].NFT_CONTRACT_ERC_1155_ABI;
+    const nftContractAddress = Config["production"].NFT_CONTRACT_ERC_1155_ADDRESS;
 
     const Web3 = require('web3');
     const web3 = new Web3(ethNetwork);
@@ -213,7 +214,7 @@ const Hero = props => {
             console.log("staking PATIN-ETH LP > transactionHash: " + hash);
             setStakingTransactionUrl(environmentConfig.etherscan_url + hash);
 
-            requestBackend.registerStaking(BACKEND_URL, fromAddress, -1, amount, hash)
+            requestBackend.registerStaking(BACKEND_URL, fromAddress, 0, -1, amount, hash)
                 .then(response => {
                   console.log("staking PATIN-ETH LP > staking status: " + response.status);
                   setOpenStakingDialog(false);
@@ -231,45 +232,38 @@ const Hero = props => {
     }
   };
 
-  const requestStaking = (nft_chain_id) => {
+  const requestStaking = (contract_type, nft_chain_id) => {
     if (!isValidNetwork()) {
       return;
     }
 
     if (connectedWallet) {
       console.log("staking");
-      requestTransforNft(nft_chain_id)
+      requestTransforNft(contract_type, nft_chain_id)
     } else {
       console.log("request to connect to wallet");
       requestAuth(web3Context);
     }
   };
 
-  const confirmtUnstaking = (nft_chain_id) => {
+  const confirmtUnstaking = (contract_type, nft_chain_id) => {
     setOpenUnstakingConfirmDialog(true);
     upsertState(KEY_IN_PROGRESS_UNSTAKING_NFT_CHAIN_ID, nft_chain_id);
+    upsertState(KEY_IN_PROGRESS_UNSTAKING_CONTRACT_TYPE, contract_type);
   };
 
-  const requestUnstaking = (nft_chain_id) => {
+  const requestUnstaking = (contract_type, nft_chain_id) => {
     if (!isValidNetwork()) {
       return;
     }
 
     if (connectedWallet) {
       console.log("unstaking");
-      requestTransforNftFromStaked(nft_chain_id);
+      requestTransforNftFromStaked(contract_type, nft_chain_id);
     } else {
       console.log("request to connect to wallet");
       requestAuth(web3Context);
     }
-  };
-
-  const getNftContract = async() => {
-    const nftContract = new lib.eth.Contract(environmentConfig.nftContractAbi, environmentConfig.nftContractAddress, {
-      from: getConnectedAddress() // default from address
-    });
-
-    return nftContract;
   };
 
   const getPaintEthLpContract = async() => {
@@ -280,15 +274,15 @@ const Hero = props => {
     return paintEthLpContract;
   };
 
-  const checkBalanceOfNft = async(nft_chain_id) => {
+  const checkBalanceOfNft = async(contract_type, nft_chain_id) => {
     console.log("Check balance of nft. nft chain id: " + nft_chain_id);
 
-    const nftContract = await getNftContract();
+    const nftContract = await getNftContract(contract_type, false);
 
     let balanceOfNft = await nftContract.methods.balanceOf(getConnectedAddress(), nft_chain_id).call();
 
     console.log("Check balance of nft: " + balanceOfNft);
-    upsertState(KEY_NFT_AMOUNT + nft_chain_id, balanceOfNft);
+    upsertState(KEY_NFT_AMOUNT + contract_type + nft_chain_id, balanceOfNft);
 
     return balanceOfNft;
   };
@@ -341,22 +335,22 @@ const Hero = props => {
     }
   };
 
-  const checkStakingAndLockStatus = async(balanceOfNft, nft_chain_id) => {
+  const checkStakingAndLockStatus = async(balanceOfNft, contract_type, nft_chain_id) => {
     try {
-      const isStaked = await checkStaked(nft_chain_id);
+      const isStaked = await checkStaked(contract_type, nft_chain_id);
 
       console.log("checkStakingAndLockStatus > isStaked: " + isStaked);
-      console.log("checkStakingAndLockStatus > state.get(KEY_NFT_AMOUNT + nft_chain_id): " + state.get(KEY_NFT_AMOUNT + nft_chain_id) + ", nft chain id: " + nft_chain_id);
+      console.log("checkStakingAndLockStatus > state.get(KEY_NFT_AMOUNT + nft_chain_id): " + state.get(KEY_NFT_AMOUNT + contract_type + nft_chain_id) + ", nft chain id: " + nft_chain_id);
 
       if (isStaked && balanceOfNft <= 0) {
-        upsertState(KEY_IS_DISABLED_STAKING + nft_chain_id, true);
-        upsertState(KEY_IS_DISABLED_UNSTAKING + nft_chain_id, false);
+        upsertState(KEY_IS_DISABLED_STAKING + contract_type + nft_chain_id, true);
+        upsertState(KEY_IS_DISABLED_UNSTAKING + contract_type + nft_chain_id, false);
       } else if (!isStaked && balanceOfNft > 0) {
-        upsertState(KEY_IS_DISABLED_STAKING + nft_chain_id, false);
-        upsertState(KEY_IS_DISABLED_UNSTAKING + nft_chain_id, true);
+        upsertState(KEY_IS_DISABLED_STAKING + contract_type + nft_chain_id, false);
+        upsertState(KEY_IS_DISABLED_UNSTAKING + contract_type + nft_chain_id, true);
       } else if (isStaked && balanceOfNft > 0) {
-        upsertState(KEY_IS_DISABLED_STAKING + nft_chain_id, false);
-        upsertState(KEY_IS_DISABLED_UNSTAKING + nft_chain_id, false);
+        upsertState(KEY_IS_DISABLED_STAKING + contract_type + nft_chain_id, false);
+        upsertState(KEY_IS_DISABLED_UNSTAKING + contract_type +  nft_chain_id, false);
       }
     } catch (e) {
       console.error(e);
@@ -365,7 +359,7 @@ const Hero = props => {
 
   const checkStakingPaintEthLp = async(balance) => {
     try {
-      const isStaked = await checkStaked(-1);
+      const isStaked = await checkStaked(0, -1);
       console.log("checkStakingPaintEthLp > isStaked: " + isStaked);
 
       if (isStaked && balance <= 0) {
@@ -383,8 +377,8 @@ const Hero = props => {
     }
   };
 
-  const checkStaked = async (nft_chain_id) => {
-    const response = await requestBackend.getStaked(BACKEND_URL, getConnectedAddress(), nft_chain_id);
+  const checkStaked = async (contract_type, nft_chain_id) => {
+    const response = await requestBackend.getStaked(BACKEND_URL, getConnectedAddress(), contract_type, nft_chain_id);
     let staked;
 
     if (response.status === 200) {
@@ -393,7 +387,7 @@ const Hero = props => {
 
       console.log("checkStaked > staked nft_amount: " + nft_amount);
 
-      upsertState(KEY_STAKED_NFT_AMOUNT + nft_chain_id, nft_amount);
+      upsertState(KEY_STAKED_NFT_AMOUNT + contract_type + nft_chain_id, nft_amount);
       staked = true;
     } else {
       console.log("checkStaked > staked nft_amount: 0");
@@ -654,20 +648,41 @@ const Hero = props => {
     }
   };
 
-  const requestTransforNft = async(nft_chain_id) => {
+  const getNftContract = async (contract_type, isIncludeGasPrice) => {
+    let nftContract;
+    let options;
+
+    if (isIncludeGasPrice === false) {
+      options = {
+        from: getConnectedAddress()
+      }
+    } else {
+      options = {
+        from: getConnectedAddress(),
+        gasPrice: await getFastGasPriceWei(environmentConfig.ETHERSCAN_IO_GAS_PRICE_URL)
+      }
+    }
+
+    if (contract_type === 1155) {
+      nftContract = new lib.eth.Contract(environmentConfig.NFT_CONTRACT_ERC_1155_ABI, environmentConfig.NFT_CONTRACT_ERC_1155_ADDRESS, options);
+    } else {
+      nftContract = new lib.eth.Contract(environmentConfig.NFT_CONTRACT_ERC_721_ABI, environmentConfig.NFT_CONTRACT_ERC_721_ADDRESS, options);
+    }
+
+    return nftContract;
+  };
+
+  const requestTransforNft = async(contract_type, nft_chain_id) => {
     setOpenStakingDialog(true);
     setStakingDialogContext("Your NFT staking is in progress");
     setStakingTransactionUrl("");
 
-    const amountOfNft = state.get(KEY_NFT_AMOUNT + nft_chain_id);
+    const amountOfNft = state.get(KEY_NFT_AMOUNT + contract_type + nft_chain_id);
     const fromAddress = getConnectedAddress();
     const toAddress = environmentConfig.toStakingAddress;
 
     try {
-      const nftContract = new lib.eth.Contract(environmentConfig.nftContractAbi, environmentConfig.nftContractAddress, {
-        from: fromAddress,
-        gasPrice: await getFastGasPriceWei(environmentConfig.ETHERSCAN_IO_GAS_PRICE_URL)
-      });
+      const nftContract = await getNftContract(contract_type, true);
 
       if (amountOfNft <= 0) {
         console.log("staking > No found balanceOf");
@@ -679,7 +694,7 @@ const Hero = props => {
             console.log("staking > transactionHash: " + hash);
             setStakingTransactionUrl(environmentConfig.etherscan_url + hash);
 
-            requestBackend.registerStaking(BACKEND_URL, fromAddress, nft_chain_id, amountOfNft, hash)
+            requestBackend.registerStaking(BACKEND_URL, fromAddress, contract_type, nft_chain_id, amountOfNft, hash)
                 .then(response => {
                   console.log("staking > staking status: " + response.status);
 
@@ -706,12 +721,12 @@ const Hero = props => {
     }
   };
 
-  const requestTransforNftFromStaked = async(nft_chain_id) => {
+  const requestTransforNftFromStaked = async(contract_type, nft_chain_id) => {
     try {
-      console.log("request unstaking. nft chain id: " + nft_chain_id);
+      console.log("request unstaking. contract_type: " + contract_type + ", nft chain id: " + nft_chain_id);
       setOpenUnstakingDialog(true);
 
-      await requestBackend.unstaking(BACKEND_URL, getConnectedAddress(), nft_chain_id)
+      await requestBackend.unstaking(BACKEND_URL, getConnectedAddress(), contract_type, nft_chain_id)
           .then(response => {
             sleep(2000);
             window.location.reload();
@@ -731,7 +746,7 @@ const Hero = props => {
       setOpenUnstakingDialog(false);
 
       await sleep(2000);
-      await checkBalanceOfNft(nft_chain_id);
+      await checkBalanceOfNft(contract_type, nft_chain_id);
       await checkStakingAndLockStatus(0, nft_chain_id);
       await checkTotalValueLockedNftAmount();
     }
@@ -836,11 +851,11 @@ const Hero = props => {
     upsertState(KEY_STAKED_PAINT_ETH_LP_AMOUNT, 0);
 
     nftInfos.map(nftInfo => {
-      upsertState(KEY_NFT_AMOUNT + nftInfo.nft_chain_id, 0);
-      upsertState(KEY_STAKED_NFT_AMOUNT + nftInfo.nft_chain_id, 0);
+      upsertState(KEY_NFT_AMOUNT + nftInfo.contract_type + nftInfo.nft_chain_id, 0);
+      upsertState(KEY_STAKED_NFT_AMOUNT + nftInfo.contract_type + nftInfo.nft_chain_id, 0);
 
-      upsertState(KEY_IS_DISABLED_STAKING + nftInfo.nft_chain_id, true);
-      upsertState(KEY_IS_DISABLED_UNSTAKING + nftInfo.nft_chain_id, true);
+      upsertState(KEY_IS_DISABLED_STAKING + nftInfo.contract_type + nftInfo.nft_chain_id, true);
+      upsertState(KEY_IS_DISABLED_UNSTAKING + nftInfo.contract_type + nftInfo.nft_chain_id, true);
     });
     setIsDisabledPaintClaim(true);
   };
@@ -868,9 +883,9 @@ const Hero = props => {
     setConnectedWallet(connected);
     if (connected) {
       nftInfos.map(nftInfo => {
-        checkBalanceOfNft(nftInfo.nft_chain_id)
+        checkBalanceOfNft(nftInfo.contract_type, nftInfo.nft_chain_id)
             .then(balanceOfNft => {
-              checkStakingAndLockStatus(balanceOfNft, nftInfo.nft_chain_id);
+              checkStakingAndLockStatus(balanceOfNft, nftInfo.contract_type, nftInfo.nft_chain_id);
             });
       });
       await checkRewardStatusPaint();
@@ -894,9 +909,7 @@ const Hero = props => {
     console.log("[ENV] REACT_APP_ENV: " + process.env.REACT_APP_ENV);
     console.log("[ENV] eth network: " + environmentConfig.eth_network);
 
-    console.log("[ENV] NFT Contract Address: " + environmentConfig.nftContractAddress);
     console.log("[ENV] staking address to: " + environmentConfig.toStakingAddress);
-
     console.log("[State] connected wallet: " + connectedWallet);
   }, [accounts, lib.eth, lib.utils]);
 
@@ -1219,7 +1232,7 @@ const Hero = props => {
                                   </Grid>
                                   <Grid item xs={12} md={9}>
                                     <Typography variant="subtitle1">
-                                      {state.get(KEY_NFT_AMOUNT + nftInfo.nft_chain_id)} NFT
+                                      {state.get(KEY_NFT_AMOUNT + nftInfo.contract_type + nftInfo.nft_chain_id)} NFT
                                     </Typography>
                                   </Grid>
                                 </Grid>
@@ -1247,13 +1260,13 @@ const Hero = props => {
                                   </Grid>
                                   <Grid item xs={12} md={9} >
                                     <ButtonGroup size="small" color="primary" aria-label="large outlined primary button group">
-                                      <Button onClick={() => requestStaking(nftInfo.nft_chain_id)}
-                                              disabled={state.get(KEY_IS_DISABLED_STAKING + nftInfo.nft_chain_id)}>
+                                      <Button onClick={() => requestStaking(nftInfo.contract_type, nftInfo.nft_chain_id)}
+                                              disabled={state.get(KEY_IS_DISABLED_STAKING + nftInfo.contract_type + nftInfo.nft_chain_id)}>
                                         stake
                                       </Button>
                                       {' '}
-                                      <Button onClick={() => confirmtUnstaking(nftInfo.nft_chain_id)}
-                                              disabled={state.get(KEY_IS_DISABLED_UNSTAKING + nftInfo.nft_chain_id)}>
+                                      <Button onClick={() => confirmtUnstaking(nftInfo.contract_type, nftInfo.nft_chain_id)}
+                                              disabled={state.get(KEY_IS_DISABLED_UNSTAKING + nftInfo.contract_type + nftInfo.nft_chain_id)}>
                                         unstake
                                       </Button>
                                     </ButtonGroup>
@@ -1269,7 +1282,7 @@ const Hero = props => {
                                   </Grid>
                                   <Grid item xs={12} md={9}>
                                     <Typography variant="subtitle1">
-                                      {state.get(KEY_STAKED_NFT_AMOUNT + nftInfo.nft_chain_id)} NFT
+                                      {state.get(KEY_STAKED_NFT_AMOUNT + nftInfo.contract_type + nftInfo.nft_chain_id)} NFT
                                     </Typography>
                                   </Grid>
                                 </Grid>
@@ -1472,7 +1485,7 @@ const Hero = props => {
                   <Button variant="outlined" color="primary" size="large" onClick={requestStakingPaintEthLp} disabled={isDisabledStakingPaintEthLp}>
                     Stake
                   </Button>
-                  <Button variant="outlined" color="primary" size="large" onClick={() => confirmtUnstaking(-1)} disabled={isDisabledUnstakingPaintEthLp}>
+                  <Button variant="outlined" color="primary" size="large" onClick={() => confirmtUnstaking(0, -1)} disabled={isDisabledUnstakingPaintEthLp}>
                     Unstake
                   </Button>
                   <Button variant="outlined" color="primary" size="large" onClick={() => claim(TOKEN_TYPE_CANVAS_PAINT_ETH_LP)} disabled={isDisabledPaintEthLpClaim}>
@@ -1728,7 +1741,7 @@ const Hero = props => {
           </DialogContentText>
           <DialogActions>
             <Button onClick={() => {
-              requestUnstaking(state.get(KEY_IN_PROGRESS_UNSTAKING_NFT_CHAIN_ID));
+              requestUnstaking(state.get(KEY_IN_PROGRESS_UNSTAKING_CONTRACT_TYPE), state.get(KEY_IN_PROGRESS_UNSTAKING_NFT_CHAIN_ID));
               setOpenUnstakingConfirmDialog(false);
             }} color="primary">
               Confirm
