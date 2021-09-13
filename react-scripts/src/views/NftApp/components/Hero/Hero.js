@@ -968,16 +968,23 @@ const Hero = props => {
             alignItems="flex-start"
             xs={12}
             md={6}
-            data-aos={'fade-up'}
         >
-          <Image
-              src={NextSaleNft}
-              alt="Genesis NFT"
-              style={{ width: '100%', height:'100%' }}
-              className={classes.image}
-              data-aos="flip-left"
-              data-aos-easing="ease-out-cubic"
-              data-aos-duration="2000"
+          {/*<Image*/}
+          {/*    src={NextSaleNft}*/}
+          {/*    alt="Genesis NFT"*/}
+          {/*    style={{ width: '100%', height:'100%' }}*/}
+          {/*    className={classes.image}*/}
+          {/*    data-aos="flip-left"*/}
+          {/*    data-aos-easing="ease-out-cubic"*/}
+          {/*    data-aos-duration="2000"*/}
+          {/*/>*/}
+          <ReactPlayer
+              url={"https://ngfinance.io/resources/metroPainting.mp4"}
+              width='100%'
+              height='100%'
+              playing={true}
+              loop={true}
+              muted={true}
           />
         </Grid>
         <Grid
@@ -1024,7 +1031,7 @@ const Hero = props => {
                     title={
                       <span>
                         <Typography component="span" variant="h5" color="textPrimary" >
-                          <strong>Jackson hole</strong>
+                          <strong>Metro painting</strong>
                         </Typography>
                       </span>
                     }
@@ -1041,7 +1048,7 @@ const Hero = props => {
                   </Grid>
                   <Grid item xs={12} md={9}>
                     <Typography variant="subtitle1">
-                      Jackson hole
+                      Metro painting
                     </Typography>
                   </Grid>
                 </Grid>
@@ -1055,7 +1062,7 @@ const Hero = props => {
                   </Grid>
                   <Grid item xs={12} md={9}>
                     <Typography variant="subtitle1">
-                      NFT will be on sale on September 10st at 21:00 KST
+                      September 19 at 21:00 KST
                     </Typography>
                   </Grid>
                 </Grid>
@@ -1065,10 +1072,10 @@ const Hero = props => {
                     title={
                       <span>
                         <Typography component="span" variant="body1" color="textSecondary">
-                          On sale
+                          reserve price
                         </Typography>{' '}
                         <Typography component="span" variant="h6" color="textPrimary">
-                          <strong>0.3</strong>
+                          <strong>0.37</strong>
                         </Typography>{' '}
                         <Typography component="span" variant="body1" color="textSecondary">
                           ETH
@@ -1090,7 +1097,7 @@ const Hero = props => {
                 <span>
                   <Typography id="discrete-slider-small-steps" gutterBottom>
                     {/*Total amount : {amountOfNft} NFT*/}
-                    Total amount : 45
+                    Total amount : 1
                   </Typography>
                 </span>
               </Grid>
@@ -1099,11 +1106,11 @@ const Hero = props => {
                 <Button variant="contained" color="primary" size="large"
                         onClick={(e) => {
                           e.preventDefault();
-                          window.open("https://rarible.com/token/0x6cff6eb6c7cc2409b48e6192f98914fd05aab4ba:9", '_blank');
+                          window.open("https://rarible.com/token/0x4dfd4f4aa74b62614597e6f5417f70a6fa7a9f45:2?tab=bids", '_blank');
                         }}
                         fullWidth
-                        disabled={true}>
-                  Sold out
+                        disabled={false}>
+                  Place a bid
                 </Button>
               </Grid>
                 {
