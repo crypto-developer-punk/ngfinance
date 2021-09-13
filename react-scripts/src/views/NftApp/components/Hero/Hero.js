@@ -1008,10 +1008,10 @@ const Hero = props => {
                             Nostalgia Artist
                           </Typography>
                           <Typography variant="caption" className={classes.tag} >
-                            Paint Token
+                            Governance NFT
                           </Typography>
                           <Typography variant="caption" className={classes.tag} >
-                            NFT
+                            Redeemable
                           </Typography>
                         </div>
                       </span>
