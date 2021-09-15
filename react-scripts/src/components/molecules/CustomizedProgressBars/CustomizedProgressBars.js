@@ -22,10 +22,10 @@ export default function CustomizedProgressBars(props) {
 
         if (props.isStart) {
             setAfterTokenSaleOpenContext("Public sale starts in ");
-            setAfterTokenSaleCloseContext("Public sale closed ");
+            setAfterTokenSaleCloseContext("");
         } else {
             setAfterTokenSaleOpenContext("Public sale closes in ");
-            setAfterTokenSaleCloseContext("Public sale closed ");
+            setAfterTokenSaleCloseContext("");
         }
     };
 
