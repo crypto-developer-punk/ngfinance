@@ -30,6 +30,7 @@ import axios from "axios";
 import ReactPlayer from 'react-player'
 
 import {isMobile} from 'react-device-detect';
+import CustomizedProgressBars from "../../../../components/molecules/CustomizedProgressBars/CustomizedProgressBars";
 
 console.log("isMobile? " + isMobile);
 
@@ -39,6 +40,10 @@ Moment.tz.setDefault("Asia/Seoul");
 
 ReactGA.initialize(Config.ga_code);
 ReactGA.pageview(window.location.pathname + window.location.search);
+
+// Define token sale date
+const AUCTION_DATE = '19-09-2021 21:00:00';
+const SALE_DATE = '16-09-2021 21:00:00';
 
 // Define token type
 const TOKEN_TYPE_PAINT_NFT = 0;
@@ -884,6 +889,9 @@ const Hero = props => {
           })
     }
 
+    // check after token sale
+    checkIsAfterTokenSale(SALE_DATE);
+
     // Logging
     console.log("[Web3] ETH network connected: " + connected);
     console.log("[Web3] Network id: " + networkId +", name: " + networkName);
@@ -920,6 +928,24 @@ const Hero = props => {
   const [stakingTransactionUrl, setStakingTransactionUrl] = React.useState("");
   const [claimTransactionUrl, setClaimTransactionUrl] = React.useState("");
 
+  // Countdown token sale
+  const [afterTokenSale, setAfterTokenSale] = React.useState(false);
+  const [afterTokenSaleSubject, setAfterTokenSaleSubject] = React.useState("Veiled");
+  const [afterTokenSaleImageUrl, setAfterTokenSaleImageUrl] = React.useState("https://ngfinance.io/resources/blank.jpg");
+
+  const checkIsAfterTokenSale = (saleDate) => {
+    const today = Moment();
+    const isAfterTokenSale = today.isAfter(Moment(saleDate, 'DD-MM-YYYY hh:mm:ss'));
+
+    console.log("Sale date: " + saleDate + ", isAfterTokenSale: " + isAfterTokenSale);
+
+    if (isAfterTokenSale) {
+      setAfterTokenSale(true);
+      setAfterTokenSaleSubject("N-Loot");
+      setAfterTokenSaleImageUrl("https://ngfinance.io/resources/nLoot.jpg");
+    }
+  };
+
   React.useEffect(() => {
     getBalance();
   }, [accounts, getBalance, networkId]);
@@ -942,7 +968,7 @@ const Hero = props => {
         <SectionHeader
             title={
               <Typography variant="h5">
-                Our next NFT
+                Current opened auction
               </Typography>
             }
             align="left"
@@ -999,6 +1025,9 @@ const Hero = props => {
           <CardBase liftUp variant="outlined" align="left" withShadow
                     style={{ borderTop: `5px solid ${colors.blueGrey[500]}` }}>
             <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <CustomizedProgressBars saleDate={AUCTION_DATE} isStart={false}/>
+              </Grid>
               <Grid item xs={9}>
                 <SectionHeader
                     title={
@@ -1124,6 +1153,158 @@ const Hero = props => {
             </Grid>
           </CardBase>
         </Grid>
+        <Grid
+            item
+            container
+            justify="flex-start"
+            alignItems="flex-start"
+            xs={12}
+            md={12}
+        >
+          <SectionHeader
+              title={
+                <Typography variant="h5">
+                  Next open sale
+                </Typography>
+              }
+              align="left"
+              disableGutter
+          />
+        </Grid>
+        <Grid
+            item
+            container
+            justify="flex-start"
+            alignItems="flex-start"
+            xs={12}
+            md={6}
+        >
+          <Image
+              src={afterTokenSaleImageUrl}
+              alt="Genesis NFT"
+              style={{ width: '100%', height:'100%' }}
+              className={classes.image}
+              data-aos="flip-left"
+              data-aos-easing="ease-out-cubic"
+              data-aos-duration="2000"
+          />
+        </Grid>
+        <Grid
+            item
+            container
+            justify="flex-start"
+            alignItems="flex-start"
+            xs={12}
+            md={6}
+            data-aos={'fade-up'}
+        >
+          <CardBase liftUp variant="outlined" align="left" withShadow
+                    style={{ borderTop: `5px solid ${colors.blueGrey[500]}` }}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <CustomizedProgressBars saleDate={SALE_DATE} isStart={true}/>
+              </Grid>
+              <Grid item xs={9}>
+                <SectionHeader
+                    title={
+                      <span>
+                        <div>
+                          <Typography variant="caption" className={classes.tag} >
+                            Governance NFT
+                          </Typography>
+                          <Typography variant="caption" className={classes.tag} >
+                            Only Paint payable
+                          </Typography>
+                        </div>
+                      </span>
+                    }
+                    align="left"
+                    disableGutter
+                />
+              </Grid>
+              <Grid item xs={3} align="right">
+                <Image
+                    src={Rarible}
+                    style={{ width: '40px', height:'40px' }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <SectionHeader
+                    title={
+                      <span>
+                        <Typography component="span" variant="h5" color="textPrimary" >
+                          <strong>{afterTokenSaleSubject}</strong>
+                        </Typography>
+                      </span>
+                    }
+                    align="left"
+                    disableGutter
+                />
+              </Grid>
+              <Grid item xs={12} className={classes.gridItemMain}>
+                <Grid container>
+                  <Grid item xs={12} md={3}>
+                    <Typography variant="subtitle1" color={"primary"}>
+                      DESCRIPTION
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} md={9}>
+                    <Typography variant="subtitle1">
+                      {afterTokenSaleSubject}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={12} className={classes.gridItemMain}>
+                <Grid container>
+                  <Grid item xs={12} md={3}>
+                    <Typography variant="subtitle1" color={"primary"}>
+                      RELEASE DATE
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} md={9}>
+                    <Typography variant="subtitle1">
+                      September 16 at 21:00 KST
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={12}>
+                <SectionHeader
+                    title={
+                      <span>
+                        <Typography component="span" variant="body1" color="textSecondary">
+                          Minimum price
+                        </Typography>{' '}
+                        <Typography component="span" variant="h6" color="textPrimary">
+                          <strong>200000</strong>
+                        </Typography>{' '}
+                        <Typography component="span" variant="body1" color="textSecondary">
+                          PAINT
+                        </Typography>
+                      </span>
+                    }
+                    align="left"
+                    disableGutter
+                    titleVariant="h3"
+                />
+              </Grid>
+              <Grid item xs={12} align="center">
+                <br />
+                <Button variant="contained" color="primary" size="large"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          window.open("https://docs.google.com/forms/d/1u6HITfQuZtRA44cI0ICj6yvpTl6XwL0TnG5W0klB1nA/edit", '_blank');
+                        }}
+                        fullWidth
+                        disabled={!afterTokenSale}>
+                  Register
+                </Button>
+              </Grid>
+            </Grid>
+          </CardBase>
+        </Grid>
+
         <Grid
             item
             container

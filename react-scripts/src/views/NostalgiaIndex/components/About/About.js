@@ -8,10 +8,6 @@ import { CardBase } from 'components/organisms';
 import GenesisNFT from '../../../../assets/images/main/genesis_nft.jpg';
 import Eth from '../../../../assets/images/main/logo_eth.svg';
 
-import { DescriptionCta } from 'components/molecules';
-import { CardProduct } from 'components/organisms';
-import CustomizedProgressBars from "../../../../components/molecules/CustomizedProgressBars/CustomizedProgressBars";
-
 const useStyles = makeStyles(theme => ({
   playIcon: {
     width: 40,
@@ -96,10 +92,6 @@ const About = props => {
                           style={{height:'20px', width: '20px'}}
                       />
                       </Typography>
-              </Grid>
-              <Grid item xs={12}>
-                  <br />
-                  <CustomizedProgressBars/>
               </Grid>
           </Grid>
       </CardBase>
