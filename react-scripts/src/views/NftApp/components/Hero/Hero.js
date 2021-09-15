@@ -1070,12 +1070,12 @@ const Hero = props => {
               </Grid>
               <Grid item xs={12} className={classes.gridItemMain}>
                 <Grid container>
-                  <Grid item xs={12} md={3}>
+                  <Grid item xs={12} md={4}>
                     <Typography variant="subtitle1" color={"primary"}>
                       DESCRIPTION
                     </Typography>
                   </Grid>
-                  <Grid item xs={12} md={9}>
+                  <Grid item xs={12} md={8}>
                     <Typography variant="subtitle1">
                       Metro painting
                     </Typography>
@@ -1084,12 +1084,12 @@ const Hero = props => {
               </Grid>
               <Grid item xs={12} className={classes.gridItemMain}>
                 <Grid container>
-                  <Grid item xs={12} md={5}>
+                  <Grid item xs={12} md={4}>
                     <Typography variant="subtitle1" color={"primary"}>
                       CLOSING DATE
                     </Typography>
                   </Grid>
-                  <Grid item xs={12} md={5}>
+                  <Grid item xs={12} md={8}>
                     <Typography variant="subtitle1">
                       September 19 at 21:00 KST
                     </Typography>
@@ -1243,12 +1243,12 @@ const Hero = props => {
               </Grid>
               <Grid item xs={12} className={classes.gridItemMain}>
                 <Grid container>
-                  <Grid item xs={12} md={3}>
+                  <Grid item xs={12} md={4}>
                     <Typography variant="subtitle1" color={"primary"}>
                       DESCRIPTION
                     </Typography>
                   </Grid>
-                  <Grid item xs={12} md={9}>
+                  <Grid item xs={12} md={8}>
                     <Typography variant="subtitle1">
                       {afterTokenSaleSubject}
                     </Typography>
@@ -1257,12 +1257,12 @@ const Hero = props => {
               </Grid>
               <Grid item xs={12} className={classes.gridItemMain}>
                 <Grid container>
-                  <Grid item xs={12} md={5}>
+                  <Grid item xs={12} md={4}>
                     <Typography variant="subtitle1" color={"primary"}>
                       OPEN SALE DATE
                     </Typography>
                   </Grid>
-                  <Grid item xs={12} md={5}>
+                  <Grid item xs={12} md={8}>
                     <Typography variant="subtitle1">
                       September 15 at 21:00 KST
                     </Typography>
