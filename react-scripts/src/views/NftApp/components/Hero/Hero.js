@@ -43,7 +43,7 @@ ReactGA.pageview(window.location.pathname + window.location.search);
 
 // Define token sale date
 const AUCTION_DATE = '19-09-2021 21:00:00';
-const SALE_DATE = '16-09-2021 21:00:00';
+const SALE_DATE = '15-09-2021 21:00:00';
 
 // Define token type
 const TOKEN_TYPE_PAINT_NFT = 0;
