@@ -1084,12 +1084,12 @@ const Hero = props => {
               </Grid>
               <Grid item xs={12} className={classes.gridItemMain}>
                 <Grid container>
-                  <Grid item xs={12} md={3}>
+                  <Grid item xs={12} md={5}>
                     <Typography variant="subtitle1" color={"primary"}>
-                      AUCTION CLOSING DATE
+                      CLOSING DATE
                     </Typography>
                   </Grid>
-                  <Grid item xs={12} md={9}>
+                  <Grid item xs={12} md={5}>
                     <Typography variant="subtitle1">
                       September 19 at 21:00 KST
                     </Typography>
@@ -1257,12 +1257,12 @@ const Hero = props => {
               </Grid>
               <Grid item xs={12} className={classes.gridItemMain}>
                 <Grid container>
-                  <Grid item xs={12} md={3}>
+                  <Grid item xs={12} md={5}>
                     <Typography variant="subtitle1" color={"primary"}>
                       OPEN SALE DATE
                     </Typography>
                   </Grid>
-                  <Grid item xs={12} md={9}>
+                  <Grid item xs={12} md={5}>
                     <Typography variant="subtitle1">
                       September 15 at 21:00 KST
                     </Typography>
