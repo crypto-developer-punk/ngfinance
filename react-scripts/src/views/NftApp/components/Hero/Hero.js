@@ -1101,7 +1101,7 @@ const Hero = props => {
                     title={
                       <span>
                         <Typography component="span" variant="body1" color="textSecondary">
-                          reserve price
+                          Reserve price
                         </Typography>{' '}
                         <Typography component="span" variant="h6" color="textPrimary">
                           <strong>0.37</strong>
