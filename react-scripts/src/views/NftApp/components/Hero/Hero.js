@@ -1086,7 +1086,7 @@ const Hero = props => {
                 <Grid container>
                   <Grid item xs={12} md={3}>
                     <Typography variant="subtitle1" color={"primary"}>
-                      RELEASE DATE
+                      AUCTION CLOSING DATE
                     </Typography>
                   </Grid>
                   <Grid item xs={12} md={9}>
@@ -1259,12 +1259,12 @@ const Hero = props => {
                 <Grid container>
                   <Grid item xs={12} md={3}>
                     <Typography variant="subtitle1" color={"primary"}>
-                      RELEASE DATE
+                      OPEN SALE DATE
                     </Typography>
                   </Grid>
                   <Grid item xs={12} md={9}>
                     <Typography variant="subtitle1">
-                      September 16 at 21:00 KST
+                      September 15 at 21:00 KST
                     </Typography>
                   </Grid>
                 </Grid>
