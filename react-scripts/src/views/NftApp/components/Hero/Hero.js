@@ -288,6 +288,11 @@ const Hero = props => {
   const checkBalanceOfNft = async(nft_chain_id) => {
     console.log("Check balance of nft. nft chain id: " + nft_chain_id);
 
+    if (nft_chain_id <= 0) {
+      console.log("skip check balance of nft. nft chain id: " + nft_chain_id);
+      return;
+    }
+
     const nftContract = await getNftContract();
 
     let balanceOfNft = await nftContract.methods.balanceOf(getConnectedAddress(), nft_chain_id).call();
