@@ -73,6 +73,15 @@ export const claim = async(backend_url, my_address, token_type, transactionHash)
     return axios.post(`${backend_url}/reward/claim`, data, {headers: setRequestHeaders(my_address)});
 };
 
+export const rollbackInProgress = async(backend_url, my_address, token_type) => {
+    const data = {
+        "address": my_address,
+        "token_type": token_type
+    };
+
+    return axios.post(`${backend_url}/reward/rollbackInProgress`, data, {headers: setRequestHeaders(my_address)});
+};
+
 export const getSnapshot = async(backend_url, token_type, my_address) => {
     const params = {
         "token_type": token_type

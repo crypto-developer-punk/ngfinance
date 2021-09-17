@@ -508,37 +508,39 @@ const Hero = props => {
   };
 
   const claim = async (tokenType) => {
-    try {
-      setOpenClaimDialog(true);
-      setClaimTransactionUrl("");
+    setOpenClaimDialog(true);
+    setClaimTransactionUrl("");
 
-      console.log("claim > token type: " + tokenType);
-      const response = await requestBackend.approve(BACKEND_URL, getConnectedAddress(), tokenType);
+    console.log("claim > token type: " + tokenType);
 
-      if (response.status === 200) {
-        const approved_token_amount = response.data.approved_token_amount;
-        console.log("claim > approved_token_amount: " + approved_token_amount);
+    requestBackend.approve(BACKEND_URL, getConnectedAddress(), tokenType)
+        .then(response => {
+          if (response.status === 200) {
+            const approved_token_amount = response.data.approved_token_amount;
+            console.log("claim > approved_token_amount: " + approved_token_amount);
 
-        let rewardTokenAmount = 0;
-        requestTransferFromPaintToken(tokenType, approved_token_amount, function () {
-          switch (tokenType) {
-            case TOKEN_TYPE_PAINT_NFT:
-              rewardTokenAmount = checkRewardStatusPaint();
-              break;
-            case TOKEN_TYPE_CANVAS_PAINT_ETH_LP:
-              rewardTokenAmount = checkRewardStatusPaintEthLp();
-              break;
-            case TOKEN_TYPE_CANVAS_NFT:
-              rewardTokenAmount = checkRewardStatusCanvasNft();
-              break;
+            let rewardTokenAmount = 0;
+            requestTransferFromPaintToken(tokenType, approved_token_amount, function () {
+              switch (tokenType) {
+                case TOKEN_TYPE_PAINT_NFT:
+                  rewardTokenAmount = checkRewardStatusPaint();
+                  break;
+                case TOKEN_TYPE_CANVAS_PAINT_ETH_LP:
+                  rewardTokenAmount = checkRewardStatusPaintEthLp();
+                  break;
+                case TOKEN_TYPE_CANVAS_NFT:
+                  rewardTokenAmount = checkRewardStatusCanvasNft();
+                  break;
+              }
+              console.log("claim > rewardTokenAmount: " + rewardTokenAmount);
+              setOpenClaimDialog(false);
+            });
           }
-          console.log("claim > rewardTokenAmount: " + rewardTokenAmount);
+        })
+        .catch(error => {
           setOpenClaimDialog(false);
+          alert(error.response.data.message);
         });
-      }
-    } catch {
-      window.location.reload();
-    }
   };
 
   const requestTransferFromPaintToken = async(tokenType, approved_token_amount, callback) => {
@@ -593,6 +595,12 @@ const Hero = props => {
           })
           .on('error', function(error, receipt) {
             console.log("error");
+
+            requestBackend.rollbackInProgress(BACKEND_URL, getConnectedAddress(), tokenType)
+                .then(response => {
+                  console.log("claim > rollback in progress: " + response.status);
+                });
+
             callback();
           });
     } catch (e) {
