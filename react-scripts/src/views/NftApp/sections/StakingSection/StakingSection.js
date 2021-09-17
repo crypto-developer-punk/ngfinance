@@ -52,7 +52,8 @@ const StakingSection = props => {
     });
     const classes = useStyles();
   
-    const {backendContext} = props.store;
+    const {store} = props; 
+    const {backendContext, webThreeContext} = store;
     
     let ended = false;
     const claim = async () => {
@@ -76,11 +77,12 @@ const StakingSection = props => {
                 <br/>
               </div>);
         });
-
-        props.closeDialog();
       } catch(err) {
-        props.showErrorDialog(err);
+        if (err && err.code !== 4001) {
+          props.showErrorDialog(JSON.stringify(err));
+        }
       } finally {
+        props.closeDialog();
         let ended = true;
       }
     };
@@ -114,7 +116,7 @@ const StakingSection = props => {
               </Typography>
             </Grid>
             <Grid item xs={6} md={6} align={"right"}>
-              <Button variant="outlined" color="primary" size="large" onClick={claim} disabled={backendContext.paintRewardTokenAmount === 0}>
+              <Button variant="outlined" color="primary" size="large" onClick={claim} disabled={(backendContext.paintRewardTokenAmount === 0 || !webThreeContext.isWalletConnected)}>
                 Claim
               </Button>
             </Grid>

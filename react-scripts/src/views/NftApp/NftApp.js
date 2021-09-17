@@ -36,7 +36,6 @@ const NftApp = props => {
     async function initStore() {
       try {
         await props.store.asyncInitWebThreeContext();
-        await props.store.asyncInitNftInfos();
         await props.store.asyncInitBackendContext();
       } catch (err) {
         props.showErrorDialog(err);

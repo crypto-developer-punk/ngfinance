@@ -2,6 +2,8 @@ const sleep = (ms) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
+export {sleep};
+
 export const timeout = (target, ms) => {
     return Promise.race([
         target,

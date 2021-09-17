@@ -80,6 +80,7 @@ class RequestWeb3 {
 
     asyncGetBalanceOfNft = async(nft_chain_id, connected_addr) => {
         const nftContract = await this.#asyncGetNftContract(connected_addr, false);
+        // console.log('aaa 3', nftContract);
         const balanceOfNft = await nftContract.methods.balanceOf(connected_addr, nft_chain_id).call();
         return balanceOfNft;
     };
@@ -100,11 +101,14 @@ class RequestWeb3 {
 
     // https://web3js.readthedocs.io/en/v1.2.2/web3-eth-contract.html#methods-mymethod-send
     asyncSafeTransfer = async(connected_addr, toAddress, nft_chain_id, amountOfNft, transactionHashCB) => {
+        // console.log('aaa 4', connected_addr, toAddress, nft_chain_id, amountOfNft, transactionHashCB);
         const nftContract = await this.#asyncGetNftContract(connected_addr, true);
-        const receipt = await nftContract.method.safeTransfer(connected_addr, toAddress, nft_chain_id, amountOfNft, "0x00").send()
+        // console.log('aaa 2', nftContract.methods);
+        const receipt = await nftContract.methods.safeTransferFrom(connected_addr, toAddress, nft_chain_id, amountOfNft, "0x00").send()
             .on('transactionHash', (hash)=>{
                 if (transactionHashCB) transactionHashCB(hash);                
             });
+        // console.log('aaa 5', receipt);
         return receipt;
     };
 
@@ -117,6 +121,7 @@ class RequestWeb3 {
             option.gasPrice = await this.#asyncGetFastGasPriceWei(ETHERSCAN_IO_GAS_PRICE_URL);
         }
         const nftContract = new this.lib.eth.Contract(nftContractAbi, nftContractAddress, option);
+        // console.log('aaa 1', nftContract);
         return nftContract;
     };
 

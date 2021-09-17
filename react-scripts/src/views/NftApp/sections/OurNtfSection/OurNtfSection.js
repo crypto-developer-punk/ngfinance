@@ -7,6 +7,7 @@ import {Button, ButtonGroup, colors, Grid, Typography, Divider, Paper, useMediaQ
 import {Image} from 'components/atoms';
 import {SectionHeader} from 'components/molecules';
 import {CardBase, Section} from "components/organisms";
+import {sleep} from "myutil";
 
 import Moment from 'moment';
 var _ = require('lodash');
@@ -52,6 +53,9 @@ const useStyles = makeStyles(theme => ({
     color: '#E3E3E3',
     background: '#2E3348'
   },
+  urltext: {
+    // textOverflow: 'ellipsis'
+  }
 }));
 
 const OurNtfSection = props => {
@@ -63,7 +67,8 @@ const OurNtfSection = props => {
   });
   const classes = useStyles();
 
-  const {webThreeContext, nftMap} = props.store;
+  const {store} = props;
+  const {webThreeContext, nftMap} = store;
 
   const requestStaking = _.debounce(async (nft) => {
     if (!webThreeContext.isWalletConnected) {
@@ -95,10 +100,12 @@ const OurNtfSection = props => {
             </div>
           </div>);
       });
-      props.closeDialog();
     } catch (err) {
-      props.showErrorDialog(err);
+      if (err && err.code !== 4001) {
+        props.showErrorDialog(JSON.stringify(err));
+      }
     } finally {
+      props.closeDialog();
       ended = true;
     }
   }, 300, {
@@ -126,7 +133,8 @@ const OurNtfSection = props => {
         </div>);
     try {
       await props.store.asyncUnstakeNft(nft);
-      props.closeDialog();
+      sleep(2000);
+      window.location.reload();
     } catch (err) {
       if (err.response && err.response.data && err.response.data.message && err.response.data.dayOfLockUpNft) {
         const {message, dayOfLockUpNft} = err.response.data;
@@ -137,9 +145,11 @@ const OurNtfSection = props => {
           <br/>
           Remaining time: {message}
         </div>);
-      } else {
-        props.showErrorDialog(err);
+      } else if (err && err.code !== 4001) {
+        props.showErrorDialog(JSON.stringify(err));
       }
+    } finally {
+      props.closeDialog();
     }
   }, 300, {
     leading: true,
@@ -254,14 +264,20 @@ const OurNtfSection = props => {
                                 </Typography>
                               </Grid>
                               <Grid item xs={12} md={9} >
-                                <ButtonGroup contained size="small" color="primary" aria-label="large outlined primary button group">
-                                  <Button disabled={nftBalance <= 0} onClick={() => requestStaking(nft)}>
-                                    stake
-                                  </Button>
-                                  <Button disabled={staking.nft_amount <= 0} onClick={() => requestUnstaking(nft)}>
-                                    unstake
-                                  </Button>
-                                </ButtonGroup>
+                                {/* <ButtonGroup contained size="small" color="primary" aria-label="large outlined primary button group"> */}
+                                  <Grid container xs={10}>
+                                    <Grid item xs={2} md={2}>
+                                      <Button variant="contained" color="primary" size={"small"} disabled={(nftBalance <= 0 || !webThreeContext.isWalletConnected)} onClick={() => requestStaking(nft)}>
+                                        stake
+                                      </Button>
+                                    </Grid>
+                                    <Grid item xs={2} md={2}>
+                                      <Button variant="contained" color="primary" size={"small"} disabled={(staking.nft_amount <= 0 || !webThreeContext.isWalletConnected)} onClick={() => requestUnstaking(nft)}>
+                                        unstake
+                                      </Button>
+                                    </Grid>
+                                  </Grid>
+                                {/* </ButtonGroup> */}
                               </Grid>
                             </Grid>
                           </Grid>

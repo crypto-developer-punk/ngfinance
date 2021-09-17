@@ -62,12 +62,12 @@ const NextNftSection = props => {
   };
 
   const getWalletBtnLabel = () => {
-    return webThreeContext.isWalletConnected ? `${webThreeContext.networkName} NET Connected` : "Connect wallet";
+    return webThreeContext.isWalletConnected ? `${webThreeContext.networkName} NET Connected` : getWalletConnectInfo();
   };
 
   const getWalletConnectInfo = () => {
     if (!webThreeContext.isValidNetwork) {
-      return "Please Change to mainnet"; 
+      return "Please change wallet network to mainnet"; 
     }
     return "";
   };
@@ -96,14 +96,14 @@ const NextNftSection = props => {
             justify="flex-end"
             alignItems="center"
             direction="row"
-            xs={6}
+            xs={8}
             spacing={2}
           >
-            <Grid item>
+            {/* <Grid item>
               <Typography variant="subtitle1">
                 {getWalletConnectInfo()}
               </Typography>
-            </Grid>
+            </Grid> */}
             <Grid item>
               <Button variant="contained" color="primary" size={isMd? "large":"small"} onClick={connectToWallet} disabled={webThreeContext.isWalletConnected || !webThreeContext.isValidNetwork}>
                 {getWalletBtnLabel()}

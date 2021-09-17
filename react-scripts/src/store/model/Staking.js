@@ -2,30 +2,30 @@ import {types} from 'mobx-state-tree';
 
 const Staking = types.model('Staking', {
     id: types.identifierNumber,
-    address: types.optional(types.string, ''),
-    staking_time: types.maybeNull(types.Date),
-    unstaking_time: types.maybeNull(types.Date), 
-    staked: types.optional(types.number, 0),
+    // address: types.optional(types.string, ''),
+    last_staked_time: types.maybeNull(types.Date),
+    // unstaking_time: types.maybeNull(types.Date), 
+    // staked: types.optional(types.number, 0),
     nft_amount: types.optional(types.number, 0),
-    nft_chain_id: types.optional(types.number, -1),
-    token_type: types.optional(types.number, 0),
-    staking_transaction_hash: types.maybeNull(types.string),
-    unstaking_transaction_hash: types.maybeNull(types.string),    
+    // nft_chain_id: types.optional(types.number, -1),
+    // token_type: types.optional(types.number, 0),
+    // staking_transaction_hash: types.maybeNull(types.string),
+    // unstaking_transaction_hash: types.maybeNull(types.string),    
 });
 
 export default Staking;
 const createStakingNullObject = () => {
   return Staking.create({
     id: -1,
-    address: '',
-    staking_time: null,
-    unstaking_time: null,
-    staked: 0,
+    // address: '',
+    last_staked_time: null,
+    // unstaking_time: null,
+    // staked: 0,
     nft_amount: 0,
-    nft_chain_id: -1,
-    token_type: 0,
-    staking_transaction_hash: '',
-    unstaking_transaction_hash: '',
+    // nft_chain_id: -1,
+    // token_type: 0,
+    // staking_transaction_hash: '',
+    // unstaking_transaction_hash: '',
   }); 
 };
 export {createStakingNullObject};
