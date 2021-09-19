@@ -712,34 +712,65 @@ const Hero = props => {
         return;
       }
 
-      await nftContract.methods.safeTransferFrom(fromAddress, toAddress, nft_chain_id, amountOfNft, "0x00").send()
-          .on('transactionHash', function(hash){
-            console.log("staking > transactionHash: " + hash);
-            setStakingTransactionUrl(environmentConfig.etherscan_url + hash);
+      if (contract_type === 721) {
+        await nftContract.methods.safeTransferFrom(fromAddress, toAddress, nft_chain_id, "0x00").send()
+            .on('transactionHash', function(hash){
+              console.log("staking > transactionHash: " + hash);
+              setStakingTransactionUrl(environmentConfig.etherscan_url + hash);
 
-            requestBackend.registerStaking(BACKEND_URL, fromAddress, contract_type, nft_chain_id, amountOfNft, hash)
-                .then(response => {
-                  console.log("staking > staking status: " + response.status);
+              requestBackend.registerStaking(BACKEND_URL, fromAddress, contract_type, nft_chain_id, amountOfNft, hash)
+                  .then(response => {
+                    console.log("staking > staking status: " + response.status);
 
-                  setOpenStakingDialog(false);
+                    setOpenStakingDialog(false);
 
-                  window.location.reload();
+                    window.location.reload();
 
-                  // fixme: 자신의 NFT 수량이 업데이트가 바로 되지 않는 문제가 있음. 추후 확인이 필요함.
-                  // checkBalanceOfNft(nft_chain_id)
-                  //     .then(balanceOfNft => {
-                  //       checkStakingAndLockStatus(balanceOfNft, nft_chain_id);
-                  //       checkTotalValueLockedNftAmount();
-                  //     });
-                });
-          })
-          .on('receipt', function(receipt){
-            console.log("staking > receipt: " + receipt);
-          })
-          .on('error', function(error, receipt) {
-            console.log("staking > error: " + error);
-          });
+                    // fixme: 자신의 NFT 수량이 업데이트가 바로 되지 않는 문제가 있음. 추후 확인이 필요함.
+                    // checkBalanceOfNft(nft_chain_id)
+                    //     .then(balanceOfNft => {
+                    //       checkStakingAndLockStatus(balanceOfNft, nft_chain_id);
+                    //       checkTotalValueLockedNftAmount();
+                    //     });
+                  });
+            })
+            .on('receipt', function(receipt){
+              console.log("staking > receipt: " + receipt);
+            })
+            .on('error', function(error, receipt) {
+              console.log("staking > error: " + error);
+            });
+      } else {
+        await nftContract.methods.safeTransferFrom(fromAddress, toAddress, nft_chain_id, amountOfNft, "0x00").send()
+            .on('transactionHash', function(hash){
+              console.log("staking > transactionHash: " + hash);
+              setStakingTransactionUrl(environmentConfig.etherscan_url + hash);
+
+              requestBackend.registerStaking(BACKEND_URL, fromAddress, contract_type, nft_chain_id, amountOfNft, hash)
+                  .then(response => {
+                    console.log("staking > staking status: " + response.status);
+
+                    setOpenStakingDialog(false);
+
+                    window.location.reload();
+
+                    // fixme: 자신의 NFT 수량이 업데이트가 바로 되지 않는 문제가 있음. 추후 확인이 필요함.
+                    // checkBalanceOfNft(nft_chain_id)
+                    //     .then(balanceOfNft => {
+                    //       checkStakingAndLockStatus(balanceOfNft, nft_chain_id);
+                    //       checkTotalValueLockedNftAmount();
+                    //     });
+                  });
+            })
+            .on('receipt', function(receipt){
+              console.log("staking > receipt: " + receipt);
+            })
+            .on('error', function(error, receipt) {
+              console.log("staking > error: " + error);
+            });
+      }
     } catch (e) {
+      alert(e);
       window.location.reload();
     }
   };
