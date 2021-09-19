@@ -1323,8 +1323,8 @@ const Hero = props => {
                           window.open("https://docs.google.com/forms/d/1u6HITfQuZtRA44cI0ICj6yvpTl6XwL0TnG5W0klB1nA/edit", '_blank');
                         }}
                         fullWidth
-                        disabled={!afterTokenSale}>
-                  Register
+                        disabled={true}>
+                  Closed
                 </Button>
               </Grid>
             </Grid>
