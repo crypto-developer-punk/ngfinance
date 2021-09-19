@@ -288,8 +288,13 @@ const Hero = props => {
     }
 
     const nftContract = await getNftContract(contract_type, false);
+    let balanceOfNft;
 
-    let balanceOfNft = await nftContract.methods.balanceOf(getConnectedAddress(), nft_chain_id).call();
+    if (contract_type === 721) {
+      balanceOfNft = await nftContract.methods.balanceOf(getConnectedAddress()).call();
+    } else {
+      balanceOfNft = await nftContract.methods.balanceOf(getConnectedAddress(), nft_chain_id).call();
+    }
 
     console.log("Check balance of nft: " + balanceOfNft);
     upsertState(KEY_NFT_AMOUNT + contract_type + nft_chain_id, balanceOfNft);
