@@ -4,15 +4,16 @@ import {values, map} from 'mobx';
 import PropTypes from 'prop-types';
 import {makeStyles, withStyles, useTheme} from '@material-ui/core/styles';
 import {Button, ButtonGroup, colors, Grid, Typography, Divider, Paper, useMediaQuery} from '@material-ui/core';
+import ReactPlayer from 'react-player'
 import {Image} from 'components/atoms';
 import {SectionHeader} from 'components/molecules';
 import {CardBase, Section} from "components/organisms";
 import {sleep} from "myutil";
 
 import Moment from 'moment';
-var _ = require('lodash');
 require('moment-timezone');
 Moment.tz.setDefault("Asia/Seoul");
+var _ = require('lodash');
 
 // import requestWeb3 from 'api/requestWeb3';
 
@@ -62,9 +63,6 @@ const OurNtfSection = props => {
   const { className, ...rest } = props;
 
   const theme = useTheme();
-  const isMd = useMediaQuery(theme.breakpoints.up('md'), {
-    defaultMatches: true,
-  });
   const classes = useStyles();
 
   const {store} = props;
@@ -100,13 +98,13 @@ const OurNtfSection = props => {
             </div>
           </div>);
       });
+      props.closeDialog();
     } catch (err) {
       if (err && err.code !== 4001) {
         props.showErrorDialog(JSON.stringify(err));
       }
     } finally {
-      props.closeDialog();
-      ended = true;
+      ended = true; 
     }
   }, 300, {
     leading: true,
@@ -118,9 +116,9 @@ const OurNtfSection = props => {
       props.showInfoDialog("Please connect wallet to ethereum mainet.");
       return;
     }
-    const {nft_amount} = props.store.findStaking(nft);
+    const {token_amount} = store.findNftStaking(nft);
 
-    if (nft_amount <= 0) {
+    if (token_amount <= 0) {
       props.showInfoDialog("Must have 1 more staked NFT");
       return;
     }
@@ -132,10 +130,13 @@ const OurNtfSection = props => {
           <br/>
         </div>);
     try {
-      await props.store.asyncUnstakeNft(nft);
+      await store.asyncUnstakeNft(nft);
       sleep(2000);
       window.location.reload();
+      props.closeDialog();
     } catch (err) {
+      console.log(err);
+      console.log(JSON.stringify(err));
       if (err.response && err.response.data && err.response.data.message && err.response.data.dayOfLockUpNft) {
         const {message, dayOfLockUpNft} = err.response.data;
         props.showDialog("You can't unstake your NFT.",
@@ -148,53 +149,87 @@ const OurNtfSection = props => {
       } else if (err && err.code !== 4001) {
         props.showErrorDialog(JSON.stringify(err));
       }
-    } finally {
-      props.closeDialog();
     }
   }, 300, {
     leading: true,
     trailing: false
   });
 
+  const isMp4Url = (url) => {
+    const extension = url.split(/[#?]/)[0].split('.').pop().trim();
+
+    if (extension === "mp4") {
+      return true;
+    }
+    return false;
+  };
+
   return (
-    <Section className={className} {...rest}>
+    <React.Fragment>
+      <Grid
+        item
+        container
+        justify="flex-start"
+        alignItems="flex-start"
+        xs={12}
+        md={12}
+        data-aos={'fade-up'}
+      >
+        {/* title */}
         <Grid item xs={12} style={{marginBottom: '15px'}}>
-            <SectionHeader
-                title={
-                  <Typography variant="h5">
-                    Our NFTs
-                  </Typography>
-                }
-                align="left"
-                disableGutter
-            />
+          <SectionHeader
+              title={
+                <Typography variant="h5">
+                  Our NFTs
+                </Typography>
+              }
+              align="left"
+              disableGutter
+          />
         </Grid>
+        
+        {/* nft-list */}
         <Grid item xs={12}>
-            {
-              values(nftMap).map(nft => {
-                const staking = props.store.findStaking(nft);
-                const nftBalance = parseInt(props.store.findNftWebThreeContext(nft).balance);
-                return <Grid container spacing={3}>
+          {
+            values(nftMap).map(nft => {
+              const staking = store.findNftStaking(nft);
+              const nftBalance = parseInt(store.findNftWebThreeContext(nft).balance);
+              // console.log(nft.image_url, isMp4Url(nft.image_url));
+              return (
+                <Grid container spacing={3}>
                   <Grid item xs={12}>
                     <CardBase liftUp variant="outlined" align="left" withShadow>
                       <Grid container spacing={5}>
                         <Grid
-                            item
-                            container
-                            justify="flex-start"
-                            alignItems="flex-start"
-                            xs={12} md={4}
-                            data-aos={'fade-up'}
+                          item
+                          container
+                          justify="flex-start"
+                          alignItems="flex-start"
+                          xs={12} md={4}
+                          data-aos={'fade-up'}
                         >
                           <Image
                             src={nft.image_url}
+                            hidden={isMp4Url(nft.image_url)}
+                            style={{height:'100%', width: '100%'}}
                             alt="Genesis NFT"
                             className={classes.image}
                             data-aos="flip-left"
                             data-aos-easing="ease-out-cubic"
                             data-aos-duration="2000"
                           />
+
+                          <ReactPlayer
+                            url={nft.image_url}
+                            hidden={!isMp4Url(nft.image_url)}
+                            width='100%'
+                            height='100%'
+                            playing={true}
+                            loop={true}
+                            muted={true}
+                          />
                         </Grid>
+
                         <Grid
                           item
                           container
@@ -272,7 +307,7 @@ const OurNtfSection = props => {
                                       </Button>
                                     </Grid>
                                     <Grid item xs={2} md={2}>
-                                      <Button variant="contained" color="primary" size={"small"} disabled={(staking.nft_amount <= 0 || !webThreeContext.isWalletConnected)} onClick={() => requestUnstaking(nft)}>
+                                      <Button variant="contained" color="primary" size={"small"} disabled={(staking.token_amount <= 0 || !webThreeContext.isWalletConnected)} onClick={() => requestUnstaking(nft)}>
                                         unstake
                                       </Button>
                                     </Grid>
@@ -290,7 +325,7 @@ const OurNtfSection = props => {
                               </Grid>
                               <Grid item xs={12} md={9}>
                                 <Typography variant="subtitle1">
-                                  {staking.nft_amount} NFT
+                                  {staking.token_amount} NFT
                                 </Typography>
                               </Grid>
                             </Grid>
@@ -299,12 +334,13 @@ const OurNtfSection = props => {
                       </Grid>
                     </CardBase>
                   </Grid> 
-                </Grid>
+                </Grid>)
               }
             )
           }
         </Grid>
-    </Section>
+      </Grid>
+    </React.Fragment>
   );
 };
 

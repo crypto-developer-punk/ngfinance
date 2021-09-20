@@ -1,11 +1,22 @@
 import {types} from 'mobx-state-tree';
+var moment = require('moment'); // require
 
 const Snapshot = types.model('Snapshot', {
-    id: types.identifierNumber,
-    snapshot_time: types.Date,
-    token_type: types.optional(types.number, -1),
-    token_amount: types.optional(types.number, 0)
-});
+    snapshot_time: types.maybeNull(types.Date),
+    total_value_locked_nft_amount: types.optional(types.number, 0),
+    balance_of_reward: types.optional(types.number, 0)
+})
+.actions(self => ({
+  setBalanceOfReward(reward) {
+    self.balance_of_reward = reward;
+  }
+}))
+.views(self => ({
+  get snapShotTimeStr() {
+    return self.snapshot_time ? 
+    moment(self.snapshot_time).format("YYYY-MM-DD hh:mm:ss") : "";
+  }
+}));;
 
 export default Snapshot;
 

@@ -1,6 +1,7 @@
 import axios from "axios";
 import {timeout, ProviderHelper} from 'myutil';
 import Config, {environmentConfig} from 'myconfig';
+import {TOKEN_TYPE_PAINT_NFT, TOKEN_TYPE_CANVAS_NFT, TOKEN_TYPE_CANVAS_PAINT_ETH_LP} from 'myconstants';
 
 const Web3 = require('web3');
 
@@ -21,9 +22,9 @@ class RequestWeb3 {
         return accounts;
     };
 
-    asyncGetAccountBalance = async(connected_addr) => {
+    asyncGetEthBalance = async(connected_addr) => {
         const balance = this.lib.utils.fromWei(await this.lib.eth.getBalance(connected_addr), 'ether');
-        return balance;
+        return parseFloat(balance);
     };
 
     asyncGetNetworkId = async() => {
@@ -58,15 +59,39 @@ class RequestWeb3 {
         } else return Promise.reject(new Error("Web3 provider doesn't support send method"));
     };
 
-    asyncClaimPaintToken = async(connected_addr, approved_token_amount, transactionHashCB) => {
-        const {PAINT_TOKEN_CONTRACT_ABI, PAINT_TOKEN_CONTRACT_ADDRESS, toStakingAddress, ETHERSCAN_IO_GAS_PRICE_URL} = environmentConfig;
-        let contract = new this.lib.eth.Contract(PAINT_TOKEN_CONTRACT_ABI, PAINT_TOKEN_CONTRACT_ADDRESS, {
+    asyncClaimToken = async(connected_addr, token_type, approved_token_amount, transactionHashCB) => {
+        const {PAINT_TOKEN_CONTRACT_ABI, PAINT_TOKEN_CONTRACT_ADDRESS, 
+            CANVAS_TOKEN_CONTRACT_ABI, CANVAS_TOKEN_CONTRACT_ADDRESS, 
+            toStakingAddress, ETHERSCAN_IO_GAS_PRICE_URL} = environmentConfig;
+        
+        let contractAbi = null;
+        let contractAddress = null;
+        switch (token_type) {
+            case TOKEN_TYPE_PAINT_NFT:
+                contractAbi = PAINT_TOKEN_CONTRACT_ABI;
+                contractAddress = PAINT_TOKEN_CONTRACT_ADDRESS;
+            break;
+            case TOKEN_TYPE_CANVAS_PAINT_ETH_LP:
+                contractAbi = CANVAS_TOKEN_CONTRACT_ABI;
+                contractAddress = CANVAS_TOKEN_CONTRACT_ADDRESS;
+            break;
+            case TOKEN_TYPE_CANVAS_NFT:
+                contractAbi = CANVAS_TOKEN_CONTRACT_ABI;
+                contractAddress = CANVAS_TOKEN_CONTRACT_ADDRESS;
+            break;
+        }
+
+        if (!contractAbi || !contractAddress) {
+            throw `${token_type} token type is not supported`;
+        }
+
+        let contract = new this.lib.eth.Contract(contractAbi, contractAddress, {
             from: connected_addr
           });
         let tokenAmount = await contract.methods.allowance(toStakingAddress, connected_addr).call();
         console.log("requestTransferFromPaintToken > allowance token amount: " + tokenAmount);
         console.log("requestTransferFromPaintToken > approved token amount: " + approved_token_amount);
-        contract = new this.lib.eth.Contract(PAINT_TOKEN_CONTRACT_ABI, PAINT_TOKEN_CONTRACT_ADDRESS, {
+        contract = new this.lib.eth.Contract(contractAbi, contractAddress, {
             from: connected_addr, // default from address
             gasPrice: await this.#asyncGetFastGasPriceWei(ETHERSCAN_IO_GAS_PRICE_URL)
           });
@@ -112,6 +137,29 @@ class RequestWeb3 {
         return receipt;
     };
 
+    asyncGetBalanceOfPaintEthLP = async(connected_addr) => {
+        const paintEthLpContract = await this.#asyncGetPaintEthLpContract(connected_addr);
+        const balanceWei = await paintEthLpContract.methods.balanceOf(connected_addr).call();
+        const balanceEther = await this.lib.utils.fromWei(balanceWei, 'ether');
+        console.log("Check balance of PAINT-ETH LP: " + balanceEther);
+        return parseFloat(balanceEther);
+    };
+
+    asyncRegisterPaintEthLpStaking = async(connected_addr, amount, transactionHashCB) => {
+        const {toStakingAddress} = environmentConfig;
+        
+        const paintEthLpContract = await this.#asyncGetPaintEthLpContract(connected_addr);
+        const balanceWei = await this.lib.utils.toWei(amount, 'ether');
+
+        const receipt = await paintEthLpContract.methods.transfer(toStakingAddress, balanceWei).send()
+            .on('transactionHash', (hash)=>{
+                if (transactionHashCB) transactionHashCB(hash);
+            });
+        return receipt;
+    };
+
+    // privates methods
+
     #asyncGetNftContract = async(connected_addr, fast) => {
         const {nftContractAbi, nftContractAddress, ETHERSCAN_IO_GAS_PRICE_URL} = environmentConfig;
         let option = {
@@ -125,7 +173,17 @@ class RequestWeb3 {
         return nftContract;
     };
 
-    //330 line
+    #asyncGetPaintEthLpContract = async(connected_addr, fast) => {
+        const {PAINT_ETH_LP_CONTRACT_ABI, PAINT_ETH_LP_CONTRACT_ADDRESS, ETHERSCAN_IO_GAS_PRICE_URL} = environmentConfig;
+        let option = {
+            from: connected_addr,
+        };
+        if (fast) {
+            option.gasPrice = await this.#asyncGetFastGasPriceWei(ETHERSCAN_IO_GAS_PRICE_URL);
+        }
+        const paintEthLpContract = new this.lib.eth.Contract(PAINT_ETH_LP_CONTRACT_ABI, PAINT_ETH_LP_CONTRACT_ADDRESS, option);
+        return paintEthLpContract;
+    };
 
     #asyncGetFastGasPriceWei = async(etherScanGasPriceUrl) => {
         const avgGasPrice = await this.lib.eth.getGasPrice();

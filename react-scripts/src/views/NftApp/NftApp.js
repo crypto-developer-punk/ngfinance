@@ -1,8 +1,9 @@
 import React from 'react';
 import { inject, observer } from "mobx-react";
 import {makeStyles} from '@material-ui/core/styles';
-import {colors} from '@material-ui/core';
-import {NextNftSection, ComingNextSection, OurNtfSection, StakingSection} from './sections';
+import {colors, Grid} from '@material-ui/core';
+import {Section} from "components/organisms";
+import {CurrentOpenedAuctionSection, NextOpenSaleSection, ComingNextSection, OurNtfSection, StakingSection} from './sections';
 import WithBase from 'with/WithBase';
 import { useWeb3 } from '@openzeppelin/network/react';
 import {environmentConfig} from 'myconfig';
@@ -27,16 +28,18 @@ const useStyles = makeStyles(theme => ({
 
 const NftApp = props => {
   const classes = useStyles();
-
   const web3Context = useWeb3(environmentConfig.eth_network);    
+
   const { networkId } = web3Context;
+  const {store} = props;
 
   React.useEffect(() => {
     requestWeb3.reinitialize();
     async function initStore() {
       try {
-        await props.store.asyncInitWebThreeContext();
-        await props.store.asyncInitBackendContext();
+        await store.asyncInitWebThreeContext();
+        await store.asyncInitNftInfos();
+        await store.asyncInitSnapshots();
       } catch (err) {
         props.showErrorDialog(err);
       }
@@ -45,13 +48,22 @@ const NftApp = props => {
   }, [networkId]);
 
   return (
-    <div>
-      <div className={classes.shape}>
-        <NextNftSection className={classes.pagePaddingTop} {...props}/>
-        <OurNtfSection className={classes.sectionNoPaddingTop} {...props} />
-        <StakingSection className={classes.pagePaddingTop} {...props}/>
+    <div className={classes.shape}>
+      <Section className={classes.pagePaddingTop}>
+        <Grid
+          container
+          justify="space-between"
+          spacing={4}
+        >
+          <CurrentOpenedAuctionSection {...props}/>
+          <NextOpenSaleSection {...props} />
+          <OurNtfSection  {...props} />
+          <StakingSection {...props}/>
+        </Grid>
+      </Section>
+      <Section className={classes.pagePaddingTop}>
         <ComingNextSection className={classes.pagePaddingTop} {...props}/>
-      </div>
+      </Section>
     </div>
   );
 };

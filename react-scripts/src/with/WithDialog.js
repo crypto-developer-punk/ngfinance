@@ -13,7 +13,7 @@ const WithDialog = WrappedComponent => {
             setDialogOpened(true);
             setUseCloseBtn(true);
             setLoading(false);
-            setDialogContent(<div>{`Please contract to developer if problem is continued`}<br/>{`${content}`}</div>);
+            setDialogContent(<div>Error Content<br/>{`${content}`}<br/><br/>{`If problem is continued, please contract to developer`} </div>);
             setDialogTitle("Error occured");
         };
 

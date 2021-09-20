@@ -9,9 +9,12 @@ import {CardBase, Section} from "components/organisms";
 import PaintToken from "assets/images/main/logo_paint_token.svg";
 import CanvasToken from "assets/images/main/logo_canvas_token.svg";
 
+import {TOKEN_TYPE_PAINT_NFT, TOKEN_TYPE_CANVAS_NFT, TOKEN_TYPE_CANVAS_PAINT_ETH_LP} from 'myconstants';
+
 import Moment from 'moment';
 require('moment-timezone');
 Moment.tz.setDefault("Asia/Seoul");
+var _ = require('lodash');
 
 const useStyles = makeStyles(theme => ({
   image: {
@@ -38,25 +41,119 @@ const useStyles = makeStyles(theme => ({
   paper: {
     padding: theme.spacing(2),
     textAlign: 'center',
-    color: '#E3E3E3',
-    background: '#2E3348'
+    color: 'white',
+    background: '#2E3348CC'
+  },
+  paperSub: {
+    padding: theme.spacing(2),
+    textAlign: 'left',
+    color: 'white',
+    background: '#2E3348CC'
   },
 }));
+
+const TokenStakingSection = props => {
+  const classes = useStyles();
+  const theme = useTheme();
+  const isMd = useMediaQuery(theme.breakpoints.up('md'), {
+    defaultMatches: true,
+  });
+
+  const {title, subTitle, stakingButtonComponents, lpTokenBalanceComponents, snapShotTimeStr, totalValueLockedNftAmount, hashAddressLabel, balanceOfReward, tokenImage} = props;
+
+  return (
+    <React.Fragment>
+      <Grid item xs={12} style={{marginBottom: '30px'}}>
+        <CardBase liftUp variant="outlined" align="left" withShadow
+                  style={{ borderTop: `5px solid ${colors.deepOrange[900]}` }}>
+          <Grid container spacing={isMd ? 5 : 1}>
+            <Grid item xs={6} md={6} align={"left"}>
+              {title}
+            </Grid>
+            <Grid item xs={6} md={6} align={"right"}>
+              {stakingButtonComponents}
+            </Grid>
+            { subTitle && 
+              <Grid item xs={12} md={12} align={"left"}>
+                  {subTitle}
+              </Grid>
+            }
+            <Grid item xs={12}>
+              <Divider />
+            </Grid>
+            <Grid item xs={12} md={6} align="left">
+              <Paper className={classes.paper}>
+                <Typography component="span" variant="subtitle1">
+                  Next snapshot date : { snapShotTimeStr }
+                </Typography>
+              </Paper>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Paper className={classes.paper}>
+                <Typography component="span" variant="subtitle1">
+                  Total number of NFT locked : { totalValueLockedNftAmount }
+                </Typography>
+              </Paper>
+            </Grid>
+            <Grid item xs={12} md={12}>
+              <Paper className={classes.paper}>
+                <Typography component="span" variant="subtitle1">
+                  {hashAddressLabel}
+                </Typography>
+              </Paper>
+            </Grid>
+            <Grid item xs={12}>
+              <Divider />
+            </Grid>
+            {lpTokenBalanceComponents}
+            <Grid item xs={12}>
+              <Typography component="span" variant="h6">
+                Token Drop Balance
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Grid
+                  container
+                  xs={12}
+                  alignContent="flex-start"
+                  justify="flex-start"
+                  alignItems="center"
+                  spacing={2}
+              >
+                <Grid item>
+                  <Image src={tokenImage}
+                        style={{ width: '120px', height:'120px' }}/>
+                </Grid>
+                <Grid item
+                    alignItems=""
+                    justify="center">
+                  <Typography component="span" variant="subtitle1">
+                    Paint Token : { balanceOfReward }
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </CardBase>
+      </Grid>
+    </React.Fragment>
+  );
+};
 
 const StakingSection = props => {
     const { className, ...rest } = props;
   
     const theme = useTheme();
+    const classes = useStyles();
     const isMd = useMediaQuery(theme.breakpoints.up('md'), {
       defaultMatches: true,
     });
-    const classes = useStyles();
   
     const {store} = props; 
-    const {backendContext, webThreeContext} = store;
+    const {webThreeContext, paintSnapshot, canvasSnapshot, lpSnapshot} = store;
     
-    let ended = false;
-    const claim = async () => {
+    const claim = _.debounce(async (token_type) => {
+      let ended = false;
       try {
         props.showLoadingDialog("Claim reward token",
         <div>
@@ -65,128 +162,182 @@ const StakingSection = props => {
           <br/>
         </div>);
 
-        await props.store.asyncClaimPaintToken((hashUrl)=>{
-          if (!ended)
-            props.showLoadingDialog("Claim reward token",
-              <div>
-                Claiming the reward token
-                <br/>
-                <br/>
-                <a href={hashUrl} target={"_blank"}>View claim transaction</a>
-                <br/>
-                <br/>
-              </div>);
-        });
+        await store.asyncClaimToken(token_type, (hashUrl)=>{
+            if (!ended)
+              props.showLoadingDialog("Claim reward token",
+                <div>
+                  Claiming the reward token
+                  <br/>
+                  <br/>
+                  <a href={hashUrl} target={"_blank"}>View claim transaction</a>
+                  <br/>
+                  <br/>
+                </div>);
+          });
+        props.closeDialog();
       } catch(err) {
         if (err && err.code !== 4001) {
           props.showErrorDialog(JSON.stringify(err));
         }
       } finally {
-        props.closeDialog();
-        let ended = true;
+        ended = true;
       }
+    }, 300, {
+      leading: true,
+      trailing: false
+    })
+
+    const registerPaintEthLpStaking = _.debounce(async () => {
+      let ended = false;
+      try {
+        props.showLoadingDialog("Staking", 
+          <div>Your PAINT-ETH LP staking is in progress</div>);
+        
+        await store.asyncRegisterPaintEthLpStaking((hashUrl)=>{
+          if (!ended)
+            props.showLoadingDialog("Staking", 
+            <div>Your PAINT-ETH LP staking is in progress
+              <br/>
+              <br/>
+              <a href={hashUrl} target={"_blank"}>View claim transaction</a>
+              <br/>
+              <br/>
+            </div>);
+        });
+        props.closeDialog();
+      } catch (err) {
+        props.showErrorDialog(JSON.stringify(err));
+      } finally {
+        ended = true;
+        window.location.reload();
+      }
+    }, 300, {      
+      leading: true,
+      trailing: false
+    })
+
+    const isDisabledPaintClaim = () => {
+      return paintSnapshot.balance_of_reward === 0 || !webThreeContext.isWalletConnected;
+    };  
+
+    const isDisabledCanvasClaim = () => {
+      return canvasSnapshot.balance_of_reward === 0 || !webThreeContext.isWalletConnected;
+    };  
+
+    const isDisabledLpClaim = () => {
+      return lpSnapshot.balance_of_reward === 0 || !webThreeContext.isWalletConnected;
     };
+
     return (
-    <Section className={className} {...rest}>
-      <Grid
+      <React.Fragment>
+         <Grid
           item
           container
           justify="flex-start"
           alignItems="flex-start"
           xs={12}
+          md={12}
           data-aos={'fade-up'}
-      >
-        <SectionHeader
+        >
+          {/* title */}
+          <Grid item xs={12} style={{marginBottom: '15px'}}>
+            <SectionHeader
+                title={
+                  <Typography variant="h5">
+                    Staking
+                  </Typography>
+                }
+                align="left"
+                disableGutter
+            />
+          </Grid>
+
+          {/*  NFT Staking (PAINT) */}
+          <TokenStakingSection 
             title={
-              <Typography variant="h5">
-                NFT Staking
+              <Typography component="span" variant="h5" style={{color: `${colors.deepOrange[900]}`}}>
+                NFT Staking (PAINT)
               </Typography>
-            }
-            align="left"
-            disableGutter
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <CardBase liftUp variant="outlined" align="left" withShadow
-                    style={{ borderTop: `5px solid ${colors.blueGrey[500]}` }}>
-          <Grid container spacing={isMd ? 5 : 1}>
-            <Grid item xs={6} md={6} align={"left"}>
-              <Typography component="span" variant="h6">
-                Overview
-              </Typography>
-            </Grid>
-            <Grid item xs={6} md={6} align={"right"}>
-              <Button variant="outlined" color="primary" size="large" onClick={claim} disabled={(backendContext.paintRewardTokenAmount === 0 || !webThreeContext.isWalletConnected)}>
+            } 
+            stakingButtonComponents={
+              <Button variant="outlined" color="primary" size="large" onClick={()=>{claim(TOKEN_TYPE_PAINT_NFT)}} disabled={isDisabledPaintClaim()}>
                 Claim
               </Button>
-            </Grid>
-            <Grid item xs={12} md={6} align="left">
-              <Paper className={classes.paper}>
-                <Typography component="span" variant="subtitle1">
-                  Next snapshot date : {backendContext.snapShotTimeStr}
-                </Typography>
-              </Paper>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Paper className={classes.paper}>
-                <Typography component="span" variant="subtitle1">
-                  Total number of NFT locked : { backendContext.totalValueLockedNftAmount }
-                </Typography>
-              </Paper>
-            </Grid>
-            <Grid item xs={12}>
-              <Divider />
-            </Grid>
-            <Grid
-                  item xs={6}
-              >
-              <Grid
-                container
-                xs={12}
-                alignContent="flex-start"
-                justify="flex-start"
-                alignItems="center"
-                spacing={2}
-              >
-                <Grid item>
-                  <Image src={PaintToken}
-                          style={{ width: '120px', height:'120px' }}/>
-                </Grid>
-                <Grid item
-                      alignItems=""
-                      justify="center">
+            }
+            snapShotTimeStr={paintSnapshot.snapShotTimeStr}
+            totalValueLockedNftAmount={paintSnapshot.total_value_locked_nft_amount}
+            hashAddressLabel={"PAINT : 0x83e031005ecb771b7ff900b3c7b0bdde7f521c08"}
+            balanceOfReward={paintSnapshot.balance_of_reward}
+            tokenImage={PaintToken}/>
+          
+          <br/>
+          <br/>
+
+          {/*  NFT Staking (PAINT) */}
+          <TokenStakingSection 
+            title={
+              <Typography component="span" variant="h5" style={{color: `${colors.green[900]}`}}>
+                NFT Staking (CANVAS)
+              </Typography>
+            }
+            stakingButtonComponents={
+              <Button variant="outlined" color="primary" size="large" onClick={()=>{claim(TOKEN_TYPE_CANVAS_NFT)}} disabled={isDisabledCanvasClaim()}>
+                Claim
+              </Button>
+            }
+            snapShotTimeStr={canvasSnapshot.snapShotTimeStr}
+            totalValueLockedNftAmount={canvasSnapshot.total_value_locked_nft_amount}
+            hashAddressLabel={"CANVAS : 0x863ad391091ae0e87b850c2bb7bfc7597c79c93f"}
+            balanceOfReward={canvasSnapshot.balance_of_reward}
+            tokenImage={CanvasToken}/>
+
+          {/*  PAINT/ETH LP Staking (PAINT) */}
+          <TokenStakingSection 
+            title={
+              <Typography component="span" variant="h5" style={{color: `${colors.deepPurple[900]}`}}>
+                PAINT/ETH LP Staking
+              </Typography>
+            }
+            subTitle={
+              <Typography component="span" variant="overline" color="error">
+                The mobile meta mask is currently under maintenance.
+                <br/>
+                Currently, only desktop meta mask is available.
+              </Typography>
+            }
+            stakingButtonComponents={
+              <ButtonGroup size="small" color="primary" aria-label="large outlined primary button group">
+                <Button variant="outlined" color="primary" size="large" onClick={registerPaintEthLpStaking}>
+                  Stake
+                </Button>
+                <Button variant="outlined" color="primary" size="large" >
+                  Unstake
+                </Button>
+                <Button variant="outlined" color="primary" size="large" onClick={() => claim(TOKEN_TYPE_CANVAS_PAINT_ETH_LP)} disabled={isDisabledLpClaim()}>
+                  Claim
+                </Button>
+              </ButtonGroup>
+            }
+            lpTokenBalanceComponents={
+              <Grid item xs={12}>
+                <Paper className={classes.paperSub}>
                   <Typography component="span" variant="subtitle1">
-                    Paint Token : { backendContext.paintRewardTokenAmount }
+                    Your PAINT/ETH LP : {webThreeContext.paintEthLpBalance}
                   </Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid
-                  item xs={6}
-              >
-              <Grid
-                    container
-                    xs={12}
-                    alignContent="flex-start"
-                    justify="flex-start"
-                    alignItems="center"
-                    spacing={2}
-                >
-                <Grid item>
-                  <Image src={CanvasToken}
-                          style={{ width: '120px', height:'120px' }}/>
-                </Grid>
-                <Grid item>
+                  <br/>
                   <Typography component="span" variant="subtitle1">
-                    Canvas Token : { 0 }
+                    Staked PAINT/ETH LP : 0
                   </Typography>
-                </Grid>
+                </Paper>
               </Grid>
-            </Grid>
-          </Grid>
-        </CardBase>
-      </Grid>
-    </Section>)
+            }
+            snapShotTimeStr={lpSnapshot.snapShotTimeStr}
+            totalValueLockedNftAmount={lpSnapshot.total_value_locked_nft_amount}
+            hashAddressLabel={"CANVAS : 0x863ad391091ae0e87b850c2bb7bfc7597c79c93f"}
+            balanceOfReward={lpSnapshot.balance_of_reward}
+            tokenImage={CanvasToken}/>
+        </Grid>
+      </React.Fragment>)
 };
 
 StakingSection.propTypes = {

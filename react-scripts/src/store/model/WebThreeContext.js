@@ -4,7 +4,8 @@ const WebThreeContext = types.model('WebThreeContext', {
     accounts: types.optional(types.array(types.string), []),
     networkId: types.optional(types.number, -1),
     networkName: types.optional(types.string, ""),
-    balance: types.optional(types.string, "0")
+    ethBalance: types.optional(types.number, 0),
+    paintEthLpBalance: types.optional(types.number, 0),
 }).actions(self => ({
     setAccounts(accounts) {
         self.accounts = accounts;
@@ -14,9 +15,12 @@ const WebThreeContext = types.model('WebThreeContext', {
         self.networkId = networkId;
         self.networkName = networkName;
     },
-    setBalance(balance) {
-        self.balance = balance;
-    }
+    setEthBalance(balance) {
+        self.ethBalance = balance;
+    },
+    setPaintEthLpBalance(balance) {
+        self.paintEthLpBalance = balance;
+    },
 })).views(self => ({
     get isWalletConnected() {
         return self.isValidNetwork && self.accounts.length > 0;

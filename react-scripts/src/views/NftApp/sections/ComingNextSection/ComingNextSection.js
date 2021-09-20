@@ -76,7 +76,7 @@ const ComingNextSection = props => {
   });
 
   return (
-    <Section className={className} {...rest}>
+    <React.Fragment>
       <Grid container justify="space-between" spacing={isMd ? 4 : 2} data-aos={'fade-up'}>
         <Grid
           item
@@ -109,7 +109,7 @@ const ComingNextSection = props => {
           />
         </Grid>
       </Grid>
-    </Section>
+    </React.Fragment>
   );
 };
 

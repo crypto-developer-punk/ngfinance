@@ -1,6 +1,7 @@
 import ComingNextSection from './ComingNextSection';
-import NextNftSection from './NextNftSection';
+import CurrentOpenedAuctionSection from './CurrentOpenedAuctionSection';
 import OurNtfSection from './OurNtfSection';
 import StakingSection from './StakingSection';
+import NextOpenSaleSection from './NextOpenSaleSection';
 
-export {ComingNextSection, NextNftSection, OurNtfSection, StakingSection};
+export {ComingNextSection, CurrentOpenedAuctionSection, OurNtfSection, StakingSection, NextOpenSaleSection};
