@@ -1030,7 +1030,7 @@ const Hero = props => {
         <SectionHeader
             title={
               <Typography variant="h5">
-                Current opened auction
+                Closed auction
               </Typography>
             }
             align="left"
@@ -1226,7 +1226,7 @@ const Hero = props => {
           <SectionHeader
               title={
                 <Typography variant="h5">
-                  Next open sale
+                  Closed sale
                 </Typography>
               }
               align="left"
