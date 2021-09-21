@@ -100,7 +100,7 @@ const RootStore = types.model({
 
             self.asyncUpdatePaintEthLpStakingState();
         }),
-        asyncRegisterNftStaking: flow(function* (nft, transactionHashUrlCB) {
+        asyncRegisterNftStaking: flow(function* (nft, stakingStepCB) {
             const {currentAccount, isWalletConnected} = self.webThreeContext;
             if (!isWalletConnected)
                 throw {code: ERR_WALLET_IS_NOT_CONNECTED, msg: 'Wallet is not connected. Change to mainet.'};
@@ -112,16 +112,21 @@ const RootStore = types.model({
                 throw 'Target nft balance is empty'
             const {balance} = nftWebThreeContext;
 
-            console.log(`RegisterNftStaking 0 - currentAccount : ${currentAccount}, nft_chain_id : ${nft_chain_id}, balance : ${balance}`);
-
             let transactionHash = '';
+            console.log(`RegisterNftStaking 0 - currentAccount : ${currentAccount}, nft_chain_id : ${nft_chain_id}, balance : ${balance}`);
+            if (stakingStepCB) stakingStepCB('Allow your contract.', '');
+
             yield requestWeb3.asyncRegisterNftStaking(currentAccount, nft_chain_id, balance, (hash)=>{
-                if (transactionHashUrlCB) transactionHashUrlCB(etherscan_url + hash);
+                if (stakingStepCB) stakingStepCB('Doing contract. it take some times within 10 minutes.', etherscan_url + hash);
                 transactionHash = hash;
             });
             console.log(`RegisterNftStaking 1 - asyncRegisterNftStaking, transactionHash : ${transactionHash}`);
+            if (stakingStepCB) stakingStepCB('Complete contract. try writing contract info.', etherscan_url + transactionHash);
+
             yield requestBackend.asyncRegisterStaking(currentAccount, nft_chain_id, balance, transactionHash);
             console.log(`RegisterNftStaking 2 - asyncRegisterStaking`);
+            if (stakingStepCB) stakingStepCB('Complete writing contract info. almost done', etherscan_url + transactionHash);
+
             yield self.asyncUpdateNftBalance(nft_chain_id);
             console.log(`RegisterNftStaking 3 - asyncUpdateNftBalance`);
             yield self.asyncUpdateNftStakingState(nft_chain_id);
@@ -129,7 +134,7 @@ const RootStore = types.model({
             yield self.asyncInitSnapshots();
             console.log(`RegisterNftStaking 5 - asyncInitSnapshots`);
         }),
-        asyncRegisterPaintEthLpStaking: flow(function*(transactionHashUrlCB) {
+        asyncRegisterPaintEthLpStaking: flow(function*(stakingStepCB) {
             const {currentAccount, isWalletConnected, paintEthLpBalance} = self.webThreeContext;
             if (!isWalletConnected)
                 throw {code: ERR_WALLET_IS_NOT_CONNECTED, msg: 'Wallet is not connected. Change to mainet.'};
@@ -140,13 +145,15 @@ const RootStore = types.model({
             console.log('asyncRegisterPaintEthLpStaking 0');
             let transactionHash = '';
             yield requestWeb3.asyncRegisterPaintEthLpStaking(currentAccount, paintEthLpBalance, (hash)=>{
-                if (transactionHashUrlCB) transactionHashUrlCB(etherscan_url + hash);
+                if (stakingStepCB) stakingStepCB('Doing contract. it take some times within 10 minutes.', etherscan_url + hash);
                 transactionHash = hash;
             });
             console.log(`asyncRegisterPaintEthLpStaking 1, transactionHash : ${transactionHash}`);
-            //currentAccount, nft_chain_id, balance, transactionHash
+            if (stakingStepCB) stakingStepCB('Complete contract. try writing contract info.', etherscan_url + transactionHash);
+
             yield requestBackend.asyncRegisterStaking(currentAccount, -1, paintEthLpBalance, transactionHash);
             console.log(`asyncRegisterPaintEthLpStaking 2`);
+            if (stakingStepCB) stakingStepCB('Complete writing contract info. almost done', etherscan_url + transactionHash);
         }),
         asyncUpdateNftBalance: flow(function* (nft_chain_id) {
             const {currentAccount, isWalletConnected} = self.webThreeContext;
@@ -177,35 +184,45 @@ const RootStore = types.model({
             self.paintEthLpStaking.setTokenAmount(token_amount);
             console.log(`asyncUpdatePaintEthLpStakingState - last_staked_time : ${last_staked_time}, token_amount : ${token_amount}`);
         }),
-        asyncUnstakeNft: flow(function* (nft) {
+        asyncUnstakeNft: flow(function* (nft, unstakingStepCB) {
             const {currentAccount, isWalletConnected} = self.webThreeContext;
             if (!isWalletConnected)
                 throw {code: ERR_WALLET_IS_NOT_CONNECTED, msg: 'Wallet is not connected. Change to mainet.'};
 
             const {nft_chain_id} = nft;
             console.log(`Unstake 0 currentAccount : ${currentAccount}, nft_chain_id : ${nft_chain_id}`);
+            if (unstakingStepCB) unstakingStepCB('Doing contract. it take some times within 10 minutes.');
+
             yield requestBackend.asyncUnstaking(currentAccount, nft_chain_id);
             console.log('Unstake 1 - asyncUnstaking');
+            if (unstakingStepCB) unstakingStepCB('Complete contract. try updating staking info');
+
             yield self.asyncUpdateNftBalance(nft_chain_id);
             console.log('Unstake 2 - asyncUpdateNftBalance');
             yield self.asyncUpdateNftStakingState(nft_chain_id);
             console.log('Unstake 3 - asyncUpdateNftStakingState');
             yield self.asyncInitSnapshots();
+            if (unstakingStepCB) unstakingStepCB('Complete.');
             console.log('Unstake 4 - asyncInitSnapshots');
         }),
-        asyncUnstakePaintEthLp: flow(function* () {
+        asyncUnstakePaintEthLp: flow(function* (unstakingStepCB) {
             const {currentAccount, isWalletConnected} = self.webThreeContext;
             if (!isWalletConnected)
                 throw {code: ERR_WALLET_IS_NOT_CONNECTED, msg: 'Wallet is not connected. Change to mainet.'};
             
             console.log(`asyncUnstakePaintEthLp 0 currentAccount : ${currentAccount}, PAINT_ETH_LP_TOKEN_CHAIN_ID : ${PAINT_ETH_LP_TOKEN_CHAIN_ID}`);
+            if (unstakingStepCB) unstakingStepCB('Doing contract. it take some times within 10 minutes.');
+
             yield requestBackend.asyncUnstaking(currentAccount, PAINT_ETH_LP_TOKEN_CHAIN_ID);
             console.log('asyncUnstakePaintEthLp 1 - asyncUnstaking');
+            if (unstakingStepCB) unstakingStepCB('Complete contract. try updating staking info');
+
             const paintLpBalance = yield requestWeb3.asyncGetBalanceOfPaintEthLP(currentAccount);
             self.webThreeContext.setPaintEthLpBalance(paintLpBalance);
             console.log(`asyncUnstakePaintEthLp 2 - asyncGetBalanceOfPaintEthLP, paintLpBalance : ${paintLpBalance}`);
             yield self.asyncInitSnapshots(); // call asyncUpdatePaintEthLpStakingState
             console.log('asyncUnstakePaintEthLp 3 - asyncInitSnapshots');
+            if (unstakingStepCB) unstakingStepCB('Complete.');
         }),
         asyncClaimToken: flow(function* (token_type, transactionHashUrlCB) {
             if (!isSupportedTokenType(token_type)) 

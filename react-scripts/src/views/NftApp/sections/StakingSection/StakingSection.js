@@ -192,10 +192,12 @@ const StakingSection = props => {
         props.showLoadingDialog("Staking", 
           <div>Your PAINT-ETH LP staking is in progress</div>);
         
-        await store.asyncRegisterPaintEthLpStaking((hashUrl)=>{
+        await store.asyncRegisterPaintEthLpStaking((step, hashUrl)=>{
           if (!ended)
             props.showLoadingDialog("Staking", 
             <div>Your PAINT-ETH LP staking is in progress
+              <br/>
+              {step}
               <br/>
               <br/>
               <a href={hashUrl} target={"_blank"}>View claim transaction</a>
@@ -225,7 +227,16 @@ const StakingSection = props => {
             <br/>
           </div>);
           try {
-            await store.asyncUnstakePaintEthLp();
+            await store.asyncUnstakePaintEthLp((step)=> {
+              props.showLoadingDialog("Staking NFT", 
+              <div>
+                Your NFT unstaking is in progress
+                <br/>
+                {step}
+                <br/>
+                <br/>
+              </div>);
+            });
             await sleep(2000);
             window.location.reload();
             props.closeDialog();
@@ -336,17 +347,17 @@ const StakingSection = props => {
               </Typography>
             }
             stakingButtonComponents={
-              <ButtonGroup size="small" color="primary" aria-label="large outlined primary button group">
-                <Button variant="outlined" color="primary" size="large" onClick={registerPaintEthLpStaking} disabled={isDisalbedLpStake()}>
+              <Grid item xs={12}>
+                <Button style={{borderBottomLeftRadius: 5, borderBottomRightRadius: 0, borderTopLeftRadius: 5, borderTopRightRadius: 0}} variant="outlined" color="primary" size="large" onClick={registerPaintEthLpStaking} disabled={isDisalbedLpStake()}>
                   Stake
                 </Button>
-                <Button variant="outlined" color="primary" size="large" onClick={requestUnstaking} disabled={isDisabledLpUnstake()}>
+                <Button style={{borderBottomLeftRadius: 0, borderBottomRightRadius: 0, borderTopLeftRadius: 0, borderTopRightRadius: 0, marginLeft: -1}} variant="outlined" color="primary" size="large" onClick={requestUnstaking} disabled={isDisabledLpUnstake()}>
                   Unstake
                 </Button>
-                <Button variant="outlined" color="primary" size="large" onClick={() => claim(TOKEN_TYPE_CANVAS_PAINT_ETH_LP)} disabled={isDisabledLpClaim()}>
+                <Button style={{borderBottomLeftRadius: 0, borderBottomRightRadius: 5, borderTopLeftRadius: 0, borderTopRightRadius: 5, marginLeft: -1}} variant="outlined" color="primary" size="large" onClick={() => claim(TOKEN_TYPE_CANVAS_PAINT_ETH_LP)} disabled={isDisabledLpClaim()}>
                   Claim
                 </Button>
-              </ButtonGroup>
+              </Grid>
             }
             lpTokenBalanceComponents={
               <Grid item xs={12}>

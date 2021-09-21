@@ -83,11 +83,13 @@ const OurNtfSection = props => {
     </div>);
     let ended = false;
     try {
-      await props.store.asyncRegisterNftStaking(nft, (hashUrl)=>{
+      await props.store.asyncRegisterNftStaking(nft, (step, hashUrl)=>{
         if (!ended)
           props.showLoadingDialog("Staking NFT", 
           <div>
             Your NFT staking is in progress
+            <br/>
+            {step}
             <br/>
             <br/>
             <div hidden={hashUrl.length <= 0}>
@@ -122,14 +124,23 @@ const OurNtfSection = props => {
 
     props.showConfirmDialog("Confirm unstaking your NFT ", <div>Are you sure you want to unstaking?</div>, 
         async ()=>{
-          props.showLoadingDialog("Staking NFT", 
+          props.showLoadingDialog("Unstaking NFT", 
           <div>
             Your NFT unstaking is in progress
             <br/>
             <br/>
           </div>);
           try {
-            await store.asyncUnstakeNft(nft);
+            await store.asyncUnstakeNft(nft, (step)=> {
+              props.showLoadingDialog("Unstaking NFT", 
+              <div>
+                Your NFT unstaking is in progress
+                <br/>
+                {step}
+                <br/>
+                <br/>
+              </div>);
+            });
             await sleep(2000);
             window.location.reload();
             props.closeDialog();
@@ -286,18 +297,13 @@ const OurNtfSection = props => {
                                 </Typography>
                               </Grid>
                               <Grid item xs={12} md={9} >
-                                {/* <ButtonGroup contained size="small" color="primary" aria-label="large outlined primary button group"> */}
                                   <Grid container xs={10}>
-                                    <Grid item xs={2} md={2}>
-                                      <Button variant="contained" color="primary" size={"small"} disabled={(nftBalance <= 0 || !webThreeContext.isWalletConnected)} onClick={() => requestStaking(nft)}>
+                                      <Button style={{borderBottomLeftRadius: 5, borderBottomRightRadius: 0, borderTopLeftRadius: 5, borderTopRightRadius: 0}} variant="outlined" color="primary" size={"small"} disabled={(nftBalance <= 0 || !webThreeContext.isWalletConnected)} onClick={() => requestStaking(nft)}>
                                         stake
                                       </Button>
-                                    </Grid>
-                                    <Grid item xs={2} md={2}>
-                                      <Button variant="contained" color="primary" size={"small"} disabled={(staking.token_amount <= 0 || !webThreeContext.isWalletConnected)} onClick={() => requestUnstaking(nft)}>
+                                      <Button style={{borderBottomLeftRadius: 0, borderBottomRightRadius: 5, borderTopLeftRadius: 0, borderTopRightRadius: 5, marginLeft: -1}} variant="outlined" color="primary" size={"small"} disabled={(staking.token_amount <= 0 || !webThreeContext.isWalletConnected)} onClick={() => requestUnstaking(nft)}>
                                         unstake
                                       </Button>
-                                    </Grid>
                                   </Grid>
                                 {/* </ButtonGroup> */}
                               </Grid>
