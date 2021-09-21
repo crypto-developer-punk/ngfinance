@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { useMediaQuery, Divider } from '@material-ui/core';
 import { Topbar, Footer, Sidebar } from './components';
+import { ScrollTop } from 'components/atoms';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -340,6 +341,7 @@ const Main = ({ children, themeToggler, themeMode }) => {
         {children}
       </main>
       <Footer pages={pages} />
+      <ScrollTop />
     </div>
   );
 };

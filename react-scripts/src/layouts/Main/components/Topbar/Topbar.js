@@ -17,6 +17,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Image, DarkModeToggler } from 'components/atoms';
 import Logo from '../../../../assets/images/main/logo_topbar.svg';
+import { StringHelper } from "myutil";
 
 const useStyles = makeStyles(theme => ({
   flexGrow: {
@@ -120,6 +121,7 @@ const Topbar = ({ themeMode, themeToggler, onSidebarOpen, pages, className, ...r
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [openedPopoverId, setOpenedPopoverId] = useState(null);
+  const [activePageId, setActivePageId] = useState(-1);
 
   const handleClick = (event, popoverId) => {
     setAnchorEl(event.target);
@@ -131,113 +133,13 @@ const Topbar = ({ themeMode, themeToggler, onSidebarOpen, pages, className, ...r
     setOpenedPopoverId(null);
   };
 
-  const landings = pages.landings;
-  const supportedPages = pages.pages;
-  const account = pages.account;
-
-  const MenuGroup = props => {
-    const { item } = props;
-    return (
-      <List disablePadding>
-        <ListItem disableGutters>
-          <Typography
-            variant="body2"
-            color="primary"
-            className={classes.menuGroupTitle}
-          >
-            {item.groupTitle}
-          </Typography>
-        </ListItem>
-        {item.pages.map((page, i) => (
-          <ListItem disableGutters key={i} className={classes.menuGroupItem}>
-            <Typography
-              variant="body1"
-              component={'a'}
-              href={page.href}
-              className={clsx(classes.navLink, 'submenu-item')}
-              color="textSecondary"
-              onClick={handleClose}
-            >
-              {page.title}
-            </Typography>
-          </ListItem>
-        ))}
-      </List>
-    );
-  };
-
-  const LandingPages = () => {
-    const { services, apps, web } = landings.children;
-    return (
-      <div className={classes.menu}>
-        <div className={classes.menuItem}>
-          <MenuGroup item={services} />
-          <MenuGroup item={apps} />
-        </div>
-        <div className={classes.menuItem}>
-          <MenuGroup item={web} />
-        </div>
-      </div>
-    );
-  };
-
-  const SupportedPages = () => {
-    const {
-      career,
-      helpCenter,
-      company,
-      contact,
-      blog,
-      portfolio,
-    } = supportedPages.children;
-    return (
-      <div className={classes.menu}>
-        <div className={classes.menuItem}>
-          <MenuGroup item={career} />
-          <MenuGroup item={helpCenter} />
-        </div>
-        <div className={classes.menuItem}>
-          <MenuGroup item={company} />
-          <MenuGroup item={contact} />
-        </div>
-        <div className={classes.menuItem}>
-          <MenuGroup item={blog} />
-          <MenuGroup item={portfolio} />
-        </div>
-      </div>
-    );
-  };
-
-  const AccountPages = () => {
-    const { settings, signup, signin, password, error } = account.children;
-    return (
-      <div className={classes.menu}>
-        <div className={classes.menuItem}>
-          <MenuGroup item={settings} />
-        </div>
-        <div className={classes.menuItem}>
-          <MenuGroup item={signup} />
-          <MenuGroup item={signin} />
-        </div>
-        <div className={classes.menuItem}>
-          <MenuGroup item={password} />
-          <MenuGroup item={error} />
-        </div>
-      </div>
-    );
-  };
-
-  const renderPages = id => {
-    if (id === 'landing-pages') {
-      return <LandingPages />;
-    }
-    if (id === 'supported-pages') {
-      return <SupportedPages />;
-    }
-    if (id === 'account') {
-      return <AccountPages />;
-    }
-  };
+  React.useEffect(() => {
+    const lastItem = StringHelper.getUrlLastItem(window.location.href);
+    if (lastItem === 'app') 
+      setActivePageId(0);
+    else if (lastItem === 'staking')
+      setActivePageId(1);
+  }, [window.location.href])
 
   return (
     <Toolbar disableGutters className={classes.toolbar} {...rest}>
@@ -254,99 +156,40 @@ const Topbar = ({ themeMode, themeToggler, onSidebarOpen, pages, className, ...r
       <div className={classes.flexGrow} />
       <Hidden smDown>
         <List disablePadding className={classes.navigationContainer}>
-          {/*{[landings, supportedPages, account].map((page, i) => (*/}
-          {/*  <div key={page.id}>*/}
-          {/*    <ListItem*/}
-          {/*      aria-describedby={page.id}*/}
-          {/*      onClick={e => handleClick(e, page.id)}*/}
-          {/*      className={clsx(*/}
-          {/*        classes.listItem,*/}
-          {/*        openedPopoverId === page.id ? classes.listItemActive : '',*/}
-          {/*      )}*/}
-          {/*    >*/}
-          {/*      <Typography*/}
-          {/*        variant="body1"*/}
-          {/*        color="textPrimary"*/}
-          {/*        className={clsx(classes.listItemText, 'menu-item')}*/}
-          {/*      >*/}
-          {/*        {page.title}*/}
-          {/*      </Typography>*/}
-          {/*      <ListItemIcon className={classes.listItemIcon}>*/}
-          {/*        <ExpandMoreIcon*/}
-          {/*          className={*/}
-          {/*            openedPopoverId === page.id ? classes.expandOpen : ''*/}
-          {/*          }*/}
-          {/*          fontSize="small"*/}
-          {/*        />*/}
-          {/*      </ListItemIcon>*/}
-          {/*    </ListItem>*/}
-          {/*    <Popover*/}
-          {/*      elevation={1}*/}
-          {/*      id={page.id}*/}
-          {/*      open={openedPopoverId === page.id}*/}
-          {/*      anchorEl={anchorEl}*/}
-          {/*      onClose={handleClose}*/}
-          {/*      anchorOrigin={{*/}
-          {/*        vertical: 'bottom',*/}
-          {/*        horizontal: 'center',*/}
-          {/*      }}*/}
-          {/*      transformOrigin={{*/}
-          {/*        vertical: 'top',*/}
-          {/*        horizontal: 'center',*/}
-          {/*      }}*/}
-          {/*      classes={{ paper: classes.popover }}*/}
-          {/*    >*/}
-          {/*      <div>{renderPages(page.id)}</div>*/}
-          {/*    </Popover>*/}
-          {/*  </div>*/}
-          {/*))}*/}
-          {/*<ListItem className={clsx(classes.listItem, 'menu-item--no-dropdown')}>*/}
-          {/*  <DarkModeToggler themeMode={themeMode} onClick={() => themeToggler()} />*/}
-          {/*</ListItem>*/}
-          {/*<ListItem className={clsx(classes.listItem, 'menu-item--no-dropdown')}>*/}
-          {/*  <Button*/}
-          {/*    variant="outlined"*/}
-          {/*    component="a"*/}
-          {/*    href="/documentation"*/}
-          {/*  >*/}
-          {/*    Documentation*/}
-          {/*  </Button>*/}
-          {/*</ListItem>*/}
-          <ListItem className={clsx(classes.listItem, 'menu-item--no-dropdown')}>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.listItemButton}
-              onClick={(e) => {
-                e.preventDefault();
-                window.location.href="app";
-              }}
+          <ListItem
+            onClick={e => {window.location.href="/app"}}
+            className={clsx(
+              classes.listItem,
+            )}
+          >
+            <Typography
+              variant="body1"
+              color="textPrimary"
+              style={{fontWeight: activePageId === 0 ? 'bold' : 'normal'}}
+              className={clsx(classes.listItemText, 'menu-item')}
             >
-              Launch App
-            </Button>
+              NFT
+            </Typography>
+          </ListItem>
+          <ListItem
+            onClick={e => {window.location.href="/staking"}}
+            className={clsx(
+              classes.listItem,
+            )}
+          >
+            <Typography
+              variant="body1"
+              color="textPrimary"
+              style={{fontWeight: activePageId === 1 ? 'bold' : 'normal'}}
+              className={clsx(classes.listItemText, 'menu-item')}
+            >
+              STAKING
+            </Typography>
+          </ListItem>
+          <ListItem className={clsx(classes.listItem, 'menu-item--no-dropdown')}>
+           <DarkModeToggler themeMode={themeMode} onClick={() => themeToggler()} />
           </ListItem>
         </List>
-      </Hidden>
-      <Hidden mdUp>
-        {/*<DarkModeToggler themeMode={themeMode} onClick={() => themeToggler()} />*/}
-        {/*<IconButton*/}
-        {/*  className={classes.iconButton}*/}
-        {/*  onClick={onSidebarOpen}*/}
-        {/*  aria-label="Menu"*/}
-        {/*>*/}
-        {/*  <MenuIcon />*/}
-        {/*</IconButton>*/}
-        <Button
-            variant="contained"
-            color="primary"
-            className={classes.listItemButton}
-            onClick={(e) => {
-              e.preventDefault();
-              window.location.href="app";
-            }}
-        >
-          Launch App
-        </Button>
       </Hidden>
     </Toolbar>
   );

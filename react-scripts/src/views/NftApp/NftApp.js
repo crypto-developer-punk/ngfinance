@@ -3,9 +3,9 @@ import { inject, observer } from "mobx-react";
 import {makeStyles} from '@material-ui/core/styles';
 import {colors, Grid} from '@material-ui/core';
 import {Section} from "components/organisms";
-import {CurrentOpenedAuctionSection, NextOpenSaleSection, ComingNextSection, OurNtfSection, StakingSection} from './sections';
+import {CurrentOpenedAuctionSection, NextOpenSaleSection, ComingNextSection, OurNtfSection} from './sections';
 import WithBase from 'with/WithBase';
-import { useWeb3 } from '@openzeppelin/network/react';
+import {useWeb3} from '@openzeppelin/network/react';
 import {environmentConfig} from 'myconfig';
 import requestWeb3 from 'api/requestWeb3';
 
@@ -31,7 +31,7 @@ const NftApp = props => {
   const web3Context = useWeb3(environmentConfig.eth_network);    
 
   const { networkId } = web3Context;
-  const {store} = props;
+  const { store } = props;
 
   React.useEffect(() => {
     requestWeb3.reinitialize();
@@ -39,7 +39,7 @@ const NftApp = props => {
       try {
         await store.asyncInitWebThreeContext();
         await store.asyncInitNftInfos();
-        await store.asyncInitSnapshots();
+        // await store.asyncInitSnapshots();
         if (props.getDialogModeState() === 'force')
           props.closeDialog();
       } catch (err) {
@@ -60,7 +60,7 @@ const NftApp = props => {
           <CurrentOpenedAuctionSection {...props}/>
           <NextOpenSaleSection {...props} />
           <OurNtfSection  {...props} />
-          <StakingSection {...props}/>
+          {/* <StakingSection {...props}/> */}
         </Grid>
       </Section>
       <Section className={classes.pagePaddingTop}>

@@ -8,7 +8,7 @@ import {Redirect, Route, Switch} from 'react-router-dom';
 import WithLayout from 'WithLayout';
 import {Main as MainLayout, Minimal as MinimalLayout} from './layouts';
 
-import {NftApp, NostalgiaIndex, NotFoundCover as NotFoundCoverView,} from './views';
+import {NftApp, NostalgiaIndex, NotFoundCover as NotFoundCoverView, StakingApp} from './views';
 
 const Routes = () => {
   return (
@@ -29,9 +29,9 @@ const Routes = () => {
             path="/index"
             render={matchProps => (
                 <WithLayout
-                    {...matchProps}
-                    component={NostalgiaIndex}
-                    layout={MainLayout}
+                  {...matchProps}
+                  component={NostalgiaIndex}
+                  layout={MainLayout}
                 />
             )}
         />
@@ -40,11 +40,22 @@ const Routes = () => {
             path="/app"
             render={matchProps => (
                 <WithLayout
-                    {...matchProps}
-                    component={NftApp}
-                    layout={MainLayout}
+                  {...matchProps}
+                  component={NftApp}
+                  layout={MainLayout}
                 />
             )}
+        />
+        <Route
+          exact
+          path="/staking"
+          render={matchProps=>(
+            <WithLayout 
+              {...matchProps}
+              component={StakingApp}
+              layout={MainLayout}
+            />
+          )}
         />
       <Route
         exact
