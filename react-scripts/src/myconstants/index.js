@@ -1,11 +1,25 @@
 const TOKEN_TYPE_PAINT_NFT = 0;
 const TOKEN_TYPE_CANVAS_PAINT_ETH_LP = 1;
 const TOKEN_TYPE_CANVAS_NFT = 2;
-const TOKEN_ID_PAINT_ETH_LP = -1;
+const PAINT_ETH_LP_TOKEN_CHAIN_ID = -1;
 
 const isSupportedTokenType = (token_type) => {
     const token_type_arr = [TOKEN_TYPE_PAINT_NFT, TOKEN_TYPE_CANVAS_PAINT_ETH_LP, TOKEN_TYPE_CANVAS_NFT];
     return token_type_arr.includes(token_type);
 };
 
-export {TOKEN_TYPE_PAINT_NFT, TOKEN_TYPE_CANVAS_PAINT_ETH_LP, TOKEN_TYPE_CANVAS_NFT, TOKEN_ID_PAINT_ETH_LP, isSupportedTokenType};
+export {
+    TOKEN_TYPE_PAINT_NFT, 
+    TOKEN_TYPE_CANVAS_PAINT_ETH_LP, 
+    TOKEN_TYPE_CANVAS_NFT, 
+    PAINT_ETH_LP_TOKEN_CHAIN_ID, 
+    isSupportedTokenType
+};
+
+const ERR_WALLET_IS_NOT_CONNECTED = 'ERR_WALLET_IS_NOT_CONNECTED';
+const ERR_LIMIT_LOCKUP_NFT = 'ERR_LIMIT_LOCKUP_NFT';
+
+export {
+    ERR_WALLET_IS_NOT_CONNECTED,
+    ERR_LIMIT_LOCKUP_NFT
+};

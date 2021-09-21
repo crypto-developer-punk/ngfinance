@@ -8,14 +8,13 @@ import ReactPlayer from 'react-player'
 import {Image} from 'components/atoms';
 import {SectionHeader} from 'components/molecules';
 import {CardBase, Section} from "components/organisms";
+
 import {sleep} from "myutil";
 
 import Moment from 'moment';
 require('moment-timezone');
 Moment.tz.setDefault("Asia/Seoul");
 var _ = require('lodash');
-
-// import requestWeb3 from 'api/requestWeb3';
 
 const useStyles = makeStyles(theme => ({
   image: {
@@ -100,9 +99,7 @@ const OurNtfSection = props => {
       });
       props.closeDialog();
     } catch (err) {
-      if (err && err.code !== 4001) {
-        props.showErrorDialog(JSON.stringify(err));
-      }
+      props.showErrorDialog(err);
     } finally {
       ended = true; 
     }
@@ -123,33 +120,23 @@ const OurNtfSection = props => {
       return;
     }
 
-    props.showLoadingDialog("Staking NFT", 
-        <div>
-          Your NFT unstaking is in progress
-          <br/>
-          <br/>
-        </div>);
-    try {
-      await store.asyncUnstakeNft(nft);
-      sleep(2000);
-      window.location.reload();
-      props.closeDialog();
-    } catch (err) {
-      console.log(err);
-      console.log(JSON.stringify(err));
-      if (err.response && err.response.data && err.response.data.message && err.response.data.dayOfLockUpNft) {
-        const {message, dayOfLockUpNft} = err.response.data;
-        props.showDialog("You can't unstake your NFT.",
-        <div>
-          Unstaking is possible {dayOfLockUpNft} days after staking.
-          <br/>
-          <br/>
-          Remaining time: {message}
-        </div>);
-      } else if (err && err.code !== 4001) {
-        props.showErrorDialog(JSON.stringify(err));
-      }
-    }
+    props.showConfirmDialog("Confirm unstaking your NFT ", <div>Are you sure you want to unstaking?</div>, 
+        async ()=>{
+          props.showLoadingDialog("Staking NFT", 
+          <div>
+            Your NFT unstaking is in progress
+            <br/>
+            <br/>
+          </div>);
+          try {
+            await store.asyncUnstakeNft(nft);
+            await sleep(2000);
+            window.location.reload();
+            props.closeDialog();
+          } catch (err) {
+            props.showErrorDialog(err);  
+          }
+        });
   }, 300, {
     leading: true,
     trailing: false

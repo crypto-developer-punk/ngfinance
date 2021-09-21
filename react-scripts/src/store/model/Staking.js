@@ -4,7 +4,14 @@ const Staking = types.model('Staking', {
     id: types.identifierNumber,
     last_staked_time: types.maybeNull(types.Date),
     token_amount: types.optional(types.number, 0),
-});
+}).actions(self => ({
+    setStakedTime(date) {
+      self.last_staked_time = date;
+    },
+    setTokenAmount(amount) {
+      self.token_amount = amount;
+    } 
+}));
 
 export default Staking;
 const createStakingNullObject = () => {

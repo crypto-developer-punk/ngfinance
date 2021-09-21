@@ -23,18 +23,30 @@ const MyAlertDialog = props => {
     const [open, setOpen] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
     const [useTransition, setUseTransition] = React.useState(true);
+    const [useConfirm, setUseConfirm] = React.useState(true);
+    const [confirmLabel, setConfirmLabel] = React.useState("Confirm");
     const [useClose, setUseClose] = React.useState(true);
+    const [closeLabel, setCloseLabel] = React.useState("Close");
 
     React.useEffect(() => {
         setOpen(props.open);
         setLoading(props.loading);
         setUseTransition(props.useTransition);
+        setUseConfirm(props.useConfirm);
+        if (props.confirmLabel)
+            setConfirmLabel(props.confirmLabel);
         setUseClose(props.useClose);
-    }, [props.open, props.loading]);
+        if (props.closeLabel)
+            setCloseLabel(props.closeLabel);
+    }, [props.open, props.loading, props.useClose, props.useConfirm]);
 
     const handleClose = () => {
         setOpen(false);
         props.onClosed && props.onClosed();
+    };
+
+    const handleConfirm = () => {
+        props.onConfirm && props.onConfirm();
     };
 
     return (
@@ -60,9 +72,15 @@ const MyAlertDialog = props => {
                 </DialogContent>
                 <DialogActions>
                     {
+                        useConfirm && 
+                        <Button onClick={handleConfirm} color="primary">
+                            {confirmLabel}
+                        </Button>
+                    }
+                    {
                         useClose &&
                         <Button onClick={handleClose} color="primary">
-                            Close
+                            {closeLabel}
                         </Button>
                     }
                 </DialogActions>
@@ -75,10 +93,14 @@ MyAlertDialog.propTypes = {
     open: PropTypes.bool,
     loading: PropTypes.bool,
     useTransition: PropTypes.bool,
+    useConfirm: PropTypes.bool,
+    confirmLabel: PropTypes.string,
     useClose: PropTypes.bool,
+    closeLabel: PropTypes.string,
     title: PropTypes.any,
     content: PropTypes.any,
     onClosed: PropTypes.func,
+    onConfirm: PropTypes.func,
 };
 
 export default MyAlertDialog;

@@ -1,6 +1,6 @@
 import axios from "axios";
 import {environmentConfig} from 'myconfig';
-import {isSupportedTokenType} from "myconstants";
+import {isSupportedTokenType, ERR_LIMIT_LOCKUP_NFT} from "myconstants";
 
 class RequestBackend {
     constructor() {
@@ -23,8 +23,25 @@ class RequestBackend {
             "address": my_address,
             "nft_chain_id": nft_chain_id
         };
-    
-        return axios.post(`${this.backend_url}/staking/unstaking`, data, {headers: this.#getRequestHeaders(my_address)});
+        
+        try {
+            return axios.post(`${this.backend_url}/staking/unstaking`, data, {headers: this.#getRequestHeaders(my_address)});
+        } catch (err) {
+            if (err.response && err.response.data && err.response.data.message && err.response.data.dayOfLockUpNft) {
+                throw {
+                    code: ERR_LIMIT_LOCKUP_NFT, 
+                    msg:            
+                    <div>
+                        Unstaking is possible {err.response.data.dayOfLockUpNft} days after staking.
+                        <br/>
+                        <br/>
+                        Remaining time: {err.response.data.message}  
+                    </div>,
+                    payload: {dayOfLockUpNft: err.response.data.dayOfLockUpNft, remainingTime: err.response.data.message}
+                }
+            } 
+            throw err;
+        }
     };
 
     asyncGetStaked = async(my_address, nft_chain_id) => {
@@ -37,9 +54,9 @@ class RequestBackend {
         if (!status === 200)
             throw `asyncGetStaked - ${status} error`;
         if (!data) 
-            return {last_staked_time: null, nft_amount: null, in_progress: null};
+            return {last_staked_time: null, token_amount: null, in_progress: null};
         const {last_staked_time, nft_amount, in_progress} = data
-        return {last_staked_time, nft_amount, in_progress};
+        return {last_staked_time, token_amount: nft_amount, in_progress};
     };
     
     asyncGetTotalValueLockedNftAmount = async(my_address, token_type) => {

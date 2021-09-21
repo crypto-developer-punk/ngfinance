@@ -40,6 +40,8 @@ const NftApp = props => {
         await store.asyncInitWebThreeContext();
         await store.asyncInitNftInfos();
         await store.asyncInitSnapshots();
+        if (props.getDialogModeState() === 'force')
+          props.closeDialog();
       } catch (err) {
         props.showErrorDialog(err);
       }

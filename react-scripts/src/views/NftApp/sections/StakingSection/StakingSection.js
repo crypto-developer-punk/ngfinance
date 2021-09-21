@@ -10,6 +10,7 @@ import PaintToken from "assets/images/main/logo_paint_token.svg";
 import CanvasToken from "assets/images/main/logo_canvas_token.svg";
 
 import {TOKEN_TYPE_PAINT_NFT, TOKEN_TYPE_CANVAS_NFT, TOKEN_TYPE_CANVAS_PAINT_ETH_LP} from 'myconstants';
+import {sleep} from "myutil";
 
 import Moment from 'moment';
 require('moment-timezone');
@@ -150,7 +151,7 @@ const StakingSection = props => {
     });
   
     const {store} = props; 
-    const {webThreeContext, paintSnapshot, canvasSnapshot, lpSnapshot} = store;
+    const {webThreeContext, paintSnapshot, canvasSnapshot, lpSnapshot, paintEthLpStaking} = store;
     
     const claim = _.debounce(async (token_type) => {
       let ended = false;
@@ -176,9 +177,7 @@ const StakingSection = props => {
           });
         props.closeDialog();
       } catch(err) {
-        if (err && err.code !== 4001) {
-          props.showErrorDialog(JSON.stringify(err));
-        }
+        props.showErrorDialog(err);
       } finally {
         ended = true;
       }
@@ -206,7 +205,7 @@ const StakingSection = props => {
         });
         props.closeDialog();
       } catch (err) {
-        props.showErrorDialog(JSON.stringify(err));
+        props.showErrorDialog(err);
       } finally {
         ended = true;
         window.location.reload();
@@ -216,6 +215,29 @@ const StakingSection = props => {
       trailing: false
     })
 
+    const requestUnstaking = _.debounce(async() => {
+      props.showConfirmDialog("Confirm unstaking your NFT ", <div>Are you sure you want to unstaking?</div>, 
+        async ()=>{
+          props.showLoadingDialog("Staking NFT", 
+          <div>
+            Your NFT unstaking is in progress
+            <br/>
+            <br/>
+          </div>);
+          try {
+            await store.asyncUnstakePaintEthLp();
+            await sleep(2000);
+            window.location.reload();
+            props.closeDialog();
+          } catch (err) {
+            props.showErrorDialog(err);  
+          }
+        });
+    }, 300, {      
+      leading: true,
+      trailing: false
+    });
+
     const isDisabledPaintClaim = () => {
       return paintSnapshot.balance_of_reward === 0 || !webThreeContext.isWalletConnected;
     };  
@@ -223,6 +245,14 @@ const StakingSection = props => {
     const isDisabledCanvasClaim = () => {
       return canvasSnapshot.balance_of_reward === 0 || !webThreeContext.isWalletConnected;
     };  
+
+    const isDisalbedLpStake = () => {
+      return webThreeContext.paintEthLpBalance === 0 || !webThreeContext.isWalletConnected;
+    };
+
+    const isDisabledLpUnstake = () => {
+      return paintEthLpStaking.token_amount === 0 || !webThreeContext.isWalletConnected;
+    };
 
     const isDisabledLpClaim = () => {
       return lpSnapshot.balance_of_reward === 0 || !webThreeContext.isWalletConnected;
@@ -307,10 +337,10 @@ const StakingSection = props => {
             }
             stakingButtonComponents={
               <ButtonGroup size="small" color="primary" aria-label="large outlined primary button group">
-                <Button variant="outlined" color="primary" size="large" onClick={registerPaintEthLpStaking}>
+                <Button variant="outlined" color="primary" size="large" onClick={registerPaintEthLpStaking} disabled={isDisalbedLpStake()}>
                   Stake
                 </Button>
-                <Button variant="outlined" color="primary" size="large" >
+                <Button variant="outlined" color="primary" size="large" onClick={requestUnstaking} disabled={isDisabledLpUnstake()}>
                   Unstake
                 </Button>
                 <Button variant="outlined" color="primary" size="large" onClick={() => claim(TOKEN_TYPE_CANVAS_PAINT_ETH_LP)} disabled={isDisabledLpClaim()}>

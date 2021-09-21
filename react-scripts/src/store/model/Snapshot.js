@@ -1,6 +1,7 @@
 import {types} from 'mobx-state-tree';
 var moment = require('moment'); // require
 
+// Snapshot은 리워드와 관련된 Model이다.
 const Snapshot = types.model('Snapshot', {
     snapshot_time: types.maybeNull(types.Date),
     total_value_locked_nft_amount: types.optional(types.number, 0),
