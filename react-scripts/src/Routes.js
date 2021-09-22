@@ -8,7 +8,7 @@ import {Redirect, Route, Switch} from 'react-router-dom';
 import WithLayout from 'WithLayout';
 import {Main as MainLayout, Minimal as MinimalLayout} from './layouts';
 
-import {NftApp, NostalgiaIndex, NotFoundCover as NotFoundCoverView, StakingApp} from './views';
+import {NftApp, NostalgiaIndex, NotFoundCover as NotFoundCoverView, StakingApp, AuctionApp} from './views';
 
 const Routes = () => {
   return (
@@ -57,17 +57,28 @@ const Routes = () => {
             />
           )}
         />
-      <Route
-        exact
-        path="/not-found-cover"
-        render={matchProps => (
-          <WithLayout
-            {...matchProps}
-            component={NotFoundCoverView}
-            layout={MinimalLayout}
-          />
-        )}
-      />
+        <Route 
+          exact
+          path="/auction"
+          render={matchProps=>(
+            <WithLayout
+              {...matchProps}
+              component={AuctionApp}
+              layout={MainLayout}
+            />
+          )}
+        />
+        <Route
+          exact
+          path="/not-found-cover"
+          render={matchProps => (
+            <WithLayout
+              {...matchProps}
+              component={NotFoundCoverView}
+              layout={MinimalLayout}
+            />
+          )}
+        />
       <Redirect to="/not-found-cover" />
     </Switch>
   );

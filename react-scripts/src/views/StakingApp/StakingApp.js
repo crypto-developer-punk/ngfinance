@@ -36,14 +36,14 @@ const StakingApp = props => {
     React.useEffect(() => {
       requestWeb3.reinitialize();
       async function initStore() {
-          try {
-              await store.asyncInitWebThreeContext();
-              await store.asyncInitSnapshots();
-              if (props.getDialogModeState() === 'force')
-              props.closeDialog();
-          } catch (err) {
-              props.showErrorDialog(err);
-          }
+        try {
+          await store.asyncInitWebThreeContext();
+          await store.asyncInitSnapshots();
+          if (props.getDialogModeState() === 'force')
+            props.closeDialog();
+        } catch (err) {
+          props.showErrorDialog(err);
+        }
       }
       initStore();
     }, [networkId]);
@@ -51,7 +51,6 @@ const StakingApp = props => {
     return (
       <div className={classes.shape}>
         <Section className={classes.pagePaddingTop}>
-          {/* <div>Staking</div> */}
           <StakingSection {...props}/>
         </Section>
       </div>

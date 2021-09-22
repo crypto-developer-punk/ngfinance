@@ -54,17 +54,17 @@ const CurrentOpenedAuctionSection = props => {
 
   const {webThreeContext} = props.store;
 
-  const connectToWallet = async () => {
-    try {
-      if (!webThreeContext.isValidNetwork) {
-        props.showDialog(`${webThreeContext.networkName} is not supported network`, <div>{"Please select etherium mainet network"}</div>);
-        return;
-      }
-      await props.store.asyncRequestAuth();
-    } catch (err) {
-      props.showErrorDialog(err);
-    }
-  };
+  // const connectToWallet = async () => {
+  //   try {
+  //     if (!webThreeContext.isValidNetwork) {
+  //       props.showDialog(`${webThreeContext.networkName} is not supported network`, <div>{"Please select etherium mainet network"}</div>);
+  //       return;
+  //     }
+  //     await props.store.asyncRequestAuth();
+  //   } catch (err) {
+  //     props.showErrorDialog(err);
+  //   }
+  // };
 
   const getWalletBtnLabel = () => {
     return webThreeContext.isWalletConnected ? `${webThreeContext.networkName} NET Connected` : getWalletConnectInfo();
@@ -99,6 +99,7 @@ const CurrentOpenedAuctionSection = props => {
             disableGutter
           />
         </Grid>
+        
         <Grid
             item
             container
@@ -107,9 +108,6 @@ const CurrentOpenedAuctionSection = props => {
             xs={6}
             md={6}
         >
-          <Button variant="contained" color="primary" size={isMd? "large":"small"} onClick={connectToWallet} disabled={webThreeContext.isWalletConnected || !webThreeContext.isValidNetwork}>
-            {getWalletBtnLabel()}
-          </Button>
         </Grid>
 
         {/* nft-image */}

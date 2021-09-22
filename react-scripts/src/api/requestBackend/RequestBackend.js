@@ -7,9 +7,10 @@ class RequestBackend {
         this.backend_url = environmentConfig.backend_url;
     }
 
-    asyncRegisterStaking = async(my_address, nft_chain_id, nft_amount, transactionHash) => {
+    asyncRegisterStaking = async(my_address, contract_type, nft_chain_id, nft_amount, transactionHash) => {
         const data = {
             "address": my_address,
+            "contract_type": contract_type,
             "nft_chain_id": nft_chain_id,
             "nft_amount": nft_amount,
             "staking_transaction_hash": transactionHash
@@ -44,9 +45,10 @@ class RequestBackend {
         }
     };
 
-    asyncGetStaked = async(my_address, nft_chain_id) => {
+    asyncGetStaked = async(my_address, contract_type, nft_chain_id) => {
         const params = {
             "address": my_address,
+            "contract_type": contract_type,
             "nft_chain_id": nft_chain_id
         };
     

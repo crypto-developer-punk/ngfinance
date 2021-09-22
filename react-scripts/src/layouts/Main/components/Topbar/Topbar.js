@@ -13,11 +13,19 @@ import {
   IconButton,
   Button,
 } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MenuIcon from '@material-ui/icons/Menu';
 import { Image, DarkModeToggler } from 'components/atoms';
-import Logo from '../../../../assets/images/main/logo_topbar.svg';
+
+import { inject, observer } from "mobx-react";
+import { useWeb3 } from '@openzeppelin/network/react';
+
+import Logo from 'assets/images/main/logo_topbar.svg';
+
+import WithBase from 'with/WithBase';
+import { environmentConfig } from 'myconfig';
 import { StringHelper } from "myutil";
+import requestWeb3 from 'api/requestWeb3';
+
+var _ = require('lodash');
 
 const useStyles = makeStyles(theme => ({
   flexGrow: {
@@ -116,33 +124,56 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Topbar = ({ themeMode, themeToggler, onSidebarOpen, pages, className, ...rest }) => {
+const Topbar = props => {
+  //{ themeMode, themeToggler, onSidebarOpen, pages, className, store, showDialog, showErrorDialog, getDialogModeState, closeDialog}
   const classes = useStyles();
+  const web3Context = useWeb3(environmentConfig.eth_network);    
 
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [openedPopoverId, setOpenedPopoverId] = useState(null);
   const [activePageId, setActivePageId] = useState(-1);
-
-  const handleClick = (event, popoverId) => {
-    setAnchorEl(event.target);
-    setOpenedPopoverId(popoverId);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-    setOpenedPopoverId(null);
-  };
+  
+  const { pages, store } = props;
+  const { webThreeContext } = store;
+  const { networkId } = web3Context;
 
   React.useEffect(() => {
     const lastItem = StringHelper.getUrlLastItem(window.location.href);
-    if (lastItem === 'app') 
-      setActivePageId(0);
-    else if (lastItem === 'staking')
-      setActivePageId(1);
+    pages.forEach((page, index) => {
+      if (lastItem && page.href.includes(lastItem)) {
+        setActivePageId(index);
+      }
+    });
   }, [window.location.href])
 
+  React.useEffect(()=> {
+    requestWeb3.reinitialize();
+    async function initStore() {
+      await store.asyncInitWebThreeContext();
+    }
+    initStore();
+  }, [networkId]);
+
+  const getWalletBtnLabel = () => {
+    return webThreeContext.isWalletConnected ? `Connected` : "Connect Wallet";
+  };
+  
+  const connectToWallet = _.debounce(async(e) => {
+    try {
+      e.preventDefault();
+      if (!webThreeContext.isValidNetwork) {
+        props.showDialog(`${webThreeContext.networkName} is not supported network`, <div>{"Please select etherium mainet network"}</div>);
+        return;
+      }
+      await props.store.asyncRequestAuth();
+    } catch (err) {
+      props.showErrorDialog(err);
+    }
+  }, 300, {
+    leading: true,
+    trailing: false
+  });
+
   return (
-    <Toolbar disableGutters className={classes.toolbar} {...rest}>
+    <Toolbar disableGutters className={classes.toolbar}>
       <div className={classes.logoContainer}>
         <a href="/" title="Nostalgia Finance">
           <Image
@@ -156,39 +187,45 @@ const Topbar = ({ themeMode, themeToggler, onSidebarOpen, pages, className, ...r
       <div className={classes.flexGrow} />
       <Hidden smDown>
         <List disablePadding className={classes.navigationContainer}>
-          <ListItem
-            onClick={e => {window.location.href="/app"}}
-            className={clsx(
-              classes.listItem,
-            )}
-          >
-            <Typography
-              variant="body1"
-              color="textPrimary"
-              style={{fontWeight: activePageId === 0 ? 'bold' : 'normal'}}
-              className={clsx(classes.listItemText, 'menu-item')}
-            >
-              NFT
-            </Typography>
-          </ListItem>
-          <ListItem
-            onClick={e => {window.location.href="/staking"}}
-            className={clsx(
-              classes.listItem,
-            )}
-          >
-            <Typography
-              variant="body1"
-              color="textPrimary"
-              style={{fontWeight: activePageId === 1 ? 'bold' : 'normal'}}
-              className={clsx(classes.listItemText, 'menu-item')}
-            >
-              STAKING
-            </Typography>
-          </ListItem>
+          {pages.map((page, idx) => {
+            return (
+              <ListItem
+                key={idx}
+                onClick={e => {
+                  e.preventDefault();
+                  window.location.href=page.href}
+                }
+                className={clsx(
+                  classes.listItem,
+                )}
+              >
+                <Typography
+                  variant="body1"
+                  color="textPrimary"
+                  style={{fontWeight: activePageId === idx ? 'bold' : 'normal'}}
+                  className={clsx(classes.listItemText, 'menu-item')}
+                >
+                  {page.title}
+                </Typography>
+              </ListItem>
+            )
+          })}
+
           <ListItem className={clsx(classes.listItem, 'menu-item--no-dropdown')}>
-           <DarkModeToggler themeMode={themeMode} onClick={() => themeToggler()} />
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.listItemButton}
+              onClick={connectToWallet}
+              disabled={webThreeContext.isWalletConnected || !webThreeContext.isValidNetwork}
+            >
+              {getWalletBtnLabel()}
+            </Button>
           </ListItem>
+
+          {/* <ListItem className={clsx(classes.listItem, 'menu-item--no-dropdown')}>
+           <DarkModeToggler themeMode={themeMode} onClick={() => themeToggler()} />
+          </ListItem> */}
         </List>
       </Hidden>
     </Toolbar>
@@ -203,4 +240,6 @@ Topbar.propTypes = {
   themeMode: PropTypes.string.isRequired,
 };
 
-export default Topbar;
+export default inject(({store}) => ({
+  store: store,
+}))(WithBase(observer(Topbar)));

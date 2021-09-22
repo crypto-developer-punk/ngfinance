@@ -206,11 +206,11 @@ const StakingSection = props => {
             </div>);
         });
         props.closeDialog();
+        // ended = true;
+        // window.location.reload();
+        // }
       } catch (err) {
         props.showErrorDialog(err);
-      } finally {
-        ended = true;
-        window.location.reload();
       }
     }, 300, {      
       leading: true,

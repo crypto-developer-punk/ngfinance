@@ -7,7 +7,8 @@ const Nft = types.model('Nft', {
   subject: types.optional(types.string, ''),
   description: types.maybeNull(types.string),
   image_url: types.optional(types.string, ''),
-  nft_url: types.optional(types.string, ''),    
+  nft_url: types.optional(types.string, ''),  
+  contract_type: types.optional(types.number, -1),  
 });
 
 export default Nft;

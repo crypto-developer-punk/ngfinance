@@ -107,6 +107,7 @@ class RequestWeb3 {
         const nftContract = await this.#asyncGetNftContract(connected_addr, false);
         // console.log('aaa 3', nftContract);
         const balanceOfNft = await nftContract.methods.balanceOf(connected_addr, nft_chain_id).call();
+        console.log(nft_chain_id, 'balanceOfNft', balanceOfNft);
         return balanceOfNft;
     };
 
@@ -148,9 +149,11 @@ class RequestWeb3 {
     asyncRegisterPaintEthLpStaking = async(connected_addr, amount, transactionHashCB) => {
         const {toStakingAddress} = environmentConfig;
         
-        const paintEthLpContract = await this.#asyncGetPaintEthLpContract(connected_addr);
-        const balanceWei = await this.lib.utils.toWei(amount, 'ether');
+        const paintEthLpContract = await this.#asyncGetPaintEthLpContract(connected_addr, true);
+        let amountStr = typeof amount === 'number' ? amount.toString() : amount;
+        const balanceWei = await this.lib.utils.toWei(amountStr, 'ether');
 
+        // console.log("balanceWei", balanceWei);
         const receipt = await paintEthLpContract.methods.transfer(toStakingAddress, balanceWei).send()
             .on('transactionHash', (hash)=>{
                 if (transactionHashCB) transactionHashCB(hash);
