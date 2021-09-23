@@ -1009,8 +1009,9 @@ const Hero = props => {
   };
 
   React.useEffect(() => {
+    console.log("called use effect: " + accounts);
     getBalance();
-  }, [accounts, getBalance, networkId]);
+  }, [accounts]);
 
   return (
     <div className={className} {...rest}>
