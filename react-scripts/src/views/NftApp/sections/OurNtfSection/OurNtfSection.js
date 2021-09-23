@@ -10,6 +10,7 @@ import {SectionHeader} from 'components/molecules';
 import {CardBase, Section} from "components/organisms";
 
 import {sleep} from "myutil";
+import {isDebugMode} from 'myconfig';
 
 import Moment from 'moment';
 require('moment-timezone');
@@ -174,16 +175,17 @@ const OurNtfSection = props => {
         data-aos={'fade-up'}
       >
         {/* title */}
-        <Grid item xs={12} style={{marginBottom: '15px'}}>
+        <Grid item xs={12} style={{marginBottom: '30px'}}>
           <SectionHeader
               title={
-                <Typography variant="h5">
+                <Typography variant="inherit">
                   Our NFTs
                 </Typography>
               }
               align="left"
               disableGutter
           />
+          <Divider/>
         </Grid>
         
         {/* nft-list */}
@@ -192,18 +194,22 @@ const OurNtfSection = props => {
             values(nftMap).map(nft => {
               const staking = store.findNftStaking(nft);
               const nftBalance = parseInt(store.findNftWebThreeContext(nft).balance);
-              // console.log(nft.image_url, isMp4Url(nft.image_url));
               return (
                 <Grid container spacing={3}>
                   <Grid item xs={12}>
                     <CardBase liftUp variant="outlined" align="left" withShadow>
-                      <Grid container spacing={5}>
+                      <Grid container spacing={5} 
+                          justify="flex-start"
+                          alignItems="flex-start"
+                          style={isMp4Url(nft.image_url) ? {marginTop:'-3%'} : {}}
+                      >
                         <Grid
                           item
                           container
                           justify="flex-start"
                           alignItems="flex-start"
                           xs={12} md={4}
+                          // xs={4}
                           data-aos={'fade-up'}
                         >
                           <Image
@@ -216,16 +222,15 @@ const OurNtfSection = props => {
                             data-aos-easing="ease-out-cubic"
                             data-aos-duration="2000"
                           />
-
-                          <ReactPlayer
-                            url={nft.image_url}
-                            hidden={!isMp4Url(nft.image_url)}
-                            width='100%'
-                            height='100%'
-                            playing={true}
-                            loop={true}
-                            muted={true}
-                          />
+                            <ReactPlayer
+                              url={nft.image_url}
+                              hidden={!isMp4Url(nft.image_url)}
+                              width='100%'
+                              height='100%'
+                              playing={true}
+                              loop={true}
+                              muted={true}
+                            />
                         </Grid>
 
                         <Grid
@@ -235,21 +240,24 @@ const OurNtfSection = props => {
                           alignItems="flex-start"
                           xs={12} md={8}
                           data-aos={'fade-up'}
+                          style={isMp4Url(nft.image_url) ?  {paddingTop:'3%'} : {}}
                         >
-                          <Grid item xs={12}>
-                            <SectionHeader
-                              title={
-                                <span>
-                                  <Typography variant="subtitle1" color={"textSecondary"} >
-                                    Nostalgia Finance
-                                  </Typography>
-                                </span>
-                              }
-                              align="left"
-                              disableGutter
-                            />
+                          <Grid item container xs={12} md={8} alignItems="center">
+                            <Grid item>
+                              <SectionHeader
+                                title={
+                                  <span>
+                                    <Typography variant="subtitle1" color={"textSecondary"} >
+                                      Nostalgia Finance
+                                    </Typography>
+                                  </span>
+                                }
+                                align="left"
+                                disableGutter
+                              />
+                            </Grid>
                           </Grid>
-                          <Grid item xs={12}>
+                          <Grid item container xs={12} md={8} >
                             <SectionHeader
                                 title={
                                   <Typography variant="h5" color="textPrimary" >
@@ -305,7 +313,6 @@ const OurNtfSection = props => {
                                         unstake
                                       </Button>
                                   </Grid>
-                                {/* </ButtonGroup> */}
                               </Grid>
                             </Grid>
                           </Grid>
@@ -325,6 +332,23 @@ const OurNtfSection = props => {
                           </Grid>
                         </Grid>
                       </Grid>
+                      {
+                        isDebugMode ?                             
+                        <Grid item xs={12} style={{marginTop: '3%'}}>
+                          <SectionHeader
+                              title={
+                                <span>
+                                  <Typography variant="subtitle2" style={{color:'red'}} >
+                                    DebugInfo : {JSON.stringify(nft)}
+                                  </Typography>
+                                </span>
+                              }
+                              align="left"
+                              disableGutter
+                          />
+                        </Grid>
+                        : <div/>
+                      }
                     </CardBase>
                   </Grid> 
                 </Grid>)

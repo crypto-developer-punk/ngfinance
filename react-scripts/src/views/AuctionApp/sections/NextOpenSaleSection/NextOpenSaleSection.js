@@ -91,25 +91,19 @@ const NextOpenSaleSection = props => {
   return (
     <React.Fragment>
       {/* title */}
-      <Grid
-        item
-        container
-        justify="flex-start"
-        alignItems="flex-start"
-        xs={12}
-        md={12}
-      >
+      <Grid item xs={12} style={{marginBottom: '0px'}}>
         <SectionHeader
-          title={
-            <Typography variant="h5">
-            Next open sale
-            </Typography>
-          }
-          align="left"
-          disableGutter
+            title={
+              <Typography variant="inherit">
+                Next open sale
+              </Typography>
+            }
+            align="left"
+            disableGutter
         />
+        <Divider/>
       </Grid>
-      
+
       {/* nft-image */}
       <Grid
         item

@@ -1,6 +1,6 @@
 import axios from "axios";
 import {environmentConfig} from 'myconfig';
-import {isSupportedTokenType, ERR_LIMIT_LOCKUP_NFT} from "myconstants";
+import {isSupportedTokenType, ERR_LIMIT_LOCKUP_NFT, ERR_UNSKAKING_INPROGRESS} from "myconstants";
 
 class RequestBackend {
     constructor() {
@@ -16,18 +16,31 @@ class RequestBackend {
             "staking_transaction_hash": transactionHash
         };
     
-        return axios.post(`${this.backend_url}/staking/register`, data, {headers: this.#getRequestHeaders(my_address)});
+        const res = await axios.post(`${this.backend_url}/staking/register`, data, {headers: this.#getRequestHeaders(my_address)});
+        return res;
     };
 
-    asyncUnstaking = async(my_address, nft_chain_id) => {
+    asyncUnstaking = async(my_address, contract_type, nft_chain_id) => {
         const data = {
             "address": my_address,
+            "contract_type": contract_type,
             "nft_chain_id": nft_chain_id
         };
         
         try {
-            return axios.post(`${this.backend_url}/staking/unstaking`, data, {headers: this.#getRequestHeaders(my_address)});
+            const res = await axios.post(`${this.backend_url}/staking/unstaking`, data, {headers: this.#getRequestHeaders(my_address)});
+            return res;
         } catch (err) {
+            console.log('asyncUnstaking', err, err.response.data.message, err.msg);
+            if (err.response && err.response.data && err.response.data.message && err.response.data.message.includes("already unstaking is in progress")) {
+                throw {
+                    code: ERR_UNSKAKING_INPROGRESS, 
+                    msg:            
+                    <div>
+                        Server unstaking is in progress.
+                    </div>
+                }
+            }
             if (err.response && err.response.data && err.response.data.message && err.response.data.dayOfLockUpNft) {
                 throw {
                     code: ERR_LIMIT_LOCKUP_NFT, 
@@ -84,7 +97,8 @@ class RequestBackend {
             "token_type": token_type
         };
     
-        return axios.post(`${this.backend_url}/reward/register/allBySnapshot`, data, {headers: this.#getRequestHeaders(my_address)});
+        const res = await axios.post(`${this.backend_url}/reward/register/allBySnapshot`, data, {headers: this.#getRequestHeaders(my_address)});
+        return res;
     };
 
     asyncGetReward = async(my_address, token_type) => {

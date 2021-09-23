@@ -8,7 +8,9 @@ import WebThreeContext from "./model/WebThreeContext";
 import requestBackend from 'api/requestBackend';
 import requestWeb3 from 'api/requestWeb3';
 import {environmentConfig} from 'myconfig';
-import { TOKEN_TYPE_PAINT_NFT, TOKEN_TYPE_CANVAS_NFT, TOKEN_TYPE_CANVAS_PAINT_ETH_LP, isSupportedTokenType, ERR_WALLET_IS_NOT_CONNECTED, CHAIN_ID_PAINT_ETH_LP_TOKEN, CONTRACT_TYPE_PAINT_ETH_LP_TOKEN } from "myconstants";
+import { TOKEN_TYPE_PAINT_NFT, TOKEN_TYPE_CANVAS_NFT, TOKEN_TYPE_CANVAS_PAINT_ETH_LP, isSupportedTokenType} from "myconstants";
+import { CHAIN_ID_PAINT_ETH_LP_TOKEN, CONTRACT_TYPE_PAINT_ETH_LP_TOKEN } from "myconstants";
+import { ERR_WALLET_IS_NOT_CONNECTED, ERR_UNSKAKING_INPROGRESS } from "myconstants";
 import Snapshot from "./model/Snapshot";
 
 var _ = require('lodash');
@@ -191,7 +193,7 @@ const RootStore = types.model({
                 throw {code: ERR_WALLET_IS_NOT_CONNECTED, msg: 'Wallet is not connected. Change to mainet.'};
 
             const {nft_chain_id, contract_type} = nft;
-            console.log(`Unstake 0 currentAccount : ${currentAccount}, nft_chain_id : ${nft_chain_id}`);
+            console.log(`Unstake 0 currentAccount : ${currentAccount}, nft_chain_id : ${nft_chain_id}, contract_type : ${contract_type}`);
             if (unstakingStepCB) unstakingStepCB('Doing contract. it take some times within 10 minutes.');
 
             yield requestBackend.asyncUnstaking(currentAccount, contract_type, nft_chain_id);

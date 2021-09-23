@@ -281,16 +281,17 @@ const StakingSection = props => {
           data-aos={'fade-up'}
         >
           {/* title */}
-          <Grid item xs={12} style={{marginBottom: '15px'}}>
+          <Grid item xs={12} style={{marginBottom: '30px'}}>
             <SectionHeader
                 title={
-                  <Typography variant="h5">
+                  <Typography variant="inherit">
                     Staking
                   </Typography>
                 }
                 align="left"
                 disableGutter
             />
+            <Divider/>
           </Grid>
 
           {/*  NFT Staking (PAINT) */}

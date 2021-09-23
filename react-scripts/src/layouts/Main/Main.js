@@ -22,7 +22,7 @@ const Main = ({ children, themeToggler, themeMode }) => {
 
   const pages = [
     {title: 'NFT', href: '/app'},
-    {title: 'AUCTION', href: '/auction'},
+    {title: 'OPEN SALE', href: '/auction'},
     {title: 'STAKING', href: '/staking'} 
   ];
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import MyAlertDialog from "widget/MyAlertDialog";
-import { ERR_WALLET_IS_NOT_CONNECTED, ERR_LIMIT_LOCKUP_NFT } from "myconstants";
+import { ERR_WALLET_IS_NOT_CONNECTED, ERR_LIMIT_LOCKUP_NFT, ERR_UNSKAKING_INPROGRESS } from "myconstants";
 
 const WithDialog = WrappedComponent => {
     const Component = props => {
@@ -27,6 +27,8 @@ const WithDialog = WrappedComponent => {
                 showForceDialog(err.msg);
             } else if (err.code === ERR_LIMIT_LOCKUP_NFT) {
                 showDialog("You can't unstake your NFT.", err.msg);
+            } else if (err.code === ERR_UNSKAKING_INPROGRESS) {
+                showDialog("You can't unstake your NFT.", <div>{err.msg}If problem is continued or takes long time, please contract to developer</div>);
             } else if (err.code === 4001) {
                 closeDialog();
                 return;

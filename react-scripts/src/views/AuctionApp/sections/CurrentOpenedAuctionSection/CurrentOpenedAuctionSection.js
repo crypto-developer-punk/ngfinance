@@ -79,197 +79,183 @@ const CurrentOpenedAuctionSection = props => {
 
   return (
     <React.Fragment>
-
-        {/* title with connect wallet btn*/}
-        <Grid
-          item
-          container
-          justify="flex-start"
-          alignItems="flex-start"
-          xs={6}
-          md={6}
-        >
-          <SectionHeader
+      {/* title */}
+      <Grid item xs={12} style={{marginBottom: '0px'}}>
+        <SectionHeader
             title={
-              <Typography variant="h5">
+              <Typography variant="inherit">
                 Current opened auction
               </Typography>
             }
             align="left"
             disableGutter
-          />
-        </Grid>
-        
-        <Grid
-            item
-            container
-            justify="flex-end"
-            alignItems="flex-end"
-            xs={6}
-            md={6}
-        >
-        </Grid>
+        />
+        <Divider/>
+      </Grid>
 
-        {/* nft-image */}
-        <Grid
+      {/* nft-image */}
+      <Grid
+        item
+        container
+        justify="flex-start"
+        alignItems="flex-start"
+        xs={12}
+        md={6}
+      >
+        <ReactPlayer
+          url={"https://ngfinance.io/resources/metroPainting.mp4"}
+          width='100%'
+          height='100%'
+          playing={true}
+          loop={true}
+          muted={true}
+          style={{
+            paddingBottom: '14%'
+          }}
+        />
+      </Grid>
+      
+      {/* nft-description */}
+      <Grid
           item
           container
           justify="flex-start"
           alignItems="flex-start"
           xs={12}
           md={6}
-        >
-          <ReactPlayer
-            url={"https://ngfinance.io/resources/metroPainting.mp4"}
-            width='100%'
-            height='100%'
-            playing={true}
-            loop={true}
-            muted={true}
-          />
-        </Grid>
-        
-        {/* nft-description */}
-        <Grid
-            item
-            container
-            justify="flex-start"
-            alignItems="flex-start"
-            xs={12}
-            md={6}
-            data-aos={'fade-up'}
-        >
-          <CardBase liftUp variant="outlined" align="left" withShadow
-              style={{ borderTop: `5px solid ${colors.blueGrey[500]}` }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <CustomizedProgressBars saleDate={AUCTION_DATE} isStart={false}/>
-              </Grid>
-              <Grid item xs={9}>
-                <SectionHeader
+          data-aos={'fade-up'}
+      >
+        <CardBase liftUp variant="outlined" align="left" withShadow
+            style={{ borderTop: `5px solid ${colors.blueGrey[500]}` }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <CustomizedProgressBars saleDate={AUCTION_DATE} isStart={false}/>
+            </Grid>
+            <Grid item xs={9}>
+              <SectionHeader
+                title={
+                  <span>
+                    <div>
+                      <Typography variant="caption" className={classes.tag} >
+                        Nostalgia Artist
+                      </Typography>
+                      <Typography variant="caption" className={classes.tag} >
+                        Governance NFT
+                      </Typography>
+                      <Typography variant="caption" className={classes.tag} >
+                        Redeemable
+                      </Typography>
+                    </div>
+                  </span>
+                }
+                align="left"
+                disableGutter
+              />
+            </Grid>
+            <Grid item xs={3} align="right">
+              <Image
+                  src={Rarible}
+                  style={{ width: '40px', height:'40px' }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <SectionHeader
                   title={
                     <span>
-                      <div>
-                        <Typography variant="caption" className={classes.tag} >
-                          Nostalgia Artist
-                        </Typography>
-                        <Typography variant="caption" className={classes.tag} >
-                          Governance NFT
-                        </Typography>
-                        <Typography variant="caption" className={classes.tag} >
-                          Redeemable
-                        </Typography>
-                      </div>
+                      <Typography component="span" variant="h5" color="textPrimary" >
+                        <strong>Metro painting</strong>
+                      </Typography>
                     </span>
                   }
                   align="left"
                   disableGutter
-                />
-              </Grid>
-              <Grid item xs={3} align="right">
-                <Image
-                    src={Rarible}
-                    style={{ width: '40px', height:'40px' }}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <SectionHeader
-                    title={
-                      <span>
-                        <Typography component="span" variant="h5" color="textPrimary" >
-                          <strong>Metro painting</strong>
-                        </Typography>
-                      </span>
-                    }
-                    align="left"
-                    disableGutter
-                />
-              </Grid>
-              <Grid item xs={12} className={classes.gridItemMain}>
-                <Grid container>
-                  <Grid item xs={12} md={4}>
-                    <Typography variant="subtitle1" color={"primary"}>
-                      DESCRIPTION
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} md={8}>
-                    <Typography variant="subtitle1">
-                      Metro painting
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item xs={12} className={classes.gridItemMain}>
-                <Grid container>
-                  <Grid item xs={12} md={4}>
-                    <Typography variant="subtitle1" color={"primary"}>
-                      CLOSING DATE
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} md={8}>
-                    <Typography variant="subtitle1">
-                      September 19 at 21:00 KST
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item xs={12}>
-                <SectionHeader
-                    title={
-                      <span>
-                        <Typography component="span" variant="body1" color="textSecondary">
-                          Reserve price
-                        </Typography>{' '}
-                        <Typography component="span" variant="h6" color="textPrimary">
-                          <strong>0.37</strong>
-                        </Typography>{' '}
-                        <Typography component="span" variant="body1" color="textSecondary">
-                          ETH
-                          <span style={{paddingLeft: '10px'}}>
-                            <Image
-                                src={Eth}
-                                style={{height:'20px', width: '20px'}}
-                            />
-                          </span>
-                        </Typography>
-                      </span>
-                    }
-                    align="left"
-                    disableGutter
-                    titleVariant="h3"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <span>
-                  <Typography id="discrete-slider-small-steps" gutterBottom>
-                    {/*Total amount : {amountOfNft} NFT*/}
-                    Total amount : 1
-                  </Typography>
-                </span>
-              </Grid>
-              <Grid item xs={12} align="center">
-                <br />
-                <Button variant="contained" color="primary" size="large"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          window.open("https://rarible.com/token/0x4dfd4f4aa74b62614597e6f5417f70a6fa7a9f45:2?tab=bids", '_blank');
-                        }}
-                        fullWidth
-                        disabled={false}>
-                  Place a bid
-                </Button>
-              </Grid>
-              {
-                <Grid item xs={12} align="center"><Typography component="span" variant="overline" color="error">
-                  We only provide purchase on Ethereum mainnet.
-                  <br/>
-                  beware for using Binance smart chain.
-                </Typography>
-                </Grid>
-              }
+              />
             </Grid>
-          </CardBase>
-        </Grid>
+            <Grid item xs={12} className={classes.gridItemMain}>
+              <Grid container>
+                <Grid item xs={12} md={4}>
+                  <Typography variant="subtitle1" color={"primary"}>
+                    DESCRIPTION
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} md={8}>
+                  <Typography variant="subtitle1">
+                    Metro painting
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={12} className={classes.gridItemMain}>
+              <Grid container>
+                <Grid item xs={12} md={4}>
+                  <Typography variant="subtitle1" color={"primary"}>
+                    CLOSING DATE
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} md={8}>
+                  <Typography variant="subtitle1">
+                    September 19 at 21:00 KST
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              <SectionHeader
+                  title={
+                    <span>
+                      <Typography component="span" variant="body1" color="textSecondary">
+                        Reserve price
+                      </Typography>{' '}
+                      <Typography component="span" variant="h6" color="textPrimary">
+                        <strong>0.37</strong>
+                      </Typography>{' '}
+                      <Typography component="span" variant="body1" color="textSecondary">
+                        ETH
+                        <span style={{paddingLeft: '10px'}}>
+                          <Image
+                              src={Eth}
+                              style={{height:'20px', width: '20px'}}
+                          />
+                        </span>
+                      </Typography>
+                    </span>
+                  }
+                  align="left"
+                  disableGutter
+                  titleVariant="h3"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <span>
+                <Typography id="discrete-slider-small-steps" gutterBottom>
+                  {/*Total amount : {amountOfNft} NFT*/}
+                  Total amount : 1
+                </Typography>
+              </span>
+            </Grid>
+            <Grid item xs={12} align="center">
+              <br />
+              <Button variant="contained" color="primary" size="large"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        window.open("https://rarible.com/token/0x4dfd4f4aa74b62614597e6f5417f70a6fa7a9f45:2?tab=bids", '_blank');
+                      }}
+                      fullWidth
+                      disabled={false}>
+                Place a bid
+              </Button>
+            </Grid>
+            {
+              <Grid item xs={12} align="center"><Typography component="span" variant="overline" color="error">
+                We only provide purchase on Ethereum mainnet.
+                <br/>
+                beware for using Binance smart chain.
+              </Typography>
+              </Grid>
+            }
+          </Grid>
+        </CardBase>
+      </Grid>
     </React.Fragment>
   );
 };
