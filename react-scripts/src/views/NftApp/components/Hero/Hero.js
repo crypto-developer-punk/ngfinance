@@ -538,7 +538,10 @@ const Hero = props => {
         })
         .catch(error => {
           setOpenClaimDialog(false);
-          alert(error.response.data.message);
+
+          const data = error.response.data;
+          setApproveRewardHash(environmentConfig.etherscan_url + data.hash);
+          setOpenRewardErrorDialog(true);
         });
   };
 
@@ -985,6 +988,9 @@ const Hero = props => {
   const [openClaimDialog, setOpenClaimDialog] = React.useState(false);
 
   const [openUnstakingConfirmDialog, setOpenUnstakingConfirmDialog] = React.useState(false);
+
+  const [openRewardErrorDialog, setOpenRewardErrorDialog] = React.useState(false);
+  const [approveRewardHash, setApproveRewardHash] = React.useState("");
 
   const [stakingDialogContext, setStakingDialogContext] = React.useState("");
   const [stakingTransactionUrl, setStakingTransactionUrl] = React.useState("");
@@ -1988,6 +1994,25 @@ const Hero = props => {
               Close
             </Button>
           </DialogActions>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+          open={openRewardErrorDialog}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={() => setOpenRewardErrorDialog(false)}
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle id="alert-dialog-slide-title">Approve reward is in progress</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            Now Nostalgia Finance approving your reward.
+            <br/>Please wait the operation.
+            <br/><br/>Please check approving reward transaction on Etherscan.
+            <br/><br/><a href={approveRewardHash} target={"_blank"}>View your transaction on Etherscan</a>
+          </DialogContentText>
         </DialogContent>
       </Dialog>
     </div>
