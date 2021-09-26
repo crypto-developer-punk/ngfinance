@@ -38,7 +38,7 @@ export default function CustomizedProgressBars(props) {
             {/*<BorderLinearProgress variant="determinate" value={20} />*/}
             <Typography
                 variant="subtitle1"
-                color="primary"
+                color="textPrimary"
                 align={"left"}
             >
                 <strong>
