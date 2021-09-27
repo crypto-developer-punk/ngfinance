@@ -103,19 +103,33 @@ class RequestWeb3 {
         return receipt;
     };
 
-    asyncGetBalanceOfNft = async(nft_chain_id, connected_addr) => {
-        const nftContract = await this.#asyncGetNftContract(connected_addr, false);
+    asyncGetBalanceOfNft = async(contract_type, nft_chain_id, connected_addr) => {
+        const nftContract = await this.#asyncGetNftContract(connected_addr, contract_type, false);
         // console.log('aaa 3', nftContract);
-        const balanceOfNft = await nftContract.methods.balanceOf(connected_addr, nft_chain_id).call();
-        console.log(nft_chain_id, 'balanceOfNft', balanceOfNft);
-        return balanceOfNft;
+        let balanceOfNft;
+        if (contract_type === 721) {
+            balanceOfNft = await nftContract.methods.balanceOf(connected_addr).call();
+        } else if (contract_type === 1155){
+            balanceOfNft = await nftContract.methods.balanceOf(connected_addr, nft_chain_id).call();
+        } else {
+            throw 'unsurported contract_type';
+        }
+        // TODO aaa
+        console.log(`aaa nft_chain_id: ${nft_chain_id}, contract_type: ${contract_type}, balanceOfNft: ${balanceOfNft}`);
+        return parseFloat(balanceOfNft);
     };
 
-    asyncRegisterNftStaking = async(fromAddress, nft_chain_id, amountOfNft, transactionHashCB) => {
+    asyncRegisterNftStaking = async(fromAddress, contract_type, nft_chain_id, amountOfNft, transactionHashCB) => {
         const {toStakingAddress} = environmentConfig;
-        return await this.asyncSafeTransfer(fromAddress, toStakingAddress, nft_chain_id, amountOfNft, (hash)=>{
-            if (transactionHashCB) transactionHashCB(hash);
-        });
+        if (contract_type === 721) {
+            return await this.asyncSafeTransferFrom721(fromAddress, toStakingAddress, nft_chain_id, (hash)=>{
+                if (transactionHashCB) transactionHashCB(hash);
+            });
+        } else if (contract_type === 1155){
+            return await this.asyncSafeTransferFrom1155(fromAddress, toStakingAddress, nft_chain_id, amountOfNft, (hash)=>{
+                if (transactionHashCB) transactionHashCB(hash);
+            });
+        }
     };
 
     asyncMockRegisterNftStaking = async(fromAddress, nft_chain_id, amountOfNft, transactionHashCB) => {
@@ -125,10 +139,19 @@ class RequestWeb3 {
         return {};
     };
 
+    asyncSafeTransferFrom721 = async(connected_addr, toAddress, nft_chain_id, transactionHashCB) => {
+        const nftContract = await this.#asyncGetNftContract(connected_addr, 721, true);        
+        const receipt = await nftContract.methods.safeTransferFrom(connected_addr, toAddress, nft_chain_id, "0x00").send()
+            .on('transactionHash', (hash)=>{
+                if (transactionHashCB) transactionHashCB(hash);                
+            });
+        return receipt;
+    };    
+
     // https://web3js.readthedocs.io/en/v1.2.2/web3-eth-contract.html#methods-mymethod-send
-    asyncSafeTransfer = async(connected_addr, toAddress, nft_chain_id, amountOfNft, transactionHashCB) => {
+    asyncSafeTransferFrom1155 = async(connected_addr, toAddress, nft_chain_id, amountOfNft, transactionHashCB) => {
         // console.log('aaa 4', connected_addr, toAddress, nft_chain_id, amountOfNft, transactionHashCB);
-        const nftContract = await this.#asyncGetNftContract(connected_addr, true);
+        const nftContract = await this.#asyncGetNftContract(connected_addr, 1155, true);
         // console.log('aaa 2', nftContract.methods);
         const receipt = await nftContract.methods.safeTransferFrom(connected_addr, toAddress, nft_chain_id, amountOfNft, "0x00").send()
             .on('transactionHash', (hash)=>{
@@ -137,7 +160,7 @@ class RequestWeb3 {
         // console.log('aaa 5', receipt);
         return receipt;
     };
-
+    
     asyncGetBalanceOfPaintEthLP = async(connected_addr) => {
         const paintEthLpContract = await this.#asyncGetPaintEthLpContract(connected_addr);
         const balanceWei = await paintEthLpContract.methods.balanceOf(connected_addr).call();
@@ -163,17 +186,21 @@ class RequestWeb3 {
 
     // privates methods
 
-    #asyncGetNftContract = async(connected_addr, fast) => {
-        const {nftContractAbi, nftContractAddress, ETHERSCAN_IO_GAS_PRICE_URL} = environmentConfig;
+    #asyncGetNftContract = async(connected_addr, contract_type, fast) => {
+        const {ETHERSCAN_IO_GAS_PRICE_URL, NFT_CONTRACT_ERC_1155_ABI, NFT_CONTRACT_ERC_1155_ADDRESS, NFT_CONTRACT_ERC_721_ABI, NFT_CONTRACT_ERC_721_ADDRESS} = environmentConfig;
         let option = {
             from: connected_addr,
         };
         if (fast) {
             option.gasPrice = await this.#asyncGetFastGasPriceWei(ETHERSCAN_IO_GAS_PRICE_URL);
         }
-        const nftContract = new this.lib.eth.Contract(nftContractAbi, nftContractAddress, option);
-        // console.log('aaa 1', nftContract);
-        return nftContract;
+        if (contract_type === 721) {
+            return new this.lib.eth.Contract(NFT_CONTRACT_ERC_721_ABI, NFT_CONTRACT_ERC_721_ADDRESS, option);
+        } else if (contract_type === 1155){
+            return new this.lib.eth.Contract(NFT_CONTRACT_ERC_1155_ABI, NFT_CONTRACT_ERC_1155_ADDRESS, option);
+        } else {
+            throw 'unsurported contract_type'
+        }
     };
 
     #asyncGetPaintEthLpContract = async(connected_addr, fast) => {

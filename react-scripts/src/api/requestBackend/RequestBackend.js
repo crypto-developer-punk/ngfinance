@@ -64,8 +64,9 @@ class RequestBackend {
             "contract_type": contract_type,
             "nft_chain_id": nft_chain_id
         };
-    
-        const {status, data} = await axios.get(`${this.backend_url}/staking`, { params : params, headers: this.#getRequestHeaders(my_address) });
+        
+        // console.log('aaa', `${this.backend_url}/staking`, my_address, contract_type, nft_chain_id);
+        const {status, data} = await axios.get(`${this.backend_url}/staking`, { params, headers: this.#getRequestHeaders(my_address) });
         if (!status === 200)
             throw `asyncGetStaked - ${status} error`;
         if (!data) 

@@ -73,7 +73,7 @@ const OurNtfSection = props => {
       props.showInfoDialog("Please connect wallet to ethereum mainet.");
       return;
     }
-    const nftBalance = parseInt(props.store.findNftWebThreeContext(nft).balance);
+    const nftBalance = nft.balance;//parseInt(props.store.findNftWebThreeContext(nft).balance);
     if (nftBalance <= 0) {
       props.showInfoDialog("Must have 1 more NFT for staking");
       return;
@@ -142,9 +142,9 @@ const OurNtfSection = props => {
                 <br/>
               </div>);
             });
-            await sleep(2000);
-            window.location.reload();
+            // await sleep(2000);
             props.closeDialog();
+            window.location.reload();
           } catch (err) {
             props.showErrorDialog(err);  
           }
@@ -193,7 +193,7 @@ const OurNtfSection = props => {
           {
             values(nftMap).map(nft => {
               const staking = store.findNftStaking(nft);
-              const nftBalance = parseInt(store.findNftWebThreeContext(nft).balance);
+              const nftBalance = nft.balance;//parseInt(store.findNftWebThreeContext(nft).balance);
               return (
                 <Grid container spacing={3}>
                   <Grid item xs={12}>

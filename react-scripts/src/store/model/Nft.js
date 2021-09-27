@@ -9,7 +9,13 @@ const Nft = types.model('Nft', {
   image_url: types.optional(types.string, ''),
   nft_url: types.optional(types.string, ''),  
   contract_type: types.optional(types.number, -1),  
-});
+  balance: types.optional(types.number, -1),
+}).actions(self => ({
+    setBalance(balance) {
+      self.balance = balance;
+    }
+  })
+);
 
 export default Nft;
 

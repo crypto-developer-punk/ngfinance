@@ -60,7 +60,7 @@ const TokenStakingSection = props => {
     defaultMatches: true,
   });
 
-  const {title, subTitle, stakingButtonComponents, lpTokenBalanceComponents, snapShotTimeStr, totalValueLockedNftAmount, hashAddressLabel, balanceOfReward, tokenImage} = props;
+  const {title, subTitle, stakingButtonComponents, lpTokenBalanceComponents, snapShotTimeStr, totalValueLockedNftAmount, hashAddressLabel, balanceOfReward, dropTokenImage, dropTokenName} = props;
 
   return (
     <React.Fragment>
@@ -122,14 +122,14 @@ const TokenStakingSection = props => {
                   spacing={2}
               >
                 <Grid item>
-                  <Image src={tokenImage}
+                  <Image src={dropTokenImage}
                         style={{ width: '120px', height:'120px' }}/>
                 </Grid>
                 <Grid item
                     alignItems=""
                     justify="center">
                   <Typography component="span" variant="subtitle1">
-                    Paint Token : { balanceOfReward }
+                    {dropTokenName} : { balanceOfReward }
                   </Typography>
                 </Grid>
               </Grid>
@@ -220,7 +220,7 @@ const StakingSection = props => {
     const requestUnstaking = _.debounce(async() => {
       props.showConfirmDialog("Confirm unstaking your NFT ", <div>Are you sure you want to unstaking?</div>, 
         async ()=>{
-          props.showLoadingDialog("Staking NFT", 
+          props.showLoadingDialog("Unstaking NFT", 
           <div>
             Your NFT unstaking is in progress
             <br/>
@@ -237,9 +237,8 @@ const StakingSection = props => {
                 <br/>
               </div>);
             });
-            await sleep(2000);
-            window.location.reload();
             props.closeDialog();
+            window.location.reload();
           } catch (err) {
             props.showErrorDialog(err);  
           }
@@ -310,7 +309,8 @@ const StakingSection = props => {
             totalValueLockedNftAmount={paintSnapshot.total_value_locked_nft_amount}
             hashAddressLabel={"PAINT : 0x83e031005ecb771b7ff900b3c7b0bdde7f521c08"}
             balanceOfReward={paintSnapshot.balance_of_reward}
-            tokenImage={PaintToken}/>
+            dropTokenImage={PaintToken}
+            dropTokenName={"Paint Token"}/>
           
           <br/>
           <br/>
@@ -331,7 +331,8 @@ const StakingSection = props => {
             totalValueLockedNftAmount={canvasSnapshot.total_value_locked_nft_amount}
             hashAddressLabel={"CANVAS : 0x863ad391091ae0e87b850c2bb7bfc7597c79c93f"}
             balanceOfReward={canvasSnapshot.balance_of_reward}
-            tokenImage={CanvasToken}/>
+            dropTokenImage={CanvasToken}
+            dropTokenName={"Canvas Token"}/>
 
           {/*  PAINT/ETH LP Staking (PAINT) */}
           <TokenStakingSection 
@@ -368,7 +369,7 @@ const StakingSection = props => {
                   </Typography>
                   <br/>
                   <Typography component="span" variant="subtitle1">
-                    Staked PAINT/ETH LP : 0
+                    Staked PAINT/ETH LP : {paintEthLpStaking.token_amount}
                   </Typography>
                 </Paper>
               </Grid>
@@ -377,7 +378,8 @@ const StakingSection = props => {
             totalValueLockedNftAmount={lpSnapshot.total_value_locked_nft_amount}
             hashAddressLabel={"CANVAS : 0x863ad391091ae0e87b850c2bb7bfc7597c79c93f"}
             balanceOfReward={lpSnapshot.balance_of_reward}
-            tokenImage={CanvasToken}/>
+            dropTokenImage={CanvasToken}
+            dropTokenName={"Canvas Token"}/>            
         </Grid>
       </React.Fragment>)
 };
