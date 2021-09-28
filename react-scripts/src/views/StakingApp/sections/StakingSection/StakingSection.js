@@ -163,14 +163,18 @@ const StakingSection = props => {
           <br/>
         </div>);
 
-        await store.asyncClaimToken(token_type, (hashUrl)=>{
+        await store.asyncClaimToken(token_type, (step, hashUrl)=>{
             if (!ended)
               props.showLoadingDialog("Claim reward token",
                 <div>
                   Claiming the reward token
                   <br/>
+                  {step}
                   <br/>
-                  <a href={hashUrl} target={"_blank"}>View claim transaction</a>
+                  <div hidden={!hashUrl || hashUrl.length <= 0}>
+                    <br/>
+                    <a href={hashUrl} target={"_blank"}>View claim transaction</a>
+                  </div>
                   <br/>
                   <br/>
                 </div>);
@@ -199,8 +203,10 @@ const StakingSection = props => {
               <br/>
               {step}
               <br/>
-              <br/>
-              <a href={hashUrl} target={"_blank"}>View claim transaction</a>
+              <div hidden={!hashUrl || hashUrl.length <= 0}>
+                <br/>
+                <a href={hashUrl} target={"_blank"}>View claim transaction</a>
+              </div>
               <br/>
               <br/>
             </div>);
