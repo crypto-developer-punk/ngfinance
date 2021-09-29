@@ -8,6 +8,7 @@ import ReactPlayer from 'react-player'
 import {Image} from 'components/atoms';
 import {SectionHeader} from 'components/molecules';
 import {CardBase, Section} from "components/organisms";
+import CanvasToken from "assets/images/main/logo_canvas_token.svg";
 
 import {sleep} from "myutil";
 import {isDebugMode} from 'myconfig';
@@ -56,10 +57,16 @@ const useStyles = makeStyles(theme => ({
   },
   urltext: {
     // textOverflow: 'ellipsis'
-  }
+  },
+  paperSub: {
+    padding: theme.spacing(2),
+    textAlign: 'left',
+    color: 'white',
+    background: '#2E3348CC'
+  },
 }));
 
-const OurNtfSection = props => {
+const NftStakingSection = props => {
   const { className, ...rest } = props;
 
   const theme = useTheme();
@@ -179,7 +186,7 @@ const OurNtfSection = props => {
           <SectionHeader
               title={
                 <Typography variant="inherit">
-                  Our NFTs
+                  Nft Staking
                 </Typography>
               }
               align="left"
@@ -361,10 +368,10 @@ const OurNtfSection = props => {
   );
 };
 
-OurNtfSection.propTypes = {
+NftStakingSection.propTypes = {
   className: PropTypes.string,
 };
 
 export default inject(({store}) => ({
   store: store,
-}))(observer(OurNtfSection));
+}))(observer(NftStakingSection));

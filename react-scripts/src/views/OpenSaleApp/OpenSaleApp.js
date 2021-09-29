@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
     },
   }));
 
-const AuctionApp = props => {
+const OpenSaleApp = props => {
   
   const classes = useStyles();
 
@@ -46,4 +46,4 @@ const AuctionApp = props => {
 
 export default inject(({store}) => ({
   store: store,
-}))(observer(WithBase(AuctionApp)));
+}))(observer(WithBase(OpenSaleApp)));

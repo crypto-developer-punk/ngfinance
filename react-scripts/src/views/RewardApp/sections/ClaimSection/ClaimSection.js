@@ -53,7 +53,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const TokenStakingSection = props => {
+const TokenClaimSection = props => {
   const classes = useStyles();
   const theme = useTheme();
   const isMd = useMediaQuery(theme.breakpoints.up('md'), {
@@ -141,7 +141,7 @@ const TokenStakingSection = props => {
   );
 };
 
-const StakingSection = props => {
+const ClaimSection = props => {
     const { className, ...rest } = props;
   
     const theme = useTheme();
@@ -190,70 +190,6 @@ const StakingSection = props => {
       trailing: false
     })
 
-    const registerPaintEthLpStaking = _.debounce(async () => {
-      let ended = false;
-      try {
-        props.showLoadingDialog("Staking", 
-          <div>Your PAINT-ETH LP staking is in progress</div>);
-        
-        await store.asyncRegisterPaintEthLpStaking((step, hashUrl)=>{
-          if (!ended)
-            props.showLoadingDialog("Staking", 
-            <div>Your PAINT-ETH LP staking is in progress
-              <br/>
-              {step}
-              <br/>
-              <div hidden={!hashUrl || hashUrl.length <= 0}>
-                <br/>
-                <a href={hashUrl} target={"_blank"}>View claim transaction</a>
-              </div>
-              <br/>
-              <br/>
-            </div>);
-        });
-        props.closeDialog();
-        // ended = true;
-        // window.location.reload();
-        // }
-      } catch (err) {
-        props.showErrorDialog(err);
-      }
-    }, 300, {      
-      leading: true,
-      trailing: false
-    })
-
-    const requestUnstaking = _.debounce(async() => {
-      props.showConfirmDialog("Confirm unstaking your NFT ", <div>Are you sure you want to unstaking?</div>, 
-        async ()=>{
-          props.showLoadingDialog("Unstaking NFT", 
-          <div>
-            Your NFT unstaking is in progress
-            <br/>
-            <br/>
-          </div>);
-          try {
-            await store.asyncUnstakePaintEthLp((step)=> {
-              props.showLoadingDialog("Staking NFT", 
-              <div>
-                Your NFT unstaking is in progress
-                <br/>
-                {step}
-                <br/>
-                <br/>
-              </div>);
-            });
-            props.closeDialog();
-            window.location.reload();
-          } catch (err) {
-            props.showErrorDialog(err);  
-          }
-        });
-    }, 300, {      
-      leading: true,
-      trailing: false
-    });
-
     const isDisabledPaintClaim = () => {
       return paintSnapshot.balance_of_reward === 0 || !webThreeContext.isWalletConnected;
     };  
@@ -261,14 +197,6 @@ const StakingSection = props => {
     const isDisabledCanvasClaim = () => {
       return canvasSnapshot.balance_of_reward === 0 || !webThreeContext.isWalletConnected;
     };  
-
-    const isDisalbedLpStake = () => {
-      return webThreeContext.paintEthLpBalance === 0 || !webThreeContext.isWalletConnected;
-    };
-
-    const isDisabledLpUnstake = () => {
-      return paintEthLpStaking.token_amount === 0 || !webThreeContext.isWalletConnected;
-    };
 
     const isDisabledLpClaim = () => {
       return lpSnapshot.balance_of_reward === 0 || !webThreeContext.isWalletConnected;
@@ -290,7 +218,7 @@ const StakingSection = props => {
             <SectionHeader
                 title={
                   <Typography variant="inherit">
-                    Staking
+                    Claim Rewards
                   </Typography>
                 }
                 align="left"
@@ -299,8 +227,8 @@ const StakingSection = props => {
             <Divider/>
           </Grid>
 
-          {/*  NFT Staking (PAINT) */}
-          <TokenStakingSection 
+          {/*  NFT Claim (PAINT) */}
+          <TokenClaimSection 
             title={
               <Typography component="span" variant="h5" style={{color: `${colors.deepOrange[900]}`}}>
                 NFT Staking (PAINT)
@@ -321,8 +249,8 @@ const StakingSection = props => {
           <br/>
           <br/>
 
-          {/*  NFT Staking (PAINT) */}
-          <TokenStakingSection 
+          {/*  NFT Claim (PAINT) */}
+          <TokenClaimSection 
             title={
               <Typography component="span" variant="h5" style={{color: `${colors.green[900]}`}}>
                 NFT Staking (CANVAS)
@@ -340,8 +268,8 @@ const StakingSection = props => {
             dropTokenImage={CanvasToken}
             dropTokenName={"Canvas Token"}/>
 
-          {/*  PAINT/ETH LP Staking (PAINT) */}
-          <TokenStakingSection 
+          {/*  PAINT/ETH LP Claim (PAINT) */}
+          <TokenClaimSection 
             title={
               <Typography component="span" variant="h5" style={{color: `${colors.deepPurple[900]}`}}>
                 PAINT/ETH LP Staking
@@ -356,13 +284,7 @@ const StakingSection = props => {
             }
             stakingButtonComponents={
               <Grid item xs={12}>
-                <Button style={{borderBottomLeftRadius: 5, borderBottomRightRadius: 0, borderTopLeftRadius: 5, borderTopRightRadius: 0}} variant="outlined" color="primary" size="large" onClick={registerPaintEthLpStaking} disabled={isDisalbedLpStake()}>
-                  Stake
-                </Button>
-                <Button style={{borderBottomLeftRadius: 0, borderBottomRightRadius: 0, borderTopLeftRadius: 0, borderTopRightRadius: 0, marginLeft: -1}} variant="outlined" color="primary" size="large" onClick={requestUnstaking} disabled={isDisabledLpUnstake()}>
-                  Unstake
-                </Button>
-                <Button style={{borderBottomLeftRadius: 0, borderBottomRightRadius: 5, borderTopLeftRadius: 0, borderTopRightRadius: 5, marginLeft: -1}} variant="outlined" color="primary" size="large" onClick={() => claim(TOKEN_TYPE_CANVAS_PAINT_ETH_LP)} disabled={isDisabledLpClaim()}>
+                <Button style={{borderBottomLeftRadius: 5, borderBottomRightRadius: 5, borderTopLeftRadius: 5, borderTopRightRadius: 5, marginLeft: -1}} variant="outlined" color="primary" size="large" onClick={() => claim(TOKEN_TYPE_CANVAS_PAINT_ETH_LP)} disabled={isDisabledLpClaim()}>
                   Claim
                 </Button>
               </Grid>
@@ -390,10 +312,10 @@ const StakingSection = props => {
       </React.Fragment>)
 };
 
-StakingSection.propTypes = {
+ClaimSection.propTypes = {
     className: PropTypes.string,
 };
   
 export default inject(({store}) => ({
 store: store,
-}))(observer(StakingSection));
+}))(observer(ClaimSection));
