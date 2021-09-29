@@ -108,7 +108,12 @@ class RequestWeb3 {
         // console.log('aaa 3', nftContract);
         let balanceOfNft;
         if (contract_type === 721) {
-            balanceOfNft = await nftContract.methods.balanceOf(connected_addr).call();
+            let addressOfOwner = await nftContract.methods.ownerOf(nft_chain_id).call();
+
+            // owner와 연결된 지갑 주소가 일치하면 소유한 것으로 판단한다.
+            if (addressOfOwner.trim() === connected_addr.trim()) {
+                balanceOfNft = 1;
+            }
         } else if (contract_type === 1155){
             balanceOfNft = await nftContract.methods.balanceOf(connected_addr, nft_chain_id).call();
         } else {
