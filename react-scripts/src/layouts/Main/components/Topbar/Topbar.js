@@ -129,6 +129,13 @@ const Topbar = props => {
   const classes = useStyles();
   const web3Context = useWeb3(environmentConfig.eth_network);    
 
+  const [buttonLabel, setButtonLabel] = useState(
+    window.localStorage.getItem("walletButtonLabel") || 'Connect Wallet'
+  );
+  const [buttonDisabled, setButtonDisabled] = useState(
+    window.localStorage.getItem("walletButtonLabel") || true
+  );
+
   const [activePageId, setActivePageId] = useState(-1);
   
   const { pages, store } = props;
@@ -148,15 +155,33 @@ const Topbar = props => {
     requestWeb3.reinitialize();
     async function initStore() {
       await store.asyncInitWebThreeContext();
+      const buttonLabel = getWalletBtnLabel();
+      window.localStorage.setItem("walletButtonLabel", buttonLabel);
+      setButtonLabel(buttonLabel);
+      
+      const buttonDisalbed = getWalletDisalbed();
+      window.localStorage.setItem("walletButtonDisalbed", buttonDisalbed);
+      setButtonDisabled(buttonDisalbed);
     }
     initStore();
   }, [networkId, accounts]);
 
+  const getWalletDisalbed = () => {
+    return webThreeContext.isWalletConnected || !webThreeContext.isValidNetwork;
+  };
+
   const getWalletBtnLabel = () => {
-    if (!webThreeContext.isValidNetwork) {
-      return "Change to mainnet";
+    // return webThreeContext.isWalletConnected ? StringHelper.getElipsedHashAddress( webThreeContext.currentAccount) : "Connect Wallet";
+    let walletButtonLabel = '';
+    if (!webThreeContext.isWalletConnected) {
+      if (!webThreeContext.isValidNetwork) 
+      walletButtonLabel = "Change to mainnet";
+      else 
+      walletButtonLabel = "Connect Wallet";
+    } else {
+      walletButtonLabel = StringHelper.getElipsedHashAddress( webThreeContext.currentAccount);
     }
-    return webThreeContext.isWalletConnected ? StringHelper.getElipsedHashAddress( webThreeContext.currentAccount) : "Connect Wallet";
+    return walletButtonLabel;
   };
   
   const connectToWallet = _.debounce(async(e) => {
@@ -220,9 +245,9 @@ const Topbar = props => {
               color="primary"
               className={classes.listItemButton}
               onClick={connectToWallet}
-              disabled={webThreeContext.isWalletConnected || !webThreeContext.isValidNetwork}
+              disabled={buttonDisabled}
             >
-              {getWalletBtnLabel()}
+              {buttonLabel}
             </Button>
           </ListItem>
 
