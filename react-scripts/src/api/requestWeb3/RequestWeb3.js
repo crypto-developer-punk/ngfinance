@@ -105,8 +105,9 @@ class RequestWeb3 {
 
     asyncGetBalanceOfNft = async(contract_type, nft_chain_id, connected_addr) => {
         const nftContract = await this.#asyncGetNftContract(connected_addr, contract_type, false);
-        // console.log('aaa 3', nftContract);
-        let balanceOfNft;
+        // TODO 
+        // console.log('aaa', contract_type, nft_chain_id);
+        let balanceOfNft = 0;
         if (contract_type === 721) {
             let addressOfOwner = await nftContract.methods.ownerOf(nft_chain_id).call();
 
@@ -134,6 +135,8 @@ class RequestWeb3 {
             return await this.asyncSafeTransferFrom1155(fromAddress, toStakingAddress, nft_chain_id, amountOfNft, (hash)=>{
                 if (transactionHashCB) transactionHashCB(hash);
             });
+        } else {
+            throw 'unsurported contract_type';
         }
     };
 
