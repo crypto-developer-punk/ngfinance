@@ -24,7 +24,8 @@ const WithDialog = WrappedComponent => {
                 setDialogTitle("Error occured");
                 dialogModeStateRef.current = 'error';
             } else if (err.code === ERR_WALLET_IS_NOT_CONNECTED){
-                showForceDialog(err.msg);
+                showInfoDialog(err.msg);
+                // showForceDialog(err.msg);
             } else if (err.code === ERR_LIMIT_LOCKUP_NFT) {
                 showDialog("You can't unstake your NFT.", err.msg);
             } else if (err.code === ERR_UNSKAKING_INPROGRESS) {

@@ -55,14 +55,16 @@ const RootStore = types.model({
         }),
         asyncInitNftInfos: flow(function* (){
             const {currentAccount, isWalletConnected} = self.webThreeContext;
-            if (!isWalletConnected) 
-                throw {code: ERR_WALLET_IS_NOT_CONNECTED, msg: 'Wallet is not connected. Change to mainet.'};
+            // if (!isWalletConnected) 
+            //     throw {code: ERR_WALLET_IS_NOT_CONNECTED, msg: 'Wallet is not connected. Change to mainet.'};
 
             const res = yield requestBackend.getNftInfo(currentAccount);
             for (let i = 0; i < res.data.length; i++) {
                 const nftDesc = res.data[i];
                 const nft = Nft.create(nftDesc);
                 self.nftMap.set(nft.id, nft);
+                if (!isWalletConnected)
+                    continue;
                 yield self.asyncUpdateNftBalance(nft);
                 yield self.asyncUpdateNftStakingState(nft);
             }

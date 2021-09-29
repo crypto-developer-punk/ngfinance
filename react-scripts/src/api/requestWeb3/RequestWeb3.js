@@ -115,7 +115,7 @@ class RequestWeb3 {
             throw 'unsurported contract_type';
         }
         // TODO aaa
-        console.log(`aaa nft_chain_id: ${nft_chain_id}, contract_type: ${contract_type}, balanceOfNft: ${balanceOfNft}`);
+        // console.log(`aaa nft_chain_id: ${nft_chain_id}, contract_type: ${contract_type}, balanceOfNft: ${balanceOfNft}`);
         return parseFloat(balanceOfNft);
     };
 

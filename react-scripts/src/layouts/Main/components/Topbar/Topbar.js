@@ -133,7 +133,7 @@ const Topbar = props => {
   
   const { pages, store } = props;
   const { webThreeContext } = store;
-  const { networkId } = web3Context;
+  const { networkId, accounts } = web3Context;
 
   React.useEffect(() => {
     const lastItem = StringHelper.getUrlLastItem(window.location.href);
@@ -150,10 +150,13 @@ const Topbar = props => {
       await store.asyncInitWebThreeContext();
     }
     initStore();
-  }, [networkId]);
+  }, [networkId, accounts]);
 
   const getWalletBtnLabel = () => {
-    return webThreeContext.isWalletConnected ? `Connected` : "Connect Wallet";
+    if (!webThreeContext.isValidNetwork) {
+      return "Change to mainnet";
+    }
+    return webThreeContext.isWalletConnected ? StringHelper.getElipsedHashAddress( webThreeContext.currentAccount) : "Connect Wallet";
   };
   
   const connectToWallet = _.debounce(async(e) => {
