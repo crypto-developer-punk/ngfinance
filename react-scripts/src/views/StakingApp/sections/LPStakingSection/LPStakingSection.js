@@ -240,7 +240,7 @@ const LpTStakingSection = props => {
         <Grid item xs={12} style={{marginBottom: '30px'}}>
           <SectionHeader
               title={
-                <Typography variant="inherit">
+                <Typography variant="h5">
                   LP Staking
                 </Typography>
               }

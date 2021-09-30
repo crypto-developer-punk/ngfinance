@@ -185,8 +185,8 @@ const NftStakingSection = props => {
         <Grid item xs={12} style={{marginBottom: '30px'}}>
           <SectionHeader
               title={
-                <Typography variant="inherit">
-                  Nft Staking
+                <Typography variant="h5">
+                  NFT Staking
                 </Typography>
               }
               align="left"

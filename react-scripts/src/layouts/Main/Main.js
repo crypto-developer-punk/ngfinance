@@ -21,9 +21,9 @@ const Main = ({ children, themeToggler, themeMode }) => {
   });
 
   const pages = [
-    {title: 'STAKING', href: '/app'},
     {title: 'OPEN SALE', href: '/opensale'},
-    {title: 'REWARD', href: '/reward'} 
+    {title: 'STAKING', href: '/app'},
+    {title: 'CLAIM', href: '/reward'}
   ];
 
   const [openSidebar, setOpenSidebar] = useState(false);
