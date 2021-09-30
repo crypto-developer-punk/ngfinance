@@ -12,6 +12,7 @@ import CanvasToken from "assets/images/main/logo_canvas_token.svg";
 
 import {sleep} from "myutil";
 import {isDebugMode} from 'myconfig';
+import {TOKEN_TYPE_PAINT_NFT, TOKEN_TYPE_CANVAS_NFT} from "myconstants";
 
 import Moment from 'moment';
 require('moment-timezone');
@@ -254,8 +255,11 @@ const NftStakingSection = props => {
                               <SectionHeader
                                 title={
                                   <span>
-                                    <Typography variant="subtitle1" color={"textSecondary"} >
-                                      Nostalgia Finance
+                                    <Typography variant="subtitle1" color={"textSecondary"} hidden={(nft.token_type === TOKEN_TYPE_PAINT_NFT ? false : true)}>
+                                      Utility NFT
+                                    </Typography>
+                                    <Typography variant="subtitle1" color={"textSecondary"} hidden={(nft.token_type === TOKEN_TYPE_CANVAS_NFT ? false : true)}>
+                                      Governance NFT
                                     </Typography>
                                   </span>
                                 }
