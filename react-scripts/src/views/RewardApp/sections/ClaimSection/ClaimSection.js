@@ -217,8 +217,8 @@ const ClaimSection = props => {
           <Grid item xs={12} style={{marginBottom: '30px'}}>
             <SectionHeader
                 title={
-                  <Typography variant="inherit">
-                    Claim Rewards
+                  <Typography variant="h5">
+                    Claim rewards
                   </Typography>
                 }
                 align="left"
@@ -230,7 +230,7 @@ const ClaimSection = props => {
           {/*  NFT Claim (PAINT) */}
           <TokenClaimSection 
             title={
-              <Typography component="span" variant="h5" style={{color: `${colors.deepOrange[900]}`}}>
+              <Typography component="span" variant="h6" style={{color: `${colors.deepOrange[900]}`}}>
                 NFT Staking (PAINT)
               </Typography>
             } 
@@ -252,7 +252,7 @@ const ClaimSection = props => {
           {/*  NFT Claim (PAINT) */}
           <TokenClaimSection 
             title={
-              <Typography component="span" variant="h5" style={{color: `${colors.green[900]}`}}>
+              <Typography component="span" variant="h6" style={{color: `${colors.green[900]}`}}>
                 NFT Staking (CANVAS)
               </Typography>
             }
@@ -271,7 +271,7 @@ const ClaimSection = props => {
           {/*  PAINT/ETH LP Claim (PAINT) */}
           <TokenClaimSection 
             title={
-              <Typography component="span" variant="h5" style={{color: `${colors.deepPurple[900]}`}}>
+              <Typography component="span" variant="h6" style={{color: `${colors.deepPurple[900]}`}}>
                 PAINT/ETH LP Staking
               </Typography>
             }
