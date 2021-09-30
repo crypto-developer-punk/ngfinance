@@ -83,7 +83,7 @@ const CurrentOpenedAuctionSection = props => {
       <Grid item xs={12} style={{marginBottom: '0px'}}>
         <SectionHeader
             title={
-              <Typography variant="inherit">
+              <Typography variant="h5">
                 Current opened auction
               </Typography>
             }

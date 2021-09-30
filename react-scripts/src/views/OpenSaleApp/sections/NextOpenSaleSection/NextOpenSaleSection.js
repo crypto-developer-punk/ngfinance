@@ -94,7 +94,7 @@ const NextOpenSaleSection = props => {
       <Grid item xs={12} style={{marginBottom: '0px'}}>
         <SectionHeader
             title={
-              <Typography variant="inherit">
+              <Typography variant="h5">
                 Next open sale
               </Typography>
             }
@@ -114,8 +114,8 @@ const NextOpenSaleSection = props => {
         md={6}
       >
         <Image
-            src={afterTokenSaleImageUrl}
-            alt="Genesis NFT"
+            src={"https://ngfinance.io/resources/metaverse.png"}
+            alt="next open sale NFT"
             style={{ width: '100%', height:'100%' }}
             className={classes.image}
             data-aos="flip-left"
@@ -146,10 +146,13 @@ const NextOpenSaleSection = props => {
                   <span>
                     <div>
                       <Typography variant="caption" className={classes.tag} >
-                        Governance NFT
+                        Nostalgia Artist
                       </Typography>
                       <Typography variant="caption" className={classes.tag} >
-                        Only Paint payable
+                        Utility NFT
+                      </Typography>
+                      <Typography variant="caption" className={classes.tag} >
+                        PAINT
                       </Typography>
                     </div>
                   </span>
@@ -170,7 +173,7 @@ const NextOpenSaleSection = props => {
                   title={
                     <span>
                       <Typography component="span" variant="h5" color="textPrimary" >
-                        <strong>{afterTokenSaleSubject}</strong>
+                        <strong>Metaverse</strong>
                       </Typography>
                     </span>
                   }
@@ -188,7 +191,7 @@ const NextOpenSaleSection = props => {
                 </Grid>
                 <Grid item xs={12} md={8}>
                   <Typography variant="subtitle1">
-                    {afterTokenSaleSubject}
+                    Metaverse
                   </Typography>
                 </Grid>
               </Grid>
@@ -203,7 +206,7 @@ const NextOpenSaleSection = props => {
                 </Grid>
                 <Grid item xs={12} md={8}>
                   <Typography variant="subtitle1">
-                    September 15 at 21:00 KST
+                    September 27 at 21:00 KST
                   </Typography>
                 </Grid>
               </Grid>
@@ -214,13 +217,19 @@ const NextOpenSaleSection = props => {
                 title={
                   <span>
                     <Typography component="span" variant="body1" color="textSecondary">
-                      Minimum price
+                      Price
                     </Typography>{' '}
                     <Typography component="span" variant="h6" color="textPrimary">
-                      <strong>200000</strong>
+                      <strong>0.6</strong>
                     </Typography>{' '}
                     <Typography component="span" variant="body1" color="textSecondary">
-                      PAINT
+                      ETH
+                      <span style={{paddingLeft: '10px'}}>
+                        <Image
+                            src={Eth}
+                            style={{height:'20px', width: '20px'}}
+                        />
+                      </span>
                     </Typography>
                   </span>
                 }
@@ -229,17 +238,23 @@ const NextOpenSaleSection = props => {
                 titleVariant="h3"
               />
             </Grid>
-            
+            <Grid item xs={12}>
+                <span>
+                  <Typography id="discrete-slider-small-steps" gutterBottom>
+                    Total amount : 20
+                  </Typography>
+                </span>
+            </Grid>
             <Grid item xs={12} align="center">
               <br />
               <Button variant="contained" color="primary" size="large"
-                onClick={(e) => {
-                  e.preventDefault();
-                  window.open("https://docs.google.com/forms/d/1u6HITfQuZtRA44cI0ICj6yvpTl6XwL0TnG5W0klB1nA/edit", '_blank');
-                }}
-                fullWidth
-                disabled={!afterTokenSale}>
-                Register
+                      onClick={(e) => {
+                        e.preventDefault();
+                        window.open("https://rarible.com/token/0x6cff6eb6c7cc2409b48e6192f98914fd05aab4ba:21", '_blank');
+                      }}
+                      fullWidth
+                      disabled={true}>
+                Sold out
               </Button>
             </Grid>
 

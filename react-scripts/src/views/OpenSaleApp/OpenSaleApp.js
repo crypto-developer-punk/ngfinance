@@ -36,7 +36,8 @@ const OpenSaleApp = props => {
           justify="space-between"
           spacing={4}
         >
-          <CurrentOpenedAuctionSection {...props}/>
+          {/* FIXME: 추후 옥션 진행시 수정 */}
+          {/*<CurrentOpenedAuctionSection {...props}/>*/}
           <NextOpenSaleSection {...props} />
         </Grid>        
       </Section>
