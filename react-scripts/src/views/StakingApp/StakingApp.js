@@ -31,7 +31,7 @@ const StakingApp = props => {
   const classes = useStyles();
   const web3Context = useWeb3(environmentConfig.eth_network);    
 
-  const { networkId } = web3Context;
+  const { networkId, accounts } = web3Context;
   const { store } = props;
 
   React.useEffect(() => {
@@ -41,14 +41,12 @@ const StakingApp = props => {
         await store.asyncInitWebThreeContext();
         await store.asyncInitNftInfos();
         await store.asyncInitSnapshots();
-        if (props.getDialogModeState() === 'force')
-          props.closeDialog();
       } catch (err) {
         props.showErrorDialog(err);
       }
     }
     initStore();
-  }, [networkId]);
+  }, [networkId, accounts]);
 
   return (
     <div className={classes.shape}>
