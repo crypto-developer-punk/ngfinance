@@ -122,23 +122,32 @@ const RootStore = types.model({
             console.log(`RegisterNftStaking 0 - currentAccount : ${currentAccount}, nft_chain_id : ${nft_chain_id}, balance : ${balance}`);
             if (stakingStepCB) stakingStepCB('Allow your contract.', '');
 
+            let backendSizeRegisterStakingFinished = false;
             yield requestWeb3.asyncRegisterNftStaking(currentAccount, contract_type, nft_chain_id, balance, (hash)=>{
                 if (stakingStepCB) stakingStepCB('Doing contract. It take some times within 10 minutes.', etherscan_url + hash);
                 transactionHash = hash;
+                if (transactionHash) {
+                    requestBackend.asyncRegisterStaking(currentAccount, contract_type, nft_chain_id, balance, transactionHash).then(res => {
+                        backendSizeRegisterStakingFinished = true;
+                    });   
+                }
             });
-            console.log(`RegisterNftStaking 1 - asyncRegisterNftStaking, transactionHash : ${transactionHash}`);
-            if (stakingStepCB) stakingStepCB('Complete contract. Try writing contract info.', etherscan_url + transactionHash);
 
-            yield requestBackend.asyncRegisterStaking(currentAccount, contract_type, nft_chain_id, balance, transactionHash);
-            console.log(`RegisterNftStaking 2 - asyncRegisterStaking`);
+            do {
+                yield sleep(1000);
+                if (backendSizeRegisterStakingFinished)
+                    break;
+            } while (true);
+
+            console.log(`RegisterNftStaking 1 - asyncRegisterStaking`);
             if (stakingStepCB) stakingStepCB('Complete writing contract info. Almost done', etherscan_url + transactionHash);
 
             yield self.asyncUpdateNftBalance(nft);
-            console.log(`RegisterNftStaking 3 - asyncUpdateNftBalance`);
+            console.log(`RegisterNftStaking 2 - asyncUpdateNftBalance`);
             yield self.asyncUpdateNftStakingState(nft);
-            console.log(`RegisterNftStaking 4 - asyncUpdateNftStakingState`);
+            console.log(`RegisterNftStaking 3 - asyncUpdateNftStakingState`);
             yield self.asyncInitSnapshots();
-            console.log(`RegisterNftStaking 5 - asyncInitSnapshots`);
+            console.log(`RegisterNftStaking 4 - asyncInitSnapshots`);
             if (stakingStepCB) stakingStepCB('Complete.', etherscan_url + transactionHash);
         }),
         asyncRegisterPaintEthLpStaking: flow(function*(stakingStepCB) {
@@ -149,22 +158,31 @@ const RootStore = types.model({
                 throw 'Balance is empty';
             console.log("paintEthLpBalance", paintEthLpBalance);            
             const {etherscan_url} = environmentConfig;
-            console.log('asyncRegisterPaintEthLpStaking 0');
+            
             let transactionHash = '';
+            console.log('asyncRegisterPaintEthLpStaking 0');
+            if (stakingStepCB) stakingStepCB('Allow your contract.', '');
+
+            let backendSizeRegisterStakingFinished = false;
             yield requestWeb3.asyncRegisterPaintEthLpStaking(currentAccount, paintEthLpBalance, (hash)=>{
                 if (stakingStepCB) stakingStepCB('Doing contract. It take some times within 10 minutes.', etherscan_url + hash);
                 transactionHash = hash;
+                if (transactionHash) {
+                    requestBackend.asyncRegisterStaking(currentAccount, CONTRACT_TYPE_PAINT_ETH_LP_TOKEN, CHAIN_ID_PAINT_ETH_LP_TOKEN, paintEthLpBalance, transactionHash).then(res => {
+                        backendSizeRegisterStakingFinished = true;
+                    });
+                }
             });
-            console.log(`asyncRegisterPaintEthLpStaking 1, transactionHash : ${transactionHash}`);
-            if (stakingStepCB) stakingStepCB('Complete contract. Try writing contract info.', etherscan_url + transactionHash);
 
-            yield requestBackend.asyncRegisterStaking(currentAccount, CONTRACT_TYPE_PAINT_ETH_LP_TOKEN, CHAIN_ID_PAINT_ETH_LP_TOKEN, paintEthLpBalance, transactionHash);
-            console.log(`asyncRegisterPaintEthLpStaking 2`);
-            if (stakingStepCB) stakingStepCB('Complete writing contract info. Try updating LP token info', etherscan_url + transactionHash);
+            do {
+                yield sleep(1000);
+                if (backendSizeRegisterStakingFinished)
+                    break;
+            } while (true);
 
             const paintLpBalance = yield requestWeb3.asyncGetBalanceOfPaintEthLP(currentAccount);
             self.webThreeContext.setPaintEthLpBalance(paintLpBalance);
-            console.log(`asyncRegisterPaintEthLpStaking 2 - asyncGetBalanceOfPaintEthLP, paintLpBalance : ${paintLpBalance}`);
+            console.log(`asyncRegisterPaintEthLpStaking 1 - asyncGetBalanceOfPaintEthLP, paintLpBalance : ${paintLpBalance}`);
             if (stakingStepCB) stakingStepCB('Complete updating LP token info. Almost done', etherscan_url + transactionHash);
 
             yield self.asyncInitSnapshots(); // call asyncUpdatePaintEthLpStakingState
@@ -258,17 +276,26 @@ const RootStore = types.model({
 
             const approvedTokenAmount = yield requestBackend.asyncApprove(currentAccount, 0, token_type);
 
-            if (claimStepCB) claimStepCB('Doing claim contract. It take some times within 10 minutes.');
+            if (claimStepCB) claimStepCB('Allow your contract.', '');
 
             let transactionHash = '';
+
+            let backendSizeRegisterStakingFinished = false;
             yield requestWeb3.asyncClaimToken(currentAccount, token_type, approvedTokenAmount, (hash)=> {
                 if (claimStepCB) claimStepCB('Doing claim contract. It take some times within 10 minutes.', etherscan_url + hash);
                 transactionHash = hash;
+                if (transactionHash) {
+                    requestBackend.asyncClaim(currentAccount, 0, token_type, transactionHash).then(res => {
+                        backendSizeRegisterStakingFinished = true;
+                    });
+                }
             });
-            if (claimStepCB) claimStepCB('Complete claim contract. Try updating claim info.', etherscan_url + transactionHash);
-            
-            yield requestBackend.asyncClaim(currentAccount, 0, token_type, transactionHash);
-            if (claimStepCB) claimStepCB('Updating claim info. Almost done.', etherscan_url + transactionHash);
+
+            do {
+                yield sleep(1000);
+                if (backendSizeRegisterStakingFinished)
+                    break;
+            } while (true);
 
             const balanceOfReward = yield requestBackend.asyncGetReward(currentAccount, token_type);
             self.findSnapshot(token_type).setBalanceOfReward(balanceOfReward);

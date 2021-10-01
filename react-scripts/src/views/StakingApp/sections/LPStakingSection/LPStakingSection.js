@@ -166,12 +166,12 @@ const LpTStakingSection = props => {
             <br/>
             {step}
             <br/>
+            <br/>
             <div hidden={!hashUrl || hashUrl.length <= 0}>
-              <br/>
               <a href={hashUrl} target={"_blank"}>View claim transaction</a>
+              <br/>
+              <br/>
             </div>
-            <br/>
-            <br/>
           </div>);
       });
       props.closeDialog();
@@ -197,7 +197,7 @@ const LpTStakingSection = props => {
         </div>);
         try {
           await store.asyncUnstakePaintEthLp((step)=> {
-            props.showLoadingDialog("Staking NFT", 
+            props.showLoadingDialog("Unstaking NFT", 
             <div>
               Your NFT unstaking is in progress
               <br/>
