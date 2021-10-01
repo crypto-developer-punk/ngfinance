@@ -13,6 +13,7 @@ import {
   IconButton,
   Button,
   Divider,
+  Grid
 } from '@material-ui/core';
 import { Image, DarkModeToggler } from 'components/atoms';
 
@@ -39,7 +40,6 @@ const useStyles = makeStyles(theme => ({
   },
   toolbar: {
     zIndex: 999,
-    maxWidth: theme.layout.contentWidth,
     width: '100%',
     margin: '0 auto',
     padding: theme.spacing(0, 2),
@@ -49,6 +49,15 @@ const useStyles = makeStyles(theme => ({
     position: 'fixed',
     background:'white',
     borderBottom: "1px solid rgb(212, 212, 212)"
+  },
+  innerContainer: {
+    maxWidth: theme.layout.contentWidth,
+    width: '100%',
+    margin: '0 auto',
+    padding: theme.spacing(0, 2),
+    [theme.breakpoints.up('sm')]: {
+      padding: theme.spacing(0, 8),
+    },
   },
   navLink: {
     '&:hover': {
@@ -212,56 +221,58 @@ const Topbar = props => {
 
   return (
     <Toolbar disableGutters className={classes.toolbar} ref={toolbarCB}>
-      <div className={classes.logoContainer}>
-        <a href="/" title="Nostalgia Finance">
-          <Image
-            className={classes.logoImage}
-            src={Logo}
-            alt="Nostalgia Finance"
-            lazy={false}
-          />
-        </a>
-      </div>
-      <div className={classes.flexGrow} />
-      <Hidden smDown>
-        <List disablePadding className={classes.navigationContainer}>
-          {pages.map((page, idx) => {
-            return (
-              <ListItem
-                key={idx}
-                onClick={e => {
-                  e.preventDefault();
-                  window.location.href=page.href}
-                }
-                className={clsx(
-                  classes.listItem,
-                )}
-              >
-                <Typography
-                  variant="body1"
-                  color="textPrimary"
-                  style={{fontWeight: activePageId === idx ? 'bold' : 'normal'}}
-                  className={clsx(classes.listItemText, 'menu-item')}
+      <Toolbar className={classes.innerContainer}>
+        <div className={classes.logoContainer}>
+          <a href="/" title="Nostalgia Finance">
+            <Image
+              className={classes.logoImage}
+              src={Logo}
+              alt="Nostalgia Finance"
+              lazy={false}
+            />
+          </a>
+        </div>
+        <div className={classes.flexGrow} />
+        <Hidden smDown>
+          <List disablePadding className={classes.navigationContainer}>
+            {pages.map((page, idx) => {
+              return (
+                <ListItem
+                  key={idx}
+                  onClick={e => {
+                    e.preventDefault();
+                    window.location.href=page.href}
+                  }
+                  className={clsx(
+                    classes.listItem,
+                  )}
                 >
-                  {page.title}
-                </Typography>
-              </ListItem>
-            )
-          })}
+                  <Typography
+                    variant="body1"
+                    color="textPrimary"
+                    style={{fontWeight: activePageId === idx ? 'bold' : 'normal'}}
+                    className={clsx(classes.listItemText, 'menu-item')}
+                  >
+                    {page.title}
+                  </Typography>
+                </ListItem>
+              )
+            })}
 
-          <ListItem className={clsx(classes.listItem, 'menu-item--no-dropdown')}>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.listItemButton}
-              onClick={connectToWallet}
-              disabled={buttonDisabled}
-            >
-              {buttonLabel}
-            </Button>
-          </ListItem>
-        </List>
-      </Hidden>
+            <ListItem className={clsx(classes.listItem, 'menu-item--no-dropdown')}>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.listItemButton}
+                onClick={connectToWallet}
+                disabled={buttonDisabled}
+              >
+                {buttonLabel}
+              </Button>
+            </ListItem>
+          </List>
+        </Hidden>
+      </Toolbar>
     </Toolbar>
   );
 };

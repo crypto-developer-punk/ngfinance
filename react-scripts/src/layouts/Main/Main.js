@@ -38,7 +38,7 @@ const Main = ({ children, themeToggler, themeMode }) => {
           setPaddingTopbarBottom(payload.height);
           window.localStorage.setItem("paddingTopbarBottom", payload.height);
       }}/>
-      <div style={{width:'100%', paddingBottom: paddingTopbarBottom}}/>
+      <div style={{paddingBottom: paddingTopbarBottom}}/>
       <main>
         {children}
       </main>
