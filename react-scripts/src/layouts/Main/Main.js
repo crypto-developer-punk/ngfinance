@@ -16,6 +16,8 @@ const Main = ({ children, themeToggler, themeMode }) => {
   const classes = useStyles();
 
   const theme = useTheme();
+  const [paddingTopbarBottom, setPaddingTopbarBottom] = React.useState(window.localStorage.getItem("paddingTopbarBottom") || 64);
+
   const isMd = useMediaQuery(theme.breakpoints.up('md'), {
     defaultMatches: true,
   });
@@ -26,27 +28,18 @@ const Main = ({ children, themeToggler, themeMode }) => {
     {title: 'CLAIM', href: '/reward'}
   ];
 
-  const [openSidebar, setOpenSidebar] = useState(false);
-
-  const handleSidebarOpen = () => {
-    setOpenSidebar(true);
-  };
-
-  const handleSidebarClose = () => {
-    setOpenSidebar(false);
-  };
-
-  const open = isMd ? false : openSidebar;
-
   return (
     <div
       className={clsx({
         [classes.root]: true,
       })}
     >
-      <Topbar onSidebarOpen={handleSidebarOpen} pages={pages} themeMode={themeMode} themeToggler={themeToggler} />
+      <Topbar pages={pages} topbarCB={(payload)=>{
+          setPaddingTopbarBottom(payload.height);
+          window.localStorage.setItem("paddingTopbarBottom", payload.height);
+      }}/>
+      <div style={{width:'100%', paddingBottom: paddingTopbarBottom}}/>
       <main>
-        <Divider />
         {children}
       </main>
       <Footer pages={pages} />

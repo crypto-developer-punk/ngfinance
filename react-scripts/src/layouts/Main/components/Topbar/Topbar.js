@@ -12,6 +12,7 @@ import {
   Typography,
   IconButton,
   Button,
+  Divider,
 } from '@material-ui/core';
 import { Image, DarkModeToggler } from 'components/atoms';
 
@@ -45,6 +46,9 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up('sm')]: {
       padding: theme.spacing(0, 8),
     },
+    position: 'fixed',
+    background:'white',
+    borderBottom: "1px solid rgb(212, 212, 212)"
   },
   navLink: {
     '&:hover': {
@@ -142,6 +146,12 @@ const Topbar = props => {
   const { webThreeContext } = store;
   const { networkId, accounts } = web3Context;
 
+  const toolbarCB = React.useCallback(node => {
+    if (node !== null) {
+      props.topbarCB && props.topbarCB({height:node.getBoundingClientRect().height});
+    }
+  }, []);
+
   React.useEffect(() => {
     const lastItem = StringHelper.getUrlLastItem(window.location.href);
     pages.forEach((page, index) => {
@@ -201,7 +211,7 @@ const Topbar = props => {
   });
 
   return (
-    <Toolbar disableGutters className={classes.toolbar}>
+    <Toolbar disableGutters className={classes.toolbar} ref={toolbarCB}>
       <div className={classes.logoContainer}>
         <a href="/" title="Nostalgia Finance">
           <Image
@@ -250,10 +260,6 @@ const Topbar = props => {
               {buttonLabel}
             </Button>
           </ListItem>
-
-          {/* <ListItem className={clsx(classes.listItem, 'menu-item--no-dropdown')}>
-           <DarkModeToggler themeMode={themeMode} onClick={() => themeToggler()} />
-          </ListItem> */}
         </List>
       </Hidden>
     </Toolbar>
