@@ -15,7 +15,8 @@ const WithDialog = WrappedComponent => {
 
         const showErrorDialog = (err) => {
             if (!err.code) {
-                let content = JSON.stringify(err);
+                console.log(err);
+                let content = err.toString() || JSON.stringify(err);
                 setDialogOpened(true);
                 setUseCloseBtn(true);
                 setUseConfirmBtn(false);
