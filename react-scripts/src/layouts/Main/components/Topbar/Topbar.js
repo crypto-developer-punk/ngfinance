@@ -15,6 +15,7 @@ import {
   Divider,
   Grid
 } from '@material-ui/core';
+import MenuIcon from '@material-ui/icons/Menu';
 import { Image, DarkModeToggler } from 'components/atoms';
 
 import { inject, observer } from "mobx-react";
@@ -153,6 +154,7 @@ const Topbar = props => {
   const [activePageId, setActivePageId] = useState(-1);
   
   const { pages, store } = props;
+  const { onSidebarOpen } = props;
   const { webThreeContext } = store;
   const { networkId, accounts } = web3Context;
 
@@ -269,6 +271,24 @@ const Topbar = props => {
               </Button>
             </ListItem>
           </List>
+        </Hidden>
+        <Hidden mdUp>
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.listItemButton}
+            onClick={connectToWallet}
+            disabled={buttonDisabled}
+          >
+            {buttonLabel}
+          </Button>
+          <IconButton
+            className={classes.iconButton}
+            onClick={onSidebarOpen}
+            aria-label="Menu"
+          >
+            <MenuIcon />
+          </IconButton> 
         </Hidden>
       </Toolbar>
     </Toolbar>

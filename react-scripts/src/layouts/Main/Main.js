@@ -17,10 +17,19 @@ const Main = ({ children, themeToggler, themeMode }) => {
 
   const theme = useTheme();
   const [paddingTopbarBottom, setPaddingTopbarBottom] = React.useState(window.localStorage.getItem("paddingTopbarBottom") || 64);
+  const [openSidebar, setOpenSidebar] = React.useState(false);
 
   const isMd = useMediaQuery(theme.breakpoints.up('md'), {
     defaultMatches: true,
   });
+
+  const handleSidebarOpen = () => {
+    setOpenSidebar(true);
+  };
+
+  const handleSidebarClose = () => {
+    setOpenSidebar(false);
+  };
 
   const pages = [
     {title: 'OPEN SALE', href: '/opensale'},
@@ -28,16 +37,24 @@ const Main = ({ children, themeToggler, themeMode }) => {
     {title: 'CLAIM', href: '/reward'}
   ];
 
+  const open = isMd ? false : openSidebar;
+
   return (
     <div
       className={clsx({
         [classes.root]: true,
       })}
     >
-      <Topbar pages={pages} topbarCB={(payload)=>{
+      <Topbar onSidebarOpen={handleSidebarOpen} pages={pages} topbarCB={(payload)=>{
           setPaddingTopbarBottom(payload.height);
           window.localStorage.setItem("paddingTopbarBottom", payload.height);
       }}/>
+      <Sidebar
+        onClose={handleSidebarClose}
+        open={open}
+        variant="temporary"
+        pages={pages}
+      />
       <div style={{paddingBottom: paddingTopbarBottom}}/>
       <main>
         {children}
