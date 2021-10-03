@@ -1,7 +1,10 @@
 import axios from "axios";
 import {timeout, ProviderHelper} from 'myutil';
 import Config, {environmentConfig} from 'myconfig';
-import {TOKEN_TYPE_PAINT_NFT, TOKEN_TYPE_CANVAS_NFT, TOKEN_TYPE_CANVAS_PAINT_ETH_LP} from 'myconstants';
+import {
+    TOKEN_TYPE_PAINT_NFT, TOKEN_TYPE_CANVAS_NFT, TOKEN_TYPE_CANVAS_PAINT_ETH_LP, ERR_UNSUPPORTED_TOKEN_TYPE, ERR_UNSUPPORTED_CONTRACT_TYPE, 
+    assertSupportedTokenType, assertSupportedContractType
+} from 'myconstants';
 
 const Web3 = require('web3');
 
@@ -82,7 +85,7 @@ class RequestWeb3 {
         }
 
         if (!contractAbi || !contractAddress) {
-            throw `${token_type} token type is not supported`;
+            assertSupportedTokenType(token_type);
         }
 
         let contract = new this.lib.eth.Contract(contractAbi, contractAddress, {
@@ -104,9 +107,10 @@ class RequestWeb3 {
     };
 
     asyncGetBalanceOfNft = async(contract_type, nft_chain_id, connected_addr) => {
+        assertSupportedContractType(contract_type);
+
         const nftContract = await this.#asyncGetNftContract(connected_addr, contract_type, false);
-        // TODO 
-        // console.log('aaa', contract_type, nft_chain_id);
+
         let balanceOfNft = 0;
         if (contract_type === 721) {
             let addressOfOwner = await nftContract.methods.ownerOf(nft_chain_id).call();
@@ -117,15 +121,15 @@ class RequestWeb3 {
             }
         } else if (contract_type === 1155){
             balanceOfNft = await nftContract.methods.balanceOf(connected_addr, nft_chain_id).call();
-        } else {
-            throw 'unsurported contract_type';
-        }
+        } 
         // TODO aaa
         // console.log(`aaa nft_chain_id: ${nft_chain_id}, contract_type: ${contract_type}, balanceOfNft: ${balanceOfNft}`);
         return parseFloat(balanceOfNft);
     };
 
     asyncRegisterNftStaking = async(fromAddress, contract_type, nft_chain_id, amountOfNft, transactionHashCB) => {
+        assertSupportedContractType(contract_type);
+        
         const {toStakingAddress} = environmentConfig;
         if (contract_type === 721) {
             return await this.asyncSafeTransferFrom721(fromAddress, toStakingAddress, nft_chain_id, (hash)=>{
@@ -135,9 +139,7 @@ class RequestWeb3 {
             return await this.asyncSafeTransferFrom1155(fromAddress, toStakingAddress, nft_chain_id, amountOfNft, (hash)=>{
                 if (transactionHashCB) transactionHashCB(hash);
             });
-        } else {
-            throw 'unsurported contract_type';
-        }
+        } 
     };
 
     asyncMockRegisterNftStaking = async(fromAddress, nft_chain_id, amountOfNft, transactionHashCB) => {
@@ -195,6 +197,8 @@ class RequestWeb3 {
     // privates methods
 
     #asyncGetNftContract = async(connected_addr, contract_type, fast) => {
+        assertSupportedContractType(contract_type);
+        
         const {ETHERSCAN_IO_GAS_PRICE_URL, NFT_CONTRACT_ERC_1155_ABI, NFT_CONTRACT_ERC_1155_ADDRESS, NFT_CONTRACT_ERC_721_ABI, NFT_CONTRACT_ERC_721_ADDRESS} = environmentConfig;
         let option = {
             from: connected_addr,
@@ -206,8 +210,6 @@ class RequestWeb3 {
             return new this.lib.eth.Contract(NFT_CONTRACT_ERC_721_ABI, NFT_CONTRACT_ERC_721_ADDRESS, option);
         } else if (contract_type === 1155){
             return new this.lib.eth.Contract(NFT_CONTRACT_ERC_1155_ABI, NFT_CONTRACT_ERC_1155_ADDRESS, option);
-        } else {
-            throw 'unsurported contract_type'
         }
     };
 

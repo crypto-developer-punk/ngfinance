@@ -1,6 +1,9 @@
 import axios from "axios";
 import {environmentConfig} from 'myconfig';
-import {isSupportedTokenType, ERR_LIMIT_LOCKUP_NFT, ERR_UNSKAKING_INPROGRESS} from "myconstants";
+import {
+    assertSupportedTokenType, ERR_LIMIT_LOCKUP_NFT, ERR_UNSKAKING_INPROGRESS, ERR_BACKEND_RESPONSE, 
+    assertBackendResponseStatus
+} from "myconstants";
 
 class RequestBackend {
     constructor() {
@@ -67,8 +70,8 @@ class RequestBackend {
         
         // console.log('aaa', `${this.backend_url}/staking`, my_address, contract_type, nft_chain_id);
         const {status, data} = await axios.get(`${this.backend_url}/staking`, { params, headers: this.#getRequestHeaders(my_address) });
-        if (!status === 200)
-            throw `asyncGetStaked - ${status} error`;
+        assertBackendResponseStatus(status, 'asyncGetStaked');
+
         if (!data) 
             return {last_staked_time: null, token_amount: null, in_progress: null};
         const {last_staked_time, nft_amount, in_progress} = data
@@ -76,23 +79,21 @@ class RequestBackend {
     };
     
     asyncGetTotalValueLockedNftAmount = async(my_address, token_type) => {
-        if (!isSupportedTokenType(token_type)) 
-            throw `token type value : ${token_type}, it is not supported.`;
+        assertSupportedTokenType(token_type);
 
         const params = {
             "token_type": token_type
         };
 
         const {status, data} = await axios.get(`${this.backend_url}/staking/getTotalValueLockedNftAmount`, { params : params, headers: this.#getRequestHeaders(my_address)});
-        if (!status === 200)
-            throw `asyncGetTotalValueLockedNftAmount - ${status} error`;
+        assertBackendResponseStatus(status);
+
         const totalValueLockedNftAmount = data && data.length > 0 ? (data[0].totalValueLockedNftAmount || 0) : 0;
         return totalValueLockedNftAmount;
     };
     
     asyncSnapshotAndReward = async(my_address, token_type) => {
-        if (!isSupportedTokenType(token_type)) 
-            throw `token type value : ${token_type}, it is not supported.`;
+        assertSupportedTokenType(token_type);
 
         const data = {
             "token_type": token_type
@@ -103,8 +104,7 @@ class RequestBackend {
     };
 
     asyncGetReward = async(my_address, token_type) => {
-        if (!isSupportedTokenType(token_type)) 
-            throw `token type value : ${token_type}, it is not supported.`;
+        assertSupportedTokenType(token_type);
 
         const params = {
             "address": my_address,
@@ -112,15 +112,14 @@ class RequestBackend {
         };
     
         const {status, data} = await axios.get(`${this.backend_url}/reward`, { params : params, headers: this.#getRequestHeaders(my_address) });
-        if (!status === 200)
-            throw `asyncGetReward - ${status} error`;
+        assertBackendResponseStatus(status, 'asyncGetReward');
+
         const tokenAmount = data && data.length > 0 ? (data[0].token_amount || 0) : 0;
         return tokenAmount;
     };
 
     asyncApprove = async(my_address, nft_chain_id, token_type) => {
-        if (!isSupportedTokenType(token_type)) 
-            throw `token type value : ${token_type}, it is not supported.`;
+        assertSupportedTokenType(token_type);
 
         const params = {
             "address": my_address,
@@ -129,15 +128,14 @@ class RequestBackend {
         };
     
         const {status, data} = await axios.post(`${this.backend_url}/reward/approve`, params, {headers: this.#getRequestHeaders(my_address)});
-        if (!status === 200)
-            throw `asyncApprove - ${status} error`;
+        assertBackendResponseStatus(status, 'asyncApprove');
+
         const {approved_token_amount} = data;
         return approved_token_amount;
     };
 
     asyncClaim = async(my_address, nft_chain_id, token_type, transactionHash) => {
-        if (!isSupportedTokenType(token_type)) 
-            throw `token type value : ${token_type}, it is not supported.`;
+        assertSupportedTokenType(token_type);
 
         const data = {
             "address": my_address,
@@ -149,16 +147,15 @@ class RequestBackend {
     };
 
     asyncGetSnapshotTime = async(my_address, token_type) => {
-        if (!isSupportedTokenType(token_type)) 
-            throw `token type value : ${token_type}, it is not supported.`;
+        assertSupportedTokenType(token_type);
 
         const params = {
             "token_type": token_type
         };
     
         const {status, data} = await axios.get(`${this.backend_url}/snapshot/latest`, { params : params , headers: this.#getRequestHeaders(my_address)});
-        if (status !== 200)
-            throw `asyncGetSnapshot - ${status} error`
+        assertBackendResponseStatus(status, 'asyncGetSnapshotTime');
+
         const {snapshot_time} = data[0]; 
         return snapshot_time;
     };
@@ -166,6 +163,8 @@ class RequestBackend {
     getNftInfo = async(my_address) => {
         return axios.get(`${this.backend_url}/nft/all`, {headers: this.#getRequestHeaders(my_address)});
     };
+
+    // private methods
 
     #getRequestHeaders = (address) => {
         return {"x-ngf-address": address};

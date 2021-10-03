@@ -9,9 +9,9 @@ import requestBackend from 'api/requestBackend';
 import requestWeb3 from 'api/requestWeb3';
 import Snapshot from "./model/Snapshot";
 
-import { TOKEN_TYPE_PAINT_NFT, TOKEN_TYPE_CANVAS_NFT, TOKEN_TYPE_CANVAS_PAINT_ETH_LP, isSupportedTokenType} from "myconstants";
+import { TOKEN_TYPE_PAINT_NFT, TOKEN_TYPE_CANVAS_NFT, TOKEN_TYPE_CANVAS_PAINT_ETH_LP, assertSupportedTokenType, assertTimeoutError} from "myconstants";
 import { CHAIN_ID_PAINT_ETH_LP_TOKEN, CONTRACT_TYPE_PAINT_ETH_LP_TOKEN } from "myconstants";
-import { ERR_WALLET_IS_NOT_CONNECTED, ERR_UNSKAKING_INPROGRESS } from "myconstants";
+import { ERR_WALLET_IS_NOT_CONNECTED, ERR_RESPONSE_TIMEOUT } from "myconstants";
 import {environmentConfig} from 'myconfig';
 import {sleep} from "myutil";
 
@@ -113,20 +113,20 @@ const RootStore = types.model({
             const {nft_chain_id, contract_type, balance} = nft;
             if (balance <= 0) 
                throw 'Target nft balance is empty' 
-            // const nftWebThreeContext = self.nftWebThreeContextMap.get(nft_chain_id);
-            // if (!nftWebThreeContext)
-                // throw 'Target nft balance is empty'
-            // const {balance} = nftWebThreeContext;
+
+            // assertTimeoutError(1000 * 6 * 5000);
 
             let transactionHash = '';
             console.log(`RegisterNftStaking 0 - currentAccount : ${currentAccount}, nft_chain_id : ${nft_chain_id}, balance : ${balance}`);
             if (stakingStepCB) stakingStepCB('Allow your contract.', '');
 
+            let accTime = 0;
             let backendSizeRegisterStakingFinished = false;
             yield requestWeb3.asyncRegisterNftStaking(currentAccount, contract_type, nft_chain_id, balance, (hash)=>{
                 if (stakingStepCB) stakingStepCB('Doing contract. It take some times within 10 minutes.', etherscan_url + hash);
                 transactionHash = hash;
                 if (transactionHash) {
+                    accTime = 0;
                     requestBackend.asyncRegisterStaking(currentAccount, contract_type, nft_chain_id, balance, transactionHash).then(res => {
                         backendSizeRegisterStakingFinished = true;
                     });   
@@ -137,6 +137,8 @@ const RootStore = types.model({
                 yield sleep(1000);
                 if (backendSizeRegisterStakingFinished)
                     break;
+                accTime += 1000;
+                assertTimeoutError(accTime);    
             } while (true);
 
             console.log(`RegisterNftStaking 1 - asyncRegisterStaking`);
@@ -163,11 +165,13 @@ const RootStore = types.model({
             console.log('asyncRegisterPaintEthLpStaking 0');
             if (stakingStepCB) stakingStepCB('Allow your contract.', '');
 
+            let accTime = 0;
             let backendSizeRegisterStakingFinished = false;
             yield requestWeb3.asyncRegisterPaintEthLpStaking(currentAccount, paintEthLpBalance, (hash)=>{
                 if (stakingStepCB) stakingStepCB('Doing contract. It take some times within 10 minutes.', etherscan_url + hash);
                 transactionHash = hash;
                 if (transactionHash) {
+                    accTime = 0;
                     requestBackend.asyncRegisterStaking(currentAccount, CONTRACT_TYPE_PAINT_ETH_LP_TOKEN, CHAIN_ID_PAINT_ETH_LP_TOKEN, paintEthLpBalance, transactionHash).then(res => {
                         backendSizeRegisterStakingFinished = true;
                     });
@@ -178,6 +182,8 @@ const RootStore = types.model({
                 yield sleep(1000);
                 if (backendSizeRegisterStakingFinished)
                     break;
+                accTime += 1000;
+                assertTimeoutError(accTime);
             } while (true);
 
             const paintLpBalance = yield requestWeb3.asyncGetBalanceOfPaintEthLP(currentAccount);
@@ -266,9 +272,8 @@ const RootStore = types.model({
             if (unstakingStepCB) unstakingStepCB('Complete.');
         }),
         asyncClaimToken: flow(function* (token_type, claimStepCB) {
-            if (!isSupportedTokenType(token_type)) 
-                throw `token type value : ${token_type}, it is not supported.`;
-            
+            assertSupportedTokenType(token_type);
+
             const {etherscan_url} = environmentConfig;
             const {currentAccount, isWalletConnected} = self.webThreeContext;
             if (!isWalletConnected)
@@ -280,11 +285,13 @@ const RootStore = types.model({
 
             let transactionHash = '';
 
+            let accTime = 0;
             let backendSizeRegisterStakingFinished = false;
             yield requestWeb3.asyncClaimToken(currentAccount, token_type, approvedTokenAmount, (hash)=> {
                 if (claimStepCB) claimStepCB('Doing claim contract. It take some times within 10 minutes.', etherscan_url + hash);
                 transactionHash = hash;
                 if (transactionHash) {
+                    accTime = 0;
                     requestBackend.asyncClaim(currentAccount, 0, token_type, transactionHash).then(res => {
                         backendSizeRegisterStakingFinished = true;
                     });
@@ -295,6 +302,8 @@ const RootStore = types.model({
                 yield sleep(1000);
                 if (backendSizeRegisterStakingFinished)
                     break;
+                accTime += 1000;
+                assertTimeoutError(accTime);
             } while (true);
 
             const balanceOfReward = yield requestBackend.asyncGetReward(currentAccount, token_type);

@@ -1,6 +1,10 @@
 import React from 'react';
 import MyAlertDialog from "widget/MyAlertDialog";
-import { ERR_WALLET_IS_NOT_CONNECTED, ERR_LIMIT_LOCKUP_NFT, ERR_UNSKAKING_INPROGRESS } from "myconstants";
+import { 
+    ERR_WALLET_IS_NOT_CONNECTED, ERR_LIMIT_LOCKUP_NFT, ERR_UNSKAKING_INPROGRESS,
+    ERR_UNSUPPORTED_TOKEN_TYPE, ERR_UNSUPPORTED_CONTRACT_TYPE, ERR_BACKEND_RESPONSE, 
+    ERR_RESPONSE_TIMEOUT,
+} from "myconstants";
 
 const WithDialog = WrappedComponent => {
     const Component = props => {
@@ -26,14 +30,24 @@ const WithDialog = WrappedComponent => {
                 dialogModeStateRef.current = 'error';
             } else if (err.code === ERR_WALLET_IS_NOT_CONNECTED){
                 showInfoDialog(err.msg);
-                // showForceDialog(err.msg);
             } else if (err.code === ERR_LIMIT_LOCKUP_NFT) {
                 showDialog("You can't unstake your NFT.", err.msg);
             } else if (err.code === ERR_UNSKAKING_INPROGRESS) {
                 showDialog("You can't unstake your NFT.", <div>{err.msg}If problem is continued or takes long time, please contract to developer</div>);
             } else if (err.code === 4001) {
                 closeDialog();
-                return;
+            } else if (
+                err.code === ERR_UNSUPPORTED_TOKEN_TYPE || err.code === ERR_UNSUPPORTED_CONTRACT_TYPE || err.code === ERR_BACKEND_RESPONSE ||
+                err.code === ERR_RESPONSE_TIMEOUT
+            ) {
+                setDialogOpened(true);
+                setUseCloseBtn(true);
+                setUseConfirmBtn(false);
+                setLoading(false);
+                console.log(err.msg);
+                setDialogContent(<div>Error Content<br/>{`${err.msg}`}<br/><br/>{`If problem is continued, please contract to developer`} </div>);
+                setDialogTitle("Error occured");
+                dialogModeStateRef.current = 'error';
             }
         };
 
