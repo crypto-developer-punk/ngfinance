@@ -54,7 +54,7 @@ const RootStore = types.model({
         }),
         asyncInitNftInfos: flow(function* (){
             const {currentAccount, isWalletConnected, networkId} = self.webThreeContext;
-            assertNetworkIdAndWalletConnect(networkId, isWalletConnected);
+            // assertNetworkIdAndWalletConnect(networkId, isWalletConnected);
 
             const res = yield requestBackend.getNftInfo(currentAccount);
             for (let i = 0; i < res.data.length; i++) {
