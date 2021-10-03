@@ -23,7 +23,7 @@ const WebThreeContext = types.model('WebThreeContext', {
     },
 })).views(self => ({
     get isWalletConnected() {
-        return self.isValidNetwork && self.accounts.length > 0;
+        return self.accounts.length > 0;
     },
     get isValidNetwork() {
         return self.networkId === 1 || self.networkId === 4;

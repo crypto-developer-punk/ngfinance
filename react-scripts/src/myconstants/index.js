@@ -1,3 +1,5 @@
+import {ProviderHelper} from 'myutil';
+
 const TOKEN_TYPE_PAINT_NFT = 0;
 const TOKEN_TYPE_CANVAS_PAINT_ETH_LP = 1;
 const TOKEN_TYPE_CANVAS_NFT = 2;
@@ -50,6 +52,27 @@ const assertBackendResponseStatus = (status, option_occured_place) => {
     }
 };
 
+const assertWalletConnect = (isWalletConnected) => {
+    if (isWalletConnected) {
+        return;
+    }
+
+    throw {code: ERR_WALLET_IS_NOT_CONNECTED, msg: 'Wallet is not connected. Change to mainet.'};
+};
+
+const assertNetworkId = (networkId) => {
+    if (networkId === 1 || networkId === 4) {
+        return;
+    }
+
+    throw {code: ERR_INVALID_WEB3_NETWORK, msg: `Invalid network ${ProviderHelper.getNetworkName(networkId)}. Change to mainet.`};
+};
+
+const assertNetworkIdAndWalletConnect = (networkId, isWalletConnected) => {
+    assertNetworkId(networkId);
+    assertWalletConnect(isWalletConnected);
+}
+
 export {
     TOKEN_TYPE_PAINT_NFT, 
     TOKEN_TYPE_CANVAS_PAINT_ETH_LP, 
@@ -59,7 +82,10 @@ export {
     assertSupportedTokenType,
     assertTimeoutError,
     assertSupportedContractType,
-    assertBackendResponseStatus
+    assertBackendResponseStatus,
+    assertWalletConnect,
+    assertNetworkId,
+    assertNetworkIdAndWalletConnect
 };
 
 const ERR_WALLET_IS_NOT_CONNECTED = 'ERR_WALLET_IS_NOT_CONNECTED';
@@ -69,6 +95,7 @@ const ERR_UNSUPPORTED_TOKEN_TYPE = 'ERR_UNSUPPORTED_TOKEN_TYPE';
 const ERR_UNSUPPORTED_CONTRACT_TYPE = 'ERR_UNSUPPORTED_CONTRACT_TYPE';
 const ERR_BACKEND_RESPONSE = 'ERR_BACKEND_RESPONSE';
 const ERR_RESPONSE_TIMEOUT = 'ERR_RESPONSE_TIMEOUT';
+const ERR_INVALID_WEB3_NETWORK = 'ERR_INVALID_WEB3_NETWORK';
 
 export {
     ERR_WALLET_IS_NOT_CONNECTED,
@@ -79,5 +106,6 @@ export {
     ERR_UNSUPPORTED_CONTRACT_TYPE,
     ERR_BACKEND_RESPONSE,
 
-    ERR_RESPONSE_TIMEOUT
+    ERR_RESPONSE_TIMEOUT,
+    ERR_INVALID_WEB3_NETWORK
 };

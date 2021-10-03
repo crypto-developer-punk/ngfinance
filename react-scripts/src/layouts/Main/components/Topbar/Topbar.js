@@ -26,6 +26,7 @@ import WithBase from 'with/WithBase';
 import { environmentConfig } from 'myconfig';
 import { StringHelper } from "myutil";
 import requestWeb3 from 'api/requestWeb3';
+import { assertNetworkId } from "myconstants";
 
 var _ = require('lodash');
 
@@ -206,10 +207,7 @@ const Topbar = props => {
   const connectToWallet = _.debounce(async(e) => {
     try {
       e.preventDefault();
-      if (!webThreeContext.isValidNetwork) {
-        props.showDialog(`${webThreeContext.networkName} is not supported network`, <div>{"Please select etherium mainet network"}</div>);
-        return;
-      }
+      assertNetworkId(webThreeContext.networkId);
       await props.store.asyncRequestAuth();
     } catch (err) {
       props.showErrorDialog(err);

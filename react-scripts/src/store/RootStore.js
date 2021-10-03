@@ -9,9 +9,9 @@ import requestBackend from 'api/requestBackend';
 import requestWeb3 from 'api/requestWeb3';
 import Snapshot from "./model/Snapshot";
 
-import { TOKEN_TYPE_PAINT_NFT, TOKEN_TYPE_CANVAS_NFT, TOKEN_TYPE_CANVAS_PAINT_ETH_LP, assertSupportedTokenType, assertTimeoutError} from "myconstants";
+import { TOKEN_TYPE_PAINT_NFT, TOKEN_TYPE_CANVAS_NFT, TOKEN_TYPE_CANVAS_PAINT_ETH_LP} from "myconstants";
+import { assertSupportedTokenType, assertTimeoutError, assertNetworkIdAndWalletConnect } from "myconstants";
 import { CHAIN_ID_PAINT_ETH_LP_TOKEN, CONTRACT_TYPE_PAINT_ETH_LP_TOKEN } from "myconstants";
-import { ERR_WALLET_IS_NOT_CONNECTED, ERR_RESPONSE_TIMEOUT } from "myconstants";
 import {environmentConfig} from 'myconfig';
 import {sleep} from "myutil";
 
@@ -21,7 +21,6 @@ const RootStore = types.model({
     name: types.optional(types.string, "test"),
     lockingMap: types.map(Locking),
     nftMap: types.map(Nft),
-    // nftWebThreeContextMap: types.map(NftWebThreeContext),
     rewordMap: types.map(Reword),
     snapshotMap: types.map(Snapshot),
     nftStakingMap: types.map(Staking),
@@ -54,9 +53,8 @@ const RootStore = types.model({
             self.webThreeContext.setAccounts(accounts);
         }),
         asyncInitNftInfos: flow(function* (){
-            const {currentAccount, isWalletConnected} = self.webThreeContext;
-            // if (!isWalletConnected) 
-            //     throw {code: ERR_WALLET_IS_NOT_CONNECTED, msg: 'Wallet is not connected. Change to mainet.'};
+            const {currentAccount, isWalletConnected, networkId} = self.webThreeContext;
+            assertNetworkIdAndWalletConnect(networkId, isWalletConnected);
 
             const res = yield requestBackend.getNftInfo(currentAccount);
             for (let i = 0; i < res.data.length; i++) {
@@ -70,9 +68,8 @@ const RootStore = types.model({
             }
         }),
         asyncInitSnapshots: flow(function* (){ 
-            const {currentAccount, isWalletConnected} = self.webThreeContext;
-            if (!isWalletConnected) 
-                throw {code: ERR_WALLET_IS_NOT_CONNECTED, msg: 'Wallet is not connected. Change to mainet.'};
+            const {currentAccount, isWalletConnected, networkId} = self.webThreeContext;
+            assertNetworkIdAndWalletConnect(networkId, isWalletConnected);
 
             const paint_snapshot_time = yield requestBackend.asyncGetSnapshotTime(currentAccount, TOKEN_TYPE_PAINT_NFT); 
             const paint_total_value_locked_nft_amount = yield requestBackend.asyncGetTotalValueLockedNftAmount(currentAccount, TOKEN_TYPE_PAINT_NFT);
@@ -105,16 +102,15 @@ const RootStore = types.model({
             yield self.asyncUpdatePaintEthLpStakingState();
         }),
         asyncRegisterNftStaking: flow(function* (nft, stakingStepCB) {
-            const {currentAccount, isWalletConnected} = self.webThreeContext;
-            if (!isWalletConnected)
-                throw {code: ERR_WALLET_IS_NOT_CONNECTED, msg: 'Wallet is not connected. Change to mainet.'};
+            const {currentAccount, isWalletConnected, networkId} = self.webThreeContext;
+            assertNetworkIdAndWalletConnect(networkId, isWalletConnected);
             
             const {etherscan_url} = environmentConfig;
             const {nft_chain_id, contract_type, balance} = nft;
             if (balance <= 0) 
                throw 'Target nft balance is empty' 
 
-            // assertTimeoutError(1000 * 6 * 5000);
+            // assertTimeoutError(1000 * 6 * 5000); // for test
 
             let transactionHash = '';
             console.log(`RegisterNftStaking 0 - currentAccount : ${currentAccount}, nft_chain_id : ${nft_chain_id}, balance : ${balance}`);
@@ -153,9 +149,9 @@ const RootStore = types.model({
             if (stakingStepCB) stakingStepCB('Complete.', etherscan_url + transactionHash);
         }),
         asyncRegisterPaintEthLpStaking: flow(function*(stakingStepCB) {
-            const {currentAccount, isWalletConnected, paintEthLpBalance} = self.webThreeContext;
-            if (!isWalletConnected)
-                throw {code: ERR_WALLET_IS_NOT_CONNECTED, msg: 'Wallet is not connected. Change to mainet.'};
+            const {currentAccount, isWalletConnected, networkId, paintEthLpBalance} = self.webThreeContext;
+            assertNetworkIdAndWalletConnect(networkId, isWalletConnected);
+
             if (paintEthLpBalance <= 0) 
                 throw 'Balance is empty';
             console.log("paintEthLpBalance", paintEthLpBalance);            
@@ -195,29 +191,26 @@ const RootStore = types.model({
             if (stakingStepCB) stakingStepCB('Complete.', etherscan_url + transactionHash);
         }),
         asyncUpdateNftBalance: flow(function* (nft) {
-            const {currentAccount, isWalletConnected} = self.webThreeContext;
-            if (!isWalletConnected)
-                throw {code: ERR_WALLET_IS_NOT_CONNECTED, msg: 'Wallet is not connected. Change to mainet.'};
-            
+            const {currentAccount, isWalletConnected, networkId} = self.webThreeContext;
+            assertNetworkIdAndWalletConnect(networkId, isWalletConnected);
+
             const {nft_chain_id, contract_type} = nft;
             const newNftBalance = yield requestWeb3.asyncGetBalanceOfNft(contract_type, nft_chain_id, currentAccount);
             nft.setBalance(newNftBalance);
         }), 
         asyncUpdateNftStakingState: flow(function* (nft){
-            const {currentAccount, isWalletConnected} = self.webThreeContext;
-            if (!isWalletConnected)
-                throw {code: ERR_WALLET_IS_NOT_CONNECTED, msg: 'Wallet is not connected. Change to mainet.'};
-            
+            const {currentAccount, isWalletConnected, networkId} = self.webThreeContext;
+            assertNetworkIdAndWalletConnect(networkId, isWalletConnected);
+
             const {nft_chain_id, contract_type} = nft;
             const {last_staked_time, token_amount, in_progress} = yield requestBackend.asyncGetStaked(currentAccount, contract_type, nft_chain_id);
             if (!last_staked_time) return;
             self.nftStakingMap.set(nft_chain_id, Staking.create({id: nft_chain_id, last_staked_time: new Date(last_staked_time), token_amount}));
         }),
         asyncUpdatePaintEthLpStakingState: flow(function* () {
-            const {currentAccount, isWalletConnected} = self.webThreeContext;
-            if (!isWalletConnected)
-                throw {code: ERR_WALLET_IS_NOT_CONNECTED, msg: 'Wallet is not connected. Change to mainet.'};
-
+            const {currentAccount, isWalletConnected, networkId} = self.webThreeContext;
+            assertNetworkIdAndWalletConnect(networkId, isWalletConnected);
+            
             const {last_staked_time, token_amount, in_progress} = yield requestBackend.asyncGetStaked(currentAccount, CONTRACT_TYPE_PAINT_ETH_LP_TOKEN, CHAIN_ID_PAINT_ETH_LP_TOKEN);
             if (!last_staked_time) return;
             self.paintEthLpStaking.setStakedTime(new Date(last_staked_time));
@@ -225,9 +218,8 @@ const RootStore = types.model({
             console.log(`asyncUpdatePaintEthLpStakingState - last_staked_time : ${last_staked_time}, token_amount : ${token_amount}`);
         }),
         asyncUnstakeNft: flow(function* (nft, unstakingStepCB) {
-            const {currentAccount, isWalletConnected} = self.webThreeContext;
-            if (!isWalletConnected)
-                throw {code: ERR_WALLET_IS_NOT_CONNECTED, msg: 'Wallet is not connected. Change to mainet.'};
+            const {currentAccount, isWalletConnected, networkId} = self.webThreeContext;
+            assertNetworkIdAndWalletConnect(networkId, isWalletConnected);
 
             const {nft_chain_id, contract_type} = nft;
             console.log(`Unstake 0 currentAccount : ${currentAccount}, nft_chain_id : ${nft_chain_id}, contract_type : ${contract_type}`);
@@ -248,9 +240,8 @@ const RootStore = types.model({
             if (unstakingStepCB) unstakingStepCB('Complete.');
         }),
         asyncUnstakePaintEthLp: flow(function* (unstakingStepCB) {
-            const {currentAccount, isWalletConnected} = self.webThreeContext;
-            if (!isWalletConnected)
-                throw {code: ERR_WALLET_IS_NOT_CONNECTED, msg: 'Wallet is not connected. Change to mainet.'};
+            const {currentAccount, isWalletConnected, networkId} = self.webThreeContext;
+            assertNetworkIdAndWalletConnect(networkId, isWalletConnected);
             
             const {etherscan_url} = environmentConfig;
 
@@ -275,9 +266,8 @@ const RootStore = types.model({
             assertSupportedTokenType(token_type);
 
             const {etherscan_url} = environmentConfig;
-            const {currentAccount, isWalletConnected} = self.webThreeContext;
-            if (!isWalletConnected)
-                throw {code: ERR_WALLET_IS_NOT_CONNECTED, msg: 'Wallet is not connected. Change to mainet.'};
+            const {currentAccount, isWalletConnected, networkId} = self.webThreeContext;
+            assertNetworkIdAndWalletConnect(networkId, isWalletConnected);
 
             const approvedTokenAmount = yield requestBackend.asyncApprove(currentAccount, 0, token_type);
 

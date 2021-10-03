@@ -3,7 +3,7 @@ import MyAlertDialog from "widget/MyAlertDialog";
 import { 
     ERR_WALLET_IS_NOT_CONNECTED, ERR_LIMIT_LOCKUP_NFT, ERR_UNSKAKING_INPROGRESS,
     ERR_UNSUPPORTED_TOKEN_TYPE, ERR_UNSUPPORTED_CONTRACT_TYPE, ERR_BACKEND_RESPONSE, 
-    ERR_RESPONSE_TIMEOUT,
+    ERR_RESPONSE_TIMEOUT, ERR_INVALID_WEB3_NETWORK
 } from "myconstants";
 
 const WithDialog = WrappedComponent => {
@@ -28,7 +28,7 @@ const WithDialog = WrappedComponent => {
                 setDialogContent(<div>Error Content<br/>{`${content}`}<br/><br/>{`If problem is continued, please contract to developer`} </div>);
                 setDialogTitle("Error occured");
                 dialogModeStateRef.current = 'error';
-            } else if (err.code === ERR_WALLET_IS_NOT_CONNECTED){
+            } else if (err.code === ERR_WALLET_IS_NOT_CONNECTED || err.code === ERR_INVALID_WEB3_NETWORK){
                 showInfoDialog(err.msg);
             } else if (err.code === ERR_LIMIT_LOCKUP_NFT) {
                 showDialog("You can't unstake your NFT.", err.msg);
