@@ -8,7 +8,7 @@ import {Redirect, Route, Switch} from 'react-router-dom';
 import WithLayout from 'WithLayout';
 import {Main as MainLayout, Minimal as MinimalLayout} from './layouts';
 
-import {StakingApp, NostalgiaIndex, NotFoundCover as NotFoundCoverView, RewardApp, OpenSaleApp} from './views';
+import {StakingApp, NostalgiaIndex, NotFoundCover as NotFoundCoverView, RewardApp, OpenSaleApp, NFTApp} from './views';
 
 const Routes = () => {
   return (
@@ -35,16 +35,38 @@ const Routes = () => {
                 />
             )}
         />
+        <Route 
+          exact
+          path="/opensale"
+          render={matchProps=>(
+            <WithLayout
+              {...matchProps}
+              component={OpenSaleApp}
+              layout={MainLayout}
+            />
+          )}
+        />
         <Route
-            exact
-            path="/app"
-            render={matchProps => (
-                <WithLayout
-                  {...matchProps}
-                  component={StakingApp}
-                  layout={MainLayout}
-                />
-            )}
+          exact
+          path="/app"
+          render={matchProps => (
+              <WithLayout
+                {...matchProps}
+                component={NFTApp}
+                layout={MainLayout}
+              />
+          )}
+        />        
+        <Route
+          exact
+          path="/staking"
+          render={matchProps => (
+              <WithLayout
+                {...matchProps}
+                component={StakingApp}
+                layout={MainLayout}
+              />
+          )}
         />
         <Route
           exact
@@ -53,17 +75,6 @@ const Routes = () => {
             <WithLayout 
               {...matchProps}
               component={RewardApp}
-              layout={MainLayout}
-            />
-          )}
-        />
-        <Route 
-          exact
-          path="/opensale"
-          render={matchProps=>(
-            <WithLayout
-              {...matchProps}
-              component={OpenSaleApp}
               layout={MainLayout}
             />
           )}

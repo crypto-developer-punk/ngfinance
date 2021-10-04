@@ -1,4 +1,5 @@
 import { types, flow } from "mobx-state-tree";
+import {values, map} from 'mobx';
 import Locking from './model/Locking';
 import Nft from './model/Nft';
 // import NftWebThreeContext from './model/NftWebThreeContext';
@@ -342,6 +343,9 @@ const RootStore = types.model({
             return Snapshot.create();
         } 
         return self.snapshotMap.get(TOKEN_TYPE_CANVAS_PAINT_ETH_LP);
+    },
+    get NFTArr() {
+        return values(self.nftMap);
     }
 }));
 

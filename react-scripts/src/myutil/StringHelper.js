@@ -11,6 +11,15 @@ class StringHelper {
         const postfix = addr.substring(addr.length-4);
         return prefix + "..." + postfix;
     };
+
+    static isMp4Url = (url) => {
+        const extension = url.split(/[#?]/)[0].split('.').pop().trim();
+    
+        if (extension === "mp4") {
+          return true;
+        }
+        return false;
+    };
 }
 
 export default StringHelper;

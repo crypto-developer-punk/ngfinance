@@ -22,6 +22,18 @@ const useStyles = makeStyles(theme => ({
   listItem: {
     flexDirection: 'column',
     alignItems: 'flex-start',
+    cursor: 'pointer',
+    '&:hover > .menu-item, &:hover svg': {
+      color: theme.palette.primary.dark,
+    },
+    '&.menu-item--no-dropdown': {
+      paddingRight: 0,
+    },
+  },
+  listItemText: {
+    flex: '0 0 auto',
+    marginRight: theme.spacing(2),
+    whiteSpace: 'nowrap',
   },
   navLink: {
     '&:hover': {
@@ -73,9 +85,9 @@ const SidebarNav = props => {
   return (
     <List {...rest} className={clsx(classes.root, className)}>
       <ListItem className={classes.closeIcon} onClick={() => onClose()}>
-        <ListItemIcon className={classes.listItemIcon}>
+        {/* <ListItemIcon className={classes.listItemIcon}>
           <CloseIcon fontSize="small" />
-        </ListItemIcon>
+        </ListItemIcon> */}
       </ListItem>
       {
         pages.map((page, idx) => {
@@ -89,6 +101,7 @@ const SidebarNav = props => {
               }
               className={classes.listItem}>
               <Typography variant="h6" color="textPrimary" gutterBottom 
+                className={clsx(classes.listItemText, 'menu-item')}
                 style={{fontWeight: activePageId === idx ? 'bold' : 'normal'}}>
                 {page.title}
               </Typography>

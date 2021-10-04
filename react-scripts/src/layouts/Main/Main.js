@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Main = ({ children, themeToggler, themeMode }) => {
+const Main = ({ children }) => {
   const classes = useStyles();
 
   const theme = useTheme();
@@ -33,7 +33,8 @@ const Main = ({ children, themeToggler, themeMode }) => {
 
   const pages = [
     {title: 'OPEN SALE', href: '/opensale'},
-    {title: 'STAKING', href: '/app'},
+    {title: 'NFT', href: '/app'},
+    {title: 'STAKING', href: '/staking'},
     {title: 'CLAIM', href: '/reward'}
   ];
 

@@ -10,7 +10,7 @@ import {SectionHeader} from 'components/molecules';
 import {CardBase, Section} from "components/organisms";
 import CanvasToken from "assets/images/main/logo_canvas_token.svg";
 
-import {sleep} from "myutil";
+import {sleep, StringHelper} from "myutil";
 import {isDebugMode} from 'myconfig';
 import {TOKEN_TYPE_PAINT_NFT, TOKEN_TYPE_CANVAS_NFT} from "myconstants";
 
@@ -162,14 +162,7 @@ const NftStakingSection = props => {
     trailing: false
   });
 
-  const isMp4Url = (url) => {
-    const extension = url.split(/[#?]/)[0].split('.').pop().trim();
-
-    if (extension === "mp4") {
-      return true;
-    }
-    return false;
-  };
+  const isMp4Url = StringHelper.isMp4Url;
 
   return (
     <React.Fragment>
@@ -201,7 +194,7 @@ const NftStakingSection = props => {
           {
             values(nftMap).map(nft => {
               const staking = store.findNftStaking(nft);
-              const nftBalance = nft.balance;//parseInt(store.findNftWebThreeContext(nft).balance);
+              const nftBalance = nft.balance;
               return (
                 <Grid container spacing={3}>
                   <Grid item xs={12}>
