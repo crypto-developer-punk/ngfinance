@@ -141,7 +141,7 @@ const OurNFTSection = props => {
                             <Image
                               src={nft.image_url}
                               hidden={isMp4Url(nft.image_url)}
-                              style={{maxHeight:380}}
+                              style={{maxHeight:340}}
                               alt="Genesis NFT"
                               className={classes.image}
                               data-aos="flip-left"
@@ -149,7 +149,7 @@ const OurNFTSection = props => {
                               data-aos-duration="2000"
                             />
                           </Grid>
-                          <Grid item maxHeight={380} xs={12}>
+                          <Grid item maxHeight={340} xs={12} style={isMp4Url(nft.image_url) ? {marginTop:'-11%'} : {}}>
                             <ReactPlayer
                               url={nft.image_url}
                               hidden={!isMp4Url(nft.image_url)}
