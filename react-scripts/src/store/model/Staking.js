@@ -1,7 +1,7 @@
 import {types} from 'mobx-state-tree';
 
 const Staking = types.model('Staking', {
-    id: types.identifierNumber,
+    id: types.identifier,
     last_staked_time: types.maybeNull(types.Date),
     token_amount: types.optional(types.number, 0),
 }).actions(self => ({
@@ -16,7 +16,7 @@ const Staking = types.model('Staking', {
 export default Staking;
 const createStakingNullObject = () => {
   return Staking.create({
-    id: -1234,
+    id: '-1234',
     last_staked_time: null,
     token_amount: 0,
   }); 

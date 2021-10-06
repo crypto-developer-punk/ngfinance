@@ -25,7 +25,7 @@ const RootStore = types.model({
     rewordMap: types.map(Reword),
     snapshotMap: types.map(Snapshot),
     nftStakingMap: types.map(Staking),
-    paintEthLpStaking: types.optional(Staking, {id: CHAIN_ID_PAINT_ETH_LP_TOKEN}), // CHAIN_ID_PAINT_ETH_LP_TOKEN = -1
+    paintEthLpStaking: types.optional(Staking, {id: '-1'}), // CHAIN_ID_PAINT_ETH_LP_TOKEN = -1
     webThreeContext: types.optional(WebThreeContext, {}),
 }).actions(self => {
     return {
@@ -62,6 +62,7 @@ const RootStore = types.model({
                 const nftDesc = res.data[i];
                 const nft = Nft.create(nftDesc);
                 self.nftMap.set(nft.id, nft);
+                // console.log('aaa', JSON.stringify(nft));
                 if (!isWalletConnected)
                     continue;
                 yield self.asyncUpdateNftBalance(nft);
@@ -203,10 +204,11 @@ const RootStore = types.model({
             const {currentAccount, isWalletConnected, networkId} = self.webThreeContext;
             assertNetworkIdAndWalletConnect(networkId, isWalletConnected);
 
-            const {nft_chain_id, contract_type} = nft;
+            const {nft_chain_id, contract_type, uniqueKey} = nft;
             const {last_staked_time, token_amount, in_progress} = yield requestBackend.asyncGetStaked(currentAccount, contract_type, nft_chain_id);
             if (!last_staked_time) return;
-            self.nftStakingMap.set(nft_chain_id, Staking.create({id: nft_chain_id, last_staked_time: new Date(last_staked_time), token_amount}));
+            
+            self.nftStakingMap.set(uniqueKey, Staking.create({id: uniqueKey, last_staked_time: new Date(last_staked_time), token_amount}));
         }),
         asyncUpdatePaintEthLpStakingState: flow(function* () {
             const {currentAccount, isWalletConnected, networkId} = self.webThreeContext;
@@ -313,12 +315,13 @@ const RootStore = types.model({
     };
 }).views(self => ({
     findNftStaking(nft) {
-        const {nft_chain_id} = nft;
-        if (!nft_chain_id) return createStakingNullObject();
-        if (!self.nftStakingMap.has(nft_chain_id)) {
+        // TODO FIND NFT STAKING 오류 수정 필요 
+        const {uniqueKey} = nft;
+        // if (!nft_chain_id) return createStakingNullObject();
+        if (!self.nftStakingMap.has(uniqueKey)) {
             return createStakingNullObject();
         }
-        return self.nftStakingMap.get(nft_chain_id);
+        return self.nftStakingMap.get(uniqueKey);
     },
     findSnapshot(token_type) {
         if (!self.snapshotMap.has(TOKEN_TYPE_PAINT_NFT)) {
@@ -346,6 +349,19 @@ const RootStore = types.model({
     },
     get NFTArr() {
         return values(self.nftMap);
+    },
+    get OwnerNFTArr() {
+        return values(self.nftMap).filter(nft => {
+            const {uniqueKey, balance} = nft;
+            if (balance > 0)
+                return true;
+            if (!self.nftStakingMap.has(uniqueKey)) {
+                return false;
+            }            
+            const nftStaking = self.nftStakingMap.get(uniqueKey);
+            const {token_amount} = nftStaking;
+            return token_amount > 0;
+        });
     }
 }));
 

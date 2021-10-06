@@ -73,8 +73,18 @@ const NftStakingSection = props => {
   const theme = useTheme();
   const classes = useStyles();
 
+  const [emptyStakingEnabled, setEmptyStakingEnabled] = React.useState(false);
+
   const {store} = props;
-  const {webThreeContext, nftMap} = store;
+  const {webThreeContext, OwnerNFTArr, NFTArr} = store;
+
+  React.useEffect(() => {
+    async function delayEmptyStaking() {
+      await sleep(2000);
+      setEmptyStakingEnabled(true);
+    }
+    delayEmptyStaking();
+  }, []);
 
   const requestStaking = _.debounce(async (nft) => {
     if (!webThreeContext.isWalletConnected) {
@@ -164,6 +174,201 @@ const NftStakingSection = props => {
 
   const isMp4Url = StringHelper.isMp4Url;
 
+  // console.log('aaa', OwnerNFTArr.length);
+  const renderNftStaking = (nftArr) => {
+    if (!nftArr || nftArr.length === 0) {
+      if (emptyStakingEnabled)
+        return renderEmptyNtfStaking();
+      return <div />;
+    }
+    return (
+      <Grid item xs={12}>
+        {nftArr.map(nft => {
+          const staking = store.findNftStaking(nft);
+          const nftBalance = nft.balance;
+          return (
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <CardBase liftUp variant="outlined" align="left" withShadow>
+                  <Grid container spacing={5} 
+                      justify="flex-start"
+                      alignItems="flex-start"
+                      style={isMp4Url(nft.image_url) ? {marginTop:'-3%'} : {}}
+                  >
+                    <Grid
+                      item
+                      container
+                      justify="flex-start"
+                      alignItems="flex-start"
+                      xs={12} md={4}
+                      // xs={4}
+                      data-aos={'fade-up'}
+                    >
+                      <Image
+                        src={nft.image_url}
+                        hidden={isMp4Url(nft.image_url)}
+                        style={{height:'100%', width: '100%'}}
+                        alt="Genesis NFT"
+                        className={classes.image}
+                        data-aos="flip-left"
+                        data-aos-easing="ease-out-cubic"
+                        data-aos-duration="2000"
+                      />
+                        <ReactPlayer
+                          url={nft.image_url}
+                          hidden={!isMp4Url(nft.image_url)}
+                          width='100%'
+                          height='100%'
+                          playing={true}
+                          loop={true}
+                          muted={true}
+                        />
+                    </Grid>
+
+                    <Grid
+                      item
+                      container
+                      justify="flex-start"
+                      alignItems="flex-start"
+                      xs={12} md={8}
+                      data-aos={'fade-up'}
+                      style={isMp4Url(nft.image_url) ?  {paddingTop:'3%'} : {}}
+                    >
+                      <Grid item container xs={12} md={8} alignItems="center">
+                        <Grid item>
+                          <SectionHeader
+                            title={
+                              <span>
+                                <Typography variant="subtitle1" color={"textSecondary"} hidden={(nft.token_type === TOKEN_TYPE_PAINT_NFT ? false : true)}>
+                                  Utility NFT
+                                </Typography>
+                                <Typography variant="subtitle1" color={"textSecondary"} hidden={(nft.token_type === TOKEN_TYPE_CANVAS_NFT ? false : true)}>
+                                  Governance NFT
+                                </Typography>
+                              </span>
+                            }
+                            align="left"
+                            disableGutter
+                          />
+                        </Grid>
+                      </Grid>
+                      <Grid item container xs={12} md={8} >
+                        <SectionHeader
+                            title={
+                              <Typography variant="h5" color="textPrimary" >
+                                <strong>{nft.subject}</strong>
+                              </Typography>
+                            }
+                            align="left"
+                            disableGutter
+                        />
+                        <Divider style={{marginTop: '20px'}} />
+                      </Grid>
+                      <Grid item xs={12} className={classes.gridItem}>
+                        <Grid container>
+                          <Grid item xs={12} md={3}>
+                            <Typography variant="subtitle1" color={"primary"}>
+                              PURCHASED
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={12} md={9}>
+                            <Typography variant="subtitle1">
+                              {nftBalance} NFT
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                      {/* <Grid item xs={12} className={classes.gridItem}>
+                        <Grid container>
+                          <Grid item xs={12} md={3}>
+                            <Typography variant="subtitle1" color={"primary"}>
+                              NFT URL
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={12} md={9} >
+                            <a href={nft.nft_url} target='_blank'>
+                              {nft.nft_url}
+                            </a>
+                          </Grid>
+                        </Grid>
+                      </Grid> */}
+                      <Grid item xs={12} className={classes.gridItem}>
+                        <Grid container>
+                          <Grid item xs={12} md={3}>
+                            <Typography variant="subtitle1" color={"primary"}>
+                              STAKING
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={12} md={9} >
+                              <Grid container xs={10}>
+                                  <Button style={{borderBottomLeftRadius: 5, borderBottomRightRadius: 0, borderTopLeftRadius: 5, borderTopRightRadius: 0}} variant="outlined" color="primary" size={"small"} disabled={(nftBalance <= 0 || !webThreeContext.isWalletConnected)} onClick={() => requestStaking(nft)}>
+                                    stake
+                                  </Button>
+                                  <Button style={{borderBottomLeftRadius: 0, borderBottomRightRadius: 5, borderTopLeftRadius: 0, borderTopRightRadius: 5, marginLeft: -1}} variant="outlined" color="primary" size={"small"} disabled={(staking.token_amount <= 0 || !webThreeContext.isWalletConnected)} onClick={() => requestUnstaking(nft)}>
+                                    unstake
+                                  </Button>
+                              </Grid>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                      <Grid item xs={12} className={classes.gridItem}>
+                        <Grid container>
+                          <Grid item xs={12} md={3}>
+                            <Typography variant="subtitle1" color={"primary"}>
+                              STAKED NFT
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={12} md={9}>
+                            <Typography variant="subtitle1">
+                              {staking.token_amount} NFT
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  {
+                    isDebugMode ?                             
+                    <Grid item xs={12} style={{marginTop: '3%'}}>
+                      <SectionHeader
+                          title={
+                            <span>
+                              <Typography variant="subtitle2" style={{color:'red'}} >
+                                DebugInfo : {JSON.stringify(nft)}
+                              </Typography>
+                            </span>
+                          }
+                          align="left"
+                          disableGutter
+                      />
+                    </Grid>
+                    : <div/>
+                  }
+                </CardBase>
+              </Grid> 
+            </Grid>)
+          }
+        )
+      }
+    </Grid>)
+  };
+  
+  const renderEmptyNtfStaking = () => {
+    return (
+      <Grid item xs={12} style={{marginLeft:1, marginTop:-1}}>
+        <SectionHeader
+            title={
+              <Typography variant="h5">
+                Don`t have nfts. If you want to buy, check nfts in nft tab.
+              </Typography>
+            }
+            align="left"
+            disableGutter
+        />
+      </Grid>
+    )
+  };
+
   return (
     <React.Fragment>
       <Grid
@@ -190,176 +395,10 @@ const NftStakingSection = props => {
         </Grid>
         
         {/* nft-list */}
-        <Grid item xs={12}>
-          {
-            values(nftMap).map(nft => {
-              const staking = store.findNftStaking(nft);
-              const nftBalance = nft.balance;
-              return (
-                <Grid container spacing={3}>
-                  <Grid item xs={12}>
-                    <CardBase liftUp variant="outlined" align="left" withShadow>
-                      <Grid container spacing={5} 
-                          justify="flex-start"
-                          alignItems="flex-start"
-                          style={isMp4Url(nft.image_url) ? {marginTop:'-3%'} : {}}
-                      >
-                        <Grid
-                          item
-                          container
-                          justify="flex-start"
-                          alignItems="flex-start"
-                          xs={12} md={4}
-                          // xs={4}
-                          data-aos={'fade-up'}
-                        >
-                          <Image
-                            src={nft.image_url}
-                            hidden={isMp4Url(nft.image_url)}
-                            style={{height:'100%', width: '100%'}}
-                            alt="Genesis NFT"
-                            className={classes.image}
-                            data-aos="flip-left"
-                            data-aos-easing="ease-out-cubic"
-                            data-aos-duration="2000"
-                          />
-                            <ReactPlayer
-                              url={nft.image_url}
-                              hidden={!isMp4Url(nft.image_url)}
-                              width='100%'
-                              height='100%'
-                              playing={true}
-                              loop={true}
-                              muted={true}
-                            />
-                        </Grid>
-
-                        <Grid
-                          item
-                          container
-                          justify="flex-start"
-                          alignItems="flex-start"
-                          xs={12} md={8}
-                          data-aos={'fade-up'}
-                          style={isMp4Url(nft.image_url) ?  {paddingTop:'3%'} : {}}
-                        >
-                          <Grid item container xs={12} md={8} alignItems="center">
-                            <Grid item>
-                              <SectionHeader
-                                title={
-                                  <span>
-                                    <Typography variant="subtitle1" color={"textSecondary"} hidden={(nft.token_type === TOKEN_TYPE_PAINT_NFT ? false : true)}>
-                                      Utility NFT
-                                    </Typography>
-                                    <Typography variant="subtitle1" color={"textSecondary"} hidden={(nft.token_type === TOKEN_TYPE_CANVAS_NFT ? false : true)}>
-                                      Governance NFT
-                                    </Typography>
-                                  </span>
-                                }
-                                align="left"
-                                disableGutter
-                              />
-                            </Grid>
-                          </Grid>
-                          <Grid item container xs={12} md={8} >
-                            <SectionHeader
-                                title={
-                                  <Typography variant="h5" color="textPrimary" >
-                                    <strong>{nft.subject}</strong>
-                                  </Typography>
-                                }
-                                align="left"
-                                disableGutter
-                            />
-                            <Divider style={{marginTop: '20px'}} />
-                          </Grid>
-                          <Grid item xs={12} className={classes.gridItem}>
-                            <Grid container>
-                              <Grid item xs={12} md={3}>
-                                <Typography variant="subtitle1" color={"primary"}>
-                                  PURCHASED
-                                </Typography>
-                              </Grid>
-                              <Grid item xs={12} md={9}>
-                                <Typography variant="subtitle1">
-                                  {nftBalance} NFT
-                                </Typography>
-                              </Grid>
-                            </Grid>
-                          </Grid>
-                          <Grid item xs={12} className={classes.gridItem}>
-                            <Grid container>
-                              <Grid item xs={12} md={3}>
-                                <Typography variant="subtitle1" color={"primary"}>
-                                  NFT URL
-                                </Typography>
-                              </Grid>
-                              <Grid item xs={12} md={9} >
-                                <a href={nft.nft_url} target='_blank'>
-                                  {nft.nft_url}
-                                </a>
-                              </Grid>
-                            </Grid>
-                          </Grid>
-                          <Grid item xs={12} className={classes.gridItem}>
-                            <Grid container>
-                              <Grid item xs={12} md={3}>
-                                <Typography variant="subtitle1" color={"primary"}>
-                                  STAKING
-                                </Typography>
-                              </Grid>
-                              <Grid item xs={12} md={9} >
-                                  <Grid container xs={10}>
-                                      <Button style={{borderBottomLeftRadius: 5, borderBottomRightRadius: 0, borderTopLeftRadius: 5, borderTopRightRadius: 0}} variant="outlined" color="primary" size={"small"} disabled={(nftBalance <= 0 || !webThreeContext.isWalletConnected)} onClick={() => requestStaking(nft)}>
-                                        stake
-                                      </Button>
-                                      <Button style={{borderBottomLeftRadius: 0, borderBottomRightRadius: 5, borderTopLeftRadius: 0, borderTopRightRadius: 5, marginLeft: -1}} variant="outlined" color="primary" size={"small"} disabled={(staking.token_amount <= 0 || !webThreeContext.isWalletConnected)} onClick={() => requestUnstaking(nft)}>
-                                        unstake
-                                      </Button>
-                                  </Grid>
-                              </Grid>
-                            </Grid>
-                          </Grid>
-                          <Grid item xs={12} className={classes.gridItem}>
-                            <Grid container>
-                              <Grid item xs={12} md={3}>
-                                <Typography variant="subtitle1" color={"primary"}>
-                                  STAKED NFT
-                                </Typography>
-                              </Grid>
-                              <Grid item xs={12} md={9}>
-                                <Typography variant="subtitle1">
-                                  {staking.token_amount} NFT
-                                </Typography>
-                              </Grid>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                      {
-                        isDebugMode ?                             
-                        <Grid item xs={12} style={{marginTop: '3%'}}>
-                          <SectionHeader
-                              title={
-                                <span>
-                                  <Typography variant="subtitle2" style={{color:'red'}} >
-                                    DebugInfo : {JSON.stringify(nft)}
-                                  </Typography>
-                                </span>
-                              }
-                              align="left"
-                              disableGutter
-                          />
-                        </Grid>
-                        : <div/>
-                      }
-                    </CardBase>
-                  </Grid> 
-                </Grid>)
-              }
-            )
-          }
-        </Grid>
+        {/* <Grid item xs={12}> */}
+          {renderNftStaking(OwnerNFTArr)}
+          {/* {renderNftStaking(NFTArr)} */}
+        {/* </Grid> */}
       </Grid>
     </React.Fragment>
   );

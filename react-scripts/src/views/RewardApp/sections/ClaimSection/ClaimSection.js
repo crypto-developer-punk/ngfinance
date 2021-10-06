@@ -171,12 +171,12 @@ const ClaimSection = props => {
                   <br/>
                   {step}
                   <br/>
+                  <br/>
                   <div hidden={!hashUrl || hashUrl.length <= 0}>
-                    <br/>
                     <a href={hashUrl} target={"_blank"}>View claim transaction</a>
+                    <br/>
+                    <br/>
                   </div>
-                  <br/>
-                  <br/>
                 </div>);
           });
         props.closeDialog();

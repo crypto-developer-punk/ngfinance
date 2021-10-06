@@ -15,7 +15,11 @@ const Nft = types.model('Nft', {
       self.balance = balance;
     }
   })
-);
+).views(self => ({
+  get uniqueKey() {
+    return self.nft_chain_id + '_' + self.contract_type;
+  }
+}));
 
 export default Nft;
 
