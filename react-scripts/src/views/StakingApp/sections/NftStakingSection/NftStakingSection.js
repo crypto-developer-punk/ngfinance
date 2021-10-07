@@ -198,7 +198,7 @@ const NftStakingSection = props => {
                     <Grid
                       item
                       container
-                      justify="flex-start"
+                      justify="center"
                       alignItems="flex-start"
                       xs={12} md={4}
                       // xs={4}
