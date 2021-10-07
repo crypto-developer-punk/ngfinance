@@ -3,7 +3,7 @@ import { inject, observer } from "mobx-react";
 import {values, map} from 'mobx';
 import PropTypes from 'prop-types';
 import {makeStyles, withStyles, useTheme} from '@material-ui/core/styles';
-import {Button, ButtonGroup, colors, Grid, Typography, Divider, Paper, useMediaQuery} from '@material-ui/core';
+import {Button, ButtonGroup, colors, Grid, Typography, Divider, Paper, useMediaQuery, CircularProgress} from '@material-ui/core';
 import ReactPlayer from 'react-player'
 import {Image} from 'components/atoms';
 import {SectionHeader} from 'components/molecules';
@@ -179,7 +179,7 @@ const NftStakingSection = props => {
     if (!nftArr || nftArr.length === 0) {
       if (emptyStakingEnabled)
         return renderEmptyNtfStaking();
-      return <div />;
+      return <div/>//<Grid item xs={12} container spacing={3} justify="center" alignItems="center" style={{marginTop:3}}><CircularProgress /></Grid>
     }
     return (
       <Grid item xs={12}>
@@ -278,20 +278,6 @@ const NftStakingSection = props => {
                           </Grid>
                         </Grid>
                       </Grid>
-                      {/* <Grid item xs={12} className={classes.gridItem}>
-                        <Grid container>
-                          <Grid item xs={12} md={3}>
-                            <Typography variant="subtitle1" color={"primary"}>
-                              NFT URL
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={12} md={9} >
-                            <a href={nft.nft_url} target='_blank'>
-                              {nft.nft_url}
-                            </a>
-                          </Grid>
-                        </Grid>
-                      </Grid> */}
                       <Grid item xs={12} className={classes.gridItem}>
                         <Grid container>
                           <Grid item xs={12} md={3}>
@@ -359,7 +345,7 @@ const NftStakingSection = props => {
         <SectionHeader
             title={
               <Typography variant="h5">
-                Don`t have nfts. If you want to buy, check nfts in nft tab.
+                You don`t have nfts. If you want to stake, check nfts in nft tab.
               </Typography>
             }
             align="left"
@@ -395,10 +381,7 @@ const NftStakingSection = props => {
         </Grid>
         
         {/* nft-list */}
-        {/* <Grid item xs={12}> */}
-          {renderNftStaking(OwnerNFTArr)}
-          {/* {renderNftStaking(NFTArr)} */}
-        {/* </Grid> */}
+        {renderNftStaking(OwnerNFTArr)}
       </Grid>
     </React.Fragment>
   );

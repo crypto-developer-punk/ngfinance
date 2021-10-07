@@ -57,7 +57,7 @@ const assertWalletConnect = (isWalletConnected) => {
         return;
     }
 
-    throw {code: ERR_WALLET_IS_NOT_CONNECTED, msg: 'Wallet is not connected. Change to mainet.'};
+    throw {code: ERR_WALLET_IS_NOT_CONNECTED, msg: 'Wallet is not connected.'};
 };
 
 const assertNetworkId = (networkId) => {
