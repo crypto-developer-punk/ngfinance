@@ -12,6 +12,7 @@ import Partner1 from '../../../assets/images/main/partner1.jpeg';
 import Partner3 from '../../../assets/images/main/partner3.jpeg';
 import Partner5 from '../../../assets/images/main/partner5.jpeg';
 import Partner6 from '../../../assets/images/main/partner6.jpeg';
+import Partner7 from '../../../assets/images/main/partner7.png';
 import WhatwedoAirdrop from '../../../assets/images/main/whatwedo_airdrop.jpg';
 import WhatwedoBurn from '../../../assets/images/main/whatwedo_burn.jpg';
 import WhatwedoArt from '../../../assets/images/main/whatwedo_art.jpg';
@@ -102,7 +103,14 @@ export const backer = [
     authorName: '코인 같이투자-딱지(Edward Park)',
     youtubeLink: 'https://www.youtube.com/channel/UCtWJlG1_QzGUbPYGPqL3rcQ',
   },
-
+  {
+    title: 'Developer',
+    authorPhoto: {
+      src: Partner7,
+    },
+    authorName: 'CryptoRamen',
+    youtubeLink: '',  
+  }
 ];
 
 export const partners = [
