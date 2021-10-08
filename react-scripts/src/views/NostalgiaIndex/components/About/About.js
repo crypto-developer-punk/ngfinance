@@ -56,7 +56,7 @@ const About = props => {
                       e.preventDefault();
                       window.location.href="app";
                   }}>
-            Buy Genesis NFT
+            Look up our NFT
           </Button>
         ]}
         data-aos="fade-up"
