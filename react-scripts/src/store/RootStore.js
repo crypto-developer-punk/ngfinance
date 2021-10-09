@@ -70,12 +70,12 @@ const RootStore = types.model({
             }
         }),
         asyncInitSnapshots: flow(function* (){ 
-            const {currentAccount, isWalletConnected, networkId} = self.webThreeContext;
-            assertNetworkIdAndWalletConnect(networkId, isWalletConnected);
+            const {currentAccount, isWalletConnected, isValidNetwork, networkId} = self.webThreeContext;
+            const isNotValidNetworkConnected = !isWalletConnected || !isValidNetwork;
 
             const paint_snapshot_time = yield requestBackend.asyncGetSnapshotTime(currentAccount, TOKEN_TYPE_PAINT_NFT); 
             const paint_total_value_locked_nft_amount = yield requestBackend.asyncGetTotalValueLockedNftAmount(currentAccount, TOKEN_TYPE_PAINT_NFT);
-            const paint_balance_of_reward = yield requestBackend.asyncGetReward(currentAccount, TOKEN_TYPE_PAINT_NFT);
+            const paint_balance_of_reward = isNotValidNetworkConnected ? 0 : yield requestBackend.asyncGetReward(currentAccount, TOKEN_TYPE_PAINT_NFT);
             
             self.snapshotMap.set(TOKEN_TYPE_PAINT_NFT, Snapshot.create({
                 snapshot_time: new Date(paint_snapshot_time),
@@ -85,7 +85,7 @@ const RootStore = types.model({
 
             const canvas_snapshot_time = yield requestBackend.asyncGetSnapshotTime(currentAccount, TOKEN_TYPE_CANVAS_NFT); 
             const canvas_total_value_locked_nft_amount = yield requestBackend.asyncGetTotalValueLockedNftAmount(currentAccount, TOKEN_TYPE_CANVAS_NFT);
-            const canvas_balance_of_reward = yield requestBackend.asyncGetReward(currentAccount, TOKEN_TYPE_CANVAS_NFT);
+            const canvas_balance_of_reward = isNotValidNetworkConnected ? 0 : yield requestBackend.asyncGetReward(currentAccount, TOKEN_TYPE_CANVAS_NFT);
             self.snapshotMap.set(TOKEN_TYPE_CANVAS_NFT, Snapshot.create({
                 snapshot_time: new Date(canvas_snapshot_time),
                 total_value_locked_nft_amount: canvas_total_value_locked_nft_amount,
@@ -94,13 +94,15 @@ const RootStore = types.model({
 
             const lp_snapshot_time = yield requestBackend.asyncGetSnapshotTime(currentAccount, TOKEN_TYPE_CANVAS_PAINT_ETH_LP);
             const lp_total_value_locked_nft_amount = yield requestBackend.asyncGetTotalValueLockedNftAmount(currentAccount, TOKEN_TYPE_CANVAS_PAINT_ETH_LP);
-            const lp_balance_of_reward = yield requestBackend.asyncGetReward(currentAccount, TOKEN_TYPE_CANVAS_PAINT_ETH_LP);
+            const lp_balance_of_reward = isNotValidNetworkConnected ?  0 : yield requestBackend.asyncGetReward(currentAccount, TOKEN_TYPE_CANVAS_PAINT_ETH_LP);
             self.snapshotMap.set(TOKEN_TYPE_CANVAS_PAINT_ETH_LP, Snapshot.create({
                 snapshot_time: new Date(lp_snapshot_time),
                 total_value_locked_nft_amount: lp_total_value_locked_nft_amount,
                 balance_of_reward: lp_balance_of_reward,
             }));
-
+            
+            if (isNotValidNetworkConnected)
+                return;
             yield self.asyncUpdatePaintEthLpStakingState();
         }),
         asyncRegisterNftStaking: flow(function* (nft, stakingStepCB) {
