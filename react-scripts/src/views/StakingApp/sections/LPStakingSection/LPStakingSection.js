@@ -60,7 +60,7 @@ const TokenStakingSection = props => {
     defaultMatches: true,
   });
 
-  const {title, subTitle, stakingButtonComponents, lpTokenBalanceComponents, snapShotTimeStr, totalValueLockedNftAmount, hashAddressLabel, balanceOfReward, dropTokenImage, dropTokenName} = props;
+  const {title, subTitle, stakingButtonComponents, lpTokenBalanceComponents, snapShotTimeStr, totalValueLockedTitle, totalValueLockedNftAmount, hashAddressLabel, balanceOfReward, dropTokenImage, dropTokenName} = props;
 
   return (
     <React.Fragment>
@@ -92,7 +92,7 @@ const TokenStakingSection = props => {
             <Grid item xs={12} md={6}>
               <Paper className={classes.paper}>
                 <Typography component="span" variant="subtitle1">
-                  Total number of NFT locked : { totalValueLockedNftAmount }
+                  {totalValueLockedTitle} : { totalValueLockedNftAmount }
                 </Typography>
               </Paper>
             </Grid>
@@ -151,7 +151,7 @@ const LpTStakingSection = props => {
   });
 
   const {store} = props; 
-  const {webThreeContext, canvasSnapshot, paintEthLpStaking} = store;
+  const {webThreeContext, paintEthLpStaking, lpSnapshot} = store;
 
   const registerPaintEthLpStaking = _.debounce(async () => {
     let ended = false;
@@ -287,10 +287,11 @@ const LpTStakingSection = props => {
                   </Paper>
                 </Grid>
               }
-              snapShotTimeStr={canvasSnapshot.snapShotTimeStr}
-              totalValueLockedNftAmount={canvasSnapshot.total_value_locked_nft_amount}
+              snapShotTimeStr={lpSnapshot.snapShotTimeStr}
+              totalValueLockedTitle={"Total number of LP locked"}
+              totalValueLockedNftAmount={lpSnapshot.total_value_locked_nft_amount}
               hashAddressLabel={"CANVAS : 0x863ad391091ae0e87b850c2bb7bfc7597c79c93f"}
-              balanceOfReward={canvasSnapshot.balance_of_reward}
+              balanceOfReward={lpSnapshot.balance_of_reward}
               dropTokenImage={CanvasToken}
               dropTokenName={"Canvas Token"}/>  
           </Grid>   
