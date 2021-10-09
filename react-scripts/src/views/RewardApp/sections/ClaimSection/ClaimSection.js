@@ -60,7 +60,7 @@ const TokenClaimSection = props => {
     defaultMatches: true,
   });
 
-  const {title, subTitle, stakingButtonComponents, lpTokenBalanceComponents, snapShotTimeStr, totalValueLockedNftAmount, hashAddressLabel, balanceOfReward, dropTokenImage, dropTokenName} = props;
+  const {title, subTitle, stakingButtonComponents, lpTokenBalanceComponents, snapShotTimeStr, totalValueLockedTitle, totalValueLockedNftAmount, hashAddressLabel, balanceOfReward, dropTokenImage, dropTokenName} = props;
 
   return (
     <React.Fragment>
@@ -92,7 +92,7 @@ const TokenClaimSection = props => {
             <Grid item xs={12} md={6}>
               <Paper className={classes.paper}>
                 <Typography component="span" variant="subtitle1">
-                  Total number of NFT locked : { totalValueLockedNftAmount }
+                  {totalValueLockedTitle} : { totalValueLockedNftAmount }
                 </Typography>
               </Paper>
             </Grid>
@@ -240,6 +240,7 @@ const ClaimSection = props => {
               </Button>
             }
             snapShotTimeStr={paintSnapshot.snapShotTimeStr}
+            totalValueLockedTitle={"Total number of NFT locked"}
             totalValueLockedNftAmount={paintSnapshot.total_value_locked_nft_amount}
             hashAddressLabel={"PAINT : 0x83e031005ecb771b7ff900b3c7b0bdde7f521c08"}
             balanceOfReward={paintSnapshot.balance_of_reward}
@@ -262,6 +263,7 @@ const ClaimSection = props => {
               </Button>
             }
             snapShotTimeStr={canvasSnapshot.snapShotTimeStr}
+            totalValueLockedTitle={"Total number of NFT locked"}
             totalValueLockedNftAmount={canvasSnapshot.total_value_locked_nft_amount}
             hashAddressLabel={"CANVAS : 0x863ad391091ae0e87b850c2bb7bfc7597c79c93f"}
             balanceOfReward={canvasSnapshot.balance_of_reward}
@@ -303,6 +305,7 @@ const ClaimSection = props => {
               </Grid>
             }
             snapShotTimeStr={lpSnapshot.snapShotTimeStr}
+            totalValueLockedTitle={"Total number of LP locked"}
             totalValueLockedNftAmount={lpSnapshot.total_value_locked_nft_amount}
             hashAddressLabel={"CANVAS : 0x863ad391091ae0e87b850c2bb7bfc7597c79c93f"}
             balanceOfReward={lpSnapshot.balance_of_reward}
