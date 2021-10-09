@@ -104,7 +104,7 @@ const OurNFTSection = props => {
           <SectionHeader
               title={
                 <Typography variant="h5">
-                  Our Nfts
+                  Our NFTs
                 </Typography>
               }
               align="left"
