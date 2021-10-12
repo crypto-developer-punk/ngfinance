@@ -79,6 +79,7 @@ export {
     TOKEN_TYPE_CANVAS_NFT, 
     CHAIN_ID_PAINT_ETH_LP_TOKEN, 
     CONTRACT_TYPE_PAINT_ETH_LP_TOKEN,
+    TIMEOUT_LIMIT_MS,
     assertSupportedTokenType,
     assertTimeoutError,
     assertSupportedContractType,

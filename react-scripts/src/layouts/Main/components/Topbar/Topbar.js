@@ -148,7 +148,7 @@ const Topbar = props => {
     window.localStorage.getItem("walletButtonLabel") || 'Connect Wallet'
   );
   const [buttonDisabled, setButtonDisabled] = useState(
-    window.localStorage.getItem("walletButtonLabel") || true
+    window.localStorage.getItem("walletButtonDisalbed") || true
   );
 
   const [activePageId, setActivePageId] = useState(-1);

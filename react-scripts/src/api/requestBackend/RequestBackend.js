@@ -2,12 +2,15 @@ import axios from "axios";
 import {environmentConfig} from 'myconfig';
 import {
     assertSupportedTokenType, ERR_LIMIT_LOCKUP_NFT, ERR_UNSKAKING_INPROGRESS, ERR_BACKEND_RESPONSE, 
-    assertBackendResponseStatus
+    assertBackendResponseStatus, TIMEOUT_LIMIT_MS
 } from "myconstants";
 
 class RequestBackend {
     constructor() {
         this.backend_url = environmentConfig.backend_url;
+        this.myaxios = axios.create({
+            timeout: TIMEOUT_LIMIT_MS,
+        });
     }
 
     asyncRegisterStaking = async(my_address, contract_type, nft_chain_id, nft_amount, transactionHash) => {
@@ -19,7 +22,7 @@ class RequestBackend {
             "staking_transaction_hash": transactionHash
         };
     
-        const res = await axios.post(`${this.backend_url}/staking/register`, data, {headers: this.#getRequestHeaders(my_address)});
+        const res = await this.myaxios.post(`${this.backend_url}/staking/register`, data, {headers: this.#getRequestHeaders(my_address)});
         return res;
     };
 
@@ -31,7 +34,7 @@ class RequestBackend {
         };
         
         try {
-            const res = await axios.post(`${this.backend_url}/staking/unstaking`, data, {headers: this.#getRequestHeaders(my_address)});
+            const res = await this.myaxios.post(`${this.backend_url}/staking/unstaking`, data, {headers: this.#getRequestHeaders(my_address)});
             return res;
         } catch (err) {
             console.log('asyncUnstaking', err, err.response.data.message, err.msg);
@@ -69,7 +72,7 @@ class RequestBackend {
         };
         
         // console.log('aaa', `${this.backend_url}/staking`, my_address, contract_type, nft_chain_id);
-        const {status, data} = await axios.get(`${this.backend_url}/staking`, { params, headers: this.#getRequestHeaders(my_address) });
+        const {status, data} = await this.myaxios.get(`${this.backend_url}/staking`, { params, headers: this.#getRequestHeaders(my_address) });
         assertBackendResponseStatus(status, 'asyncGetStaked');
 
         if (!data) 
@@ -85,7 +88,7 @@ class RequestBackend {
             "token_type": token_type
         };
 
-        const {status, data} = await axios.get(`${this.backend_url}/staking/getTotalValueLockedNftAmount`, { params : params, headers: this.#getRequestHeaders(my_address)});
+        const {status, data} = await this.myaxios.get(`${this.backend_url}/staking/getTotalValueLockedNftAmount`, { params : params, headers: this.#getRequestHeaders(my_address)});
         assertBackendResponseStatus(status);
 
         const totalValueLockedNftAmount = data && data.length > 0 ? (data[0].totalValueLockedNftAmount || 0) : 0;
@@ -99,7 +102,7 @@ class RequestBackend {
             "token_type": token_type
         };
     
-        const res = await axios.post(`${this.backend_url}/reward/register/allBySnapshot`, data, {headers: this.#getRequestHeaders(my_address)});
+        const res = await this.myaxios.post(`${this.backend_url}/reward/register/allBySnapshot`, data, {headers: this.#getRequestHeaders(my_address)});
         return res;
     };
 
@@ -111,7 +114,7 @@ class RequestBackend {
             "token_type": token_type
         };
     
-        const {status, data} = await axios.get(`${this.backend_url}/reward`, { params : params, headers: this.#getRequestHeaders(my_address) });
+        const {status, data} = await this.myaxios.get(`${this.backend_url}/reward`, { params : params, headers: this.#getRequestHeaders(my_address) });
         assertBackendResponseStatus(status, 'asyncGetReward');
 
         const tokenAmount = data && data.length > 0 ? (data[0].token_amount || 0) : 0;
@@ -127,7 +130,7 @@ class RequestBackend {
             "token_type": token_type
         };
     
-        const {status, data} = await axios.post(`${this.backend_url}/reward/approve`, params, {headers: this.#getRequestHeaders(my_address)});
+        const {status, data} = await this.myaxios.post(`${this.backend_url}/reward/approve`, params, {headers: this.#getRequestHeaders(my_address)});
         assertBackendResponseStatus(status, 'asyncApprove');
 
         const {approved_token_amount} = data;
@@ -143,7 +146,7 @@ class RequestBackend {
             "claimed_transaction_hash": transactionHash
         };
     
-        return axios.post(`${this.backend_url}/reward/claim`, data, {headers: this.#getRequestHeaders(my_address)});
+        return this.myaxios.post(`${this.backend_url}/reward/claim`, data, {headers: this.#getRequestHeaders(my_address)});
     };
 
     asyncGetSnapshotTime = async(my_address, token_type) => {
@@ -153,7 +156,7 @@ class RequestBackend {
             "token_type": token_type
         };
     
-        const {status, data} = await axios.get(`${this.backend_url}/snapshot/latest`, { params : params , headers: this.#getRequestHeaders(my_address)});
+        const {status, data} = await this.myaxios.get(`${this.backend_url}/snapshot/latest`, { params : params , headers: this.#getRequestHeaders(my_address)});
         assertBackendResponseStatus(status, 'asyncGetSnapshotTime');
 
         const {snapshot_time} = data[0]; 
@@ -161,7 +164,7 @@ class RequestBackend {
     };
 
     getNftInfo = async(my_address) => {
-        return axios.get(`${this.backend_url}/nft/all`, {headers: this.#getRequestHeaders(my_address)});
+        return this.myaxios.get(`${this.backend_url}/nft/all`, {headers: this.#getRequestHeaders(my_address)});
     };
 
     // private methods
