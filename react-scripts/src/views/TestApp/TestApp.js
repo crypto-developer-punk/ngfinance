@@ -3,11 +3,11 @@ import { inject, observer } from "mobx-react";
 import {makeStyles} from '@material-ui/core/styles';
 import {colors, Grid} from '@material-ui/core';
 import {Section} from "components/organisms";
-import WithBase from 'with/WithBase';
 import {useWeb3} from '@openzeppelin/network/react';
+
 import {environmentConfig} from 'myconfig';
 import requestWeb3 from 'api/requestWeb3';
-
+import WithBase from 'with/WithBase';
 // import {ComingNextSection, NftStakingSection, LPStakingSection} from './sections';
 
 const useStyles = makeStyles(theme => ({

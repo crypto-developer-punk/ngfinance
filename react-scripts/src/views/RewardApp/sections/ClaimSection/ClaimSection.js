@@ -67,12 +67,14 @@ const TokenClaimSection = props => {
       <Grid item xs={12} style={{marginBottom: '30px'}}>
         <CardBase liftUp variant="outlined" align="left" withShadow
                   style={{ borderTop: `5px solid ${colors.deepOrange[900]}` }}>
-          <Grid container spacing={isMd ? 5 : 1}>
+          <Grid container spacing={isMd ? 5 : 2}>
+            <Grid item container xs={12} justify="center" alignItems="center">
             <Grid item xs={6} md={6} align={"left"}>
               {title}
             </Grid>
             <Grid item xs={6} md={6} align={"right"}>
               {stakingButtonComponents}
+            </Grid>
             </Grid>
             { subTitle && 
               <Grid item xs={12} md={12} align={"left"}>
@@ -149,6 +151,9 @@ const ClaimSection = props => {
     const isMd = useMediaQuery(theme.breakpoints.up('md'), {
       defaultMatches: true,
     });
+    const isSm = useMediaQuery(theme.breakpoints.up('sm'), {
+      defaultMatches: true,
+    });
   
     const {store} = props; 
     const {webThreeContext, paintSnapshot, canvasSnapshot, lpSnapshot, paintEthLpStaking} = store;
@@ -202,6 +207,10 @@ const ClaimSection = props => {
       return lpSnapshot.balance_of_reward === 0 || !webThreeContext.isWalletConnected;
     };
 
+    const buttonSize = () => {
+      return isMd ? "large" : (isSm ? "medium" : "small")
+    };
+
     return (
       <React.Fragment>
          <Grid
@@ -235,7 +244,7 @@ const ClaimSection = props => {
               </Typography>
             } 
             stakingButtonComponents={
-              <Button variant="outlined" color="primary" size="large" onClick={()=>{claim(TOKEN_TYPE_PAINT_NFT)}} disabled={isDisabledPaintClaim()}>
+              <Button variant="outlined" color="primary" size={buttonSize()} onClick={()=>{claim(TOKEN_TYPE_PAINT_NFT)}} disabled={isDisabledPaintClaim()}>
                 Claim
               </Button>
             }
@@ -258,7 +267,7 @@ const ClaimSection = props => {
               </Typography>
             }
             stakingButtonComponents={
-              <Button variant="outlined" color="primary" size="large" onClick={()=>{claim(TOKEN_TYPE_CANVAS_NFT)}} disabled={isDisabledCanvasClaim()}>
+              <Button variant="outlined" color="primary" size={buttonSize()} onClick={()=>{claim(TOKEN_TYPE_CANVAS_NFT)}} disabled={isDisabledCanvasClaim()}>
                 Claim
               </Button>
             }
@@ -286,7 +295,7 @@ const ClaimSection = props => {
             }
             stakingButtonComponents={
               <Grid item xs={12}>
-                <Button style={{borderBottomLeftRadius: 5, borderBottomRightRadius: 5, borderTopLeftRadius: 5, borderTopRightRadius: 5, marginLeft: -1}} variant="outlined" color="primary" size="large" onClick={() => claim(TOKEN_TYPE_CANVAS_PAINT_ETH_LP)} disabled={isDisabledLpClaim()}>
+                <Button style={{borderBottomLeftRadius: 5, borderBottomRightRadius: 5, borderTopLeftRadius: 5, borderTopRightRadius: 5, marginLeft: -1}} variant="outlined" color="primary" size={buttonSize()} onClick={() => claim(TOKEN_TYPE_CANVAS_PAINT_ETH_LP)} disabled={isDisabledLpClaim()}>
                   Claim
                 </Button>
               </Grid>

@@ -8,7 +8,7 @@ import {useWeb3} from '@openzeppelin/network/react';
 import {environmentConfig} from 'myconfig';
 import requestWeb3 from 'api/requestWeb3';
 
-import {OurNFTSection} from './sections';
+import {OurNFTSection, ComingNextSection} from './sections';
 
 const useStyles = makeStyles(theme => ({
   pagePaddingTop: {
@@ -58,6 +58,8 @@ const NFTApp = props => {
           spacing={4}
         >
           <OurNFTSection  {...props} />
+          <Grid item className={classes.pagePaddingTop}/>
+          <ComingNextSection {...props} />
         </Grid>
       </Section>
     </div>

@@ -3,7 +3,7 @@ import { inject, observer } from "mobx-react";
 import {values, map} from 'mobx';
 import PropTypes from 'prop-types';
 import {makeStyles, withStyles, useTheme} from '@material-ui/core/styles';
-import {Button, ButtonGroup, colors, Grid, Typography, Divider, Paper, useMediaQuery} from '@material-ui/core';
+import {Button, ButtonGroup, colors, Grid, Typography, Divider, Paper, useMediaQuery, Select, MenuItem} from '@material-ui/core';
 import ReactPlayer from 'react-player'
 import {Image} from 'components/atoms';
 import {SectionHeader} from 'components/molecules';
@@ -12,6 +12,7 @@ import Rarible from "assets/images/main/logo_rarible.png";
 
 import {TOKEN_TYPE_PAINT_NFT, TOKEN_TYPE_CANVAS_NFT, TOKEN_TYPE_CANVAS_PAINT_ETH_LP} from 'myconstants';
 import {sleep, StringHelper} from "myutil";
+import BasicSelect from "components/my/BasicSelect";
 
 import Moment from 'moment';
 require('moment-timezone');
@@ -72,7 +73,8 @@ const OurNFTSection = props => {
   const isMd = useMediaQuery(theme.breakpoints.up('md'), {
     defaultMatches: true,
   });
-
+  const [filterTokenTypeId, setFilterTokenTypeId] = React.useState(-1);
+  
   const {store} = props; 
   const {webThreeContext, NFTArr} = store;
 
@@ -100,23 +102,38 @@ const OurNFTSection = props => {
         data-aos={'fade-up'}
       >
         {/* title */}
-        <Grid item xs={12} style={{marginBottom: '30px'}}>
-          <SectionHeader
-              title={
-                <Typography variant="h5">
-                  Our NFTs
-                </Typography>
-              }
-              align="left"
-              disableGutter
-          />
-          <Divider/>
+        <Grid container item xs={12} style={{marginBottom: '30px'}}>
+          <Grid container item xs={12} justify="space-between" style={{}} >
+            <Grid item>
+              <SectionHeader
+                  title={
+                    <Typography variant="h5">
+                      Our NFTs
+                    </Typography>
+                  }
+                  align="left"
+                  disableGutter
+              />
+            </Grid>
+            <Grid item style={{marginRight:10}}>
+              <BasicSelect boxStyle={{width:150}} title="Category" onChanged={(event)=>{console.log(event.target); setFilterTokenTypeId(event.target.value)}} defaultIndex={0} data={[{value:-1, label:'ITEM ALL'}, {value:0, label:'UTILITY'}, {value:2, label:'GOVERNANCE'}]}/>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Divider/>
+          </Grid>
         </Grid>
     
         {/* nft-list */}
         <Grid container item xs={12} spacing={1} >
           {
-            NFTArr.map(nft => {
+            NFTArr.filter(nft => {
+              if (filterTokenTypeId === -1)
+                return true;
+              else {
+                return nft.token_type === filterTokenTypeId;
+              }
+            }).map(nft => {
               return (
                   <Grid container item 
                     xs={12} sm={6} md={4}                         
@@ -137,28 +154,34 @@ const OurNFTSection = props => {
                             onClickNftItem(nft);
                           }}
                         >
-                          <Grid item>
-                            <Image
-                              src={nft.image_url}
-                              hidden={isMp4Url(nft.image_url)}
-                              style={{maxHeight:340}}
-                              alt="Genesis NFT"
-                              className={classes.image}
-                              data-aos="flip-left"
-                              data-aos-easing="ease-out-cubic"
-                              data-aos-duration="2000"
-                            />
-                          </Grid>
-                          <Grid item maxHeight={340} xs={12} style={isMp4Url(nft.image_url) ? {marginTop:'-10%', marginBottom: '2%'} : {}}>
-                            <ReactPlayer
-                              url={nft.image_url}
-                              hidden={!isMp4Url(nft.image_url)}
-                              width='100%'
-                              playing={true}
-                              loop={true}
-                              muted={true}
-                            />
-                          </Grid>
+                          {
+                            !isMp4Url(nft.image_url) &&
+                            <Grid item>
+                              <Image
+                                src={nft.image_url}
+                                // hidden={isMp4Url(nft.image_url)}
+                                style={{maxHeight:340}}
+                                alt="Genesis NFT"
+                                className={classes.image}
+                                data-aos="flip-left"
+                                data-aos-easing="ease-out-cubic"
+                                data-aos-duration="2000"
+                              />
+                            </Grid>
+                          }
+                          {
+                            isMp4Url(nft.image_url) &&
+                            <Grid item maxHeight={340} xs={12} style={isMp4Url(nft.image_url) ? {marginTop:'-10%', marginBottom: '2%'} : {}}>
+                              <ReactPlayer
+                                url={nft.image_url}
+                                // hidden={!isMp4Url(nft.image_url)}
+                                width='100%'
+                                playing={true}
+                                loop={true}
+                                muted={true}
+                              />
+                            </Grid>
+                          }
                         </Grid >
                         <Grid item xs={12}>
                           <Divider style={{width: '100%', marginTop: 15}} />

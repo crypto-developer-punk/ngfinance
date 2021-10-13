@@ -3,6 +3,10 @@ import { inject, observer } from "mobx-react";
 import {makeStyles} from '@material-ui/core/styles';
 import {colors, Grid} from '@material-ui/core';
 import {Section} from "components/organisms";
+import {useWeb3} from '@openzeppelin/network/react';
+
+import {environmentConfig} from 'myconfig';
+import requestWeb3 from 'api/requestWeb3';
 import WithBase from 'with/WithBase';
 
 import {CurrentOpenedAuctionSection, NextOpenSaleSection} from './sections';
@@ -25,8 +29,23 @@ const useStyles = makeStyles(theme => ({
   }));
 
 const OpenSaleApp = props => {
-  
   const classes = useStyles();
+  const web3Context = useWeb3(environmentConfig.eth_network);    
+
+  const { networkId, accounts } = web3Context;
+  const { store } = props;
+
+  React.useEffect(() => {
+    requestWeb3.reinitialize();
+    async function initStore() {
+      try {
+        // await store.asyncInitWebThreeContext();
+      } catch (err) {
+        props.showErrorDialog(err);
+      }
+    }
+    initStore();
+  }, [networkId, accounts]);
 
   return (
     <div className={classes.shape}>

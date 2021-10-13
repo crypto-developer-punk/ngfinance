@@ -64,15 +64,26 @@ const TokenStakingSection = props => {
 
   return (
     <React.Fragment>
+       <Grid
+          item
+          container
+          justify="flex-start"
+          alignItems="flex-start"
+          xs={12}
+          md={12}
+          data-aos={'fade-up'}
+        >
       <Grid item xs={12} style={{marginBottom: '30px'}}>
         <CardBase liftUp variant="outlined" align="left" withShadow
                   style={{ borderTop: `5px solid ${colors.deepOrange[900]}` }}>
-          <Grid container spacing={isMd ? 5 : 1}>
+          <Grid container spacing={isMd ? 5 : 2}>
+            <Grid item container xs={12} justify="center" alignItems="center">
             <Grid item xs={6} md={6} align={"left"}>
               {title}
             </Grid>
             <Grid item xs={6} md={6} align={"right"}>
               {stakingButtonComponents}
+            </Grid>
             </Grid>
             { subTitle && 
               <Grid item xs={12} md={12} align={"left"}>
@@ -137,6 +148,7 @@ const TokenStakingSection = props => {
           </Grid>
         </CardBase>
       </Grid>
+      </Grid>
     </React.Fragment>
   );
 };
@@ -147,6 +159,9 @@ const LpTStakingSection = props => {
   const theme = useTheme();
   const classes = useStyles();
   const isMd = useMediaQuery(theme.breakpoints.up('md'), {
+    defaultMatches: true,
+  });
+  const isSm = useMediaQuery(theme.breakpoints.up('sm'), {
     defaultMatches: true,
   });
 
@@ -225,6 +240,10 @@ const LpTStakingSection = props => {
     return paintEthLpStaking.token_amount === 0 || !webThreeContext.isWalletConnected;
   };
 
+  const buttonSize = () => {
+    return isMd ? "large" : (isSm ? "medium" : "small")
+  };
+
   return (
     <React.Fragment>
       <Grid
@@ -266,10 +285,10 @@ const LpTStakingSection = props => {
               }
               stakingButtonComponents={
                 <Grid item xs={12}>
-                  <Button style={{borderBottomLeftRadius: 5, borderBottomRightRadius: 0, borderTopLeftRadius: 5, borderTopRightRadius: 0}} variant="outlined" color="primary" size="large" onClick={registerPaintEthLpStaking} disabled={isDisalbedLpStake()}>
+                  <Button style={{borderBottomLeftRadius: 5, borderBottomRightRadius: 0, borderTopLeftRadius: 5, borderTopRightRadius: 0}} variant="outlined" color="primary" size={buttonSize()} onClick={registerPaintEthLpStaking} disabled={isDisalbedLpStake()}>
                     Stake
                   </Button>
-                  <Button style={{borderBottomLeftRadius: 0, borderBottomRightRadius: 5, borderTopLeftRadius: 0, borderTopRightRadius: 5, marginLeft: -1}} variant="outlined" color="primary" size="large" onClick={requestUnstaking} disabled={isDisabledLpUnstake()}>
+                  <Button style={{borderBottomLeftRadius: 0, borderBottomRightRadius: 5, borderTopLeftRadius: 0, borderTopRightRadius: 5, marginLeft: -1}} variant="outlined" color="primary" size={buttonSize()} onClick={requestUnstaking} disabled={isDisabledLpUnstake()}>
                     Unstake
                   </Button>
                 </Grid>

@@ -5,12 +5,14 @@ import PropTypes from 'prop-types';
 import {makeStyles, withStyles, useTheme} from '@material-ui/core/styles';
 import CustomizedProgressBars from 'components/molecules/CustomizedProgressBars/CustomizedProgressBars';
 import {Button, ButtonGroup, colors, Grid, Typography, Divider, Paper, useMediaQuery} from '@material-ui/core';
+import { Icon } from 'components/atoms';
 import {Image} from 'components/atoms';
 import {SectionHeader} from 'components/molecules';
 import {CardBase, Section} from "components/organisms";
 import {sleep} from "myutil";
 
 import Eth from "assets/images/main/logo_eth.svg";
+import PaintSVG from 'assets/images/main/pallete_icon.svg';
 import Rarible from "assets/images/main/logo_rarible.png";
 
 import Moment from 'moment';
@@ -46,7 +48,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   gridItem: {
-    marginTop: theme.spacing(5)
+    marginTop: theme.spacing(2)
   },
   gridItemMain: {
     marginTop: theme.spacing(1)
@@ -59,7 +61,7 @@ const useStyles = makeStyles(theme => ({
   },
   urltext: {
     // textOverflow: 'ellipsis'
-  }
+  },
 }));
 
 const NextOpenSaleSection = props => {
@@ -91,7 +93,7 @@ const NextOpenSaleSection = props => {
   return (
     <React.Fragment>
       {/* title */}
-      <Grid item xs={12} style={{marginBottom: '0px'}}>
+      <Grid item xs={12} style={{marginBottom: '0px'}} >
         <SectionHeader
             title={
               <Typography variant="h5">
@@ -108,8 +110,8 @@ const NextOpenSaleSection = props => {
       <Grid
         item
         container
-        justify="flex-start"
-        alignItems="flex-start"
+        justify="center"
+        alignItems="center"
         xs={12}
         md={6}
       >
@@ -136,129 +138,77 @@ const NextOpenSaleSection = props => {
       >
         <CardBase liftUp variant="outlined" align="left" withShadow
                 style={{ borderTop: `5px solid ${colors.blueGrey[500]}` }}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <CustomizedProgressBars saleDate={SALE_DATE} isStart={true}/>
-            </Grid>
-            <Grid item xs={9}>
-              <SectionHeader
-                title={
-                  <span>
-                    <div>
-                      <Typography variant="caption" className={classes.tag} >
-                        Nostalgia Artist
-                      </Typography>
-                      <Typography variant="caption" className={classes.tag} >
-                        Utility NFT
-                      </Typography>
-                      <Typography variant="caption" className={classes.tag} >
-                        PAINT
-                      </Typography>
-                    </div>
-                  </span>
-                }
-                align="left"
-                disableGutter
-              />
-            </Grid>
-            <Grid item xs={3} align="right">
-              <Image
-                  src={Rarible}
-                  style={{ width: '40px', height:'40px' }}
-              />
-            </Grid>
-            
-            <Grid item xs={12}>
-              <SectionHeader
-                  title={
-                    <span>
-                      <Typography component="span" variant="h5" color="textPrimary" >
-                        <strong>Metaverse</strong>
-                      </Typography>
-                    </span>
-                  }
-                  align="left"
-                  disableGutter
-              />
-            </Grid>
+          <Grid container spacing={0}>
+            <Grid container spacing={0} item>
+              <Grid container item xs={12} spacing={2} alignItems="center">
+                <Grid item >
+                  <SectionHeader
+                        title={
+                          <span>
+                            <Typography component="span" variant="h5" color="textPrimary" >
+                              <strong>Metaverse</strong>
+                            </Typography>
+                          </span>
+                        }
+                        align="left"
+                        disableGutter
+                    />
+                </Grid>
+                <Grid item >
+                  <Image
+                      src={Rarible}
+                      style={{ width: 30, height:30 }}
+                  />
+                </Grid>  
+              </Grid>
 
-            <Grid item xs={12} className={classes.gridItemMain}>
-              <Grid container>
-                <Grid item xs={12} md={4}>
-                  <Typography variant="subtitle1" color={"primary"}>
-                    DESCRIPTION
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} md={8}>
-                  <Typography variant="subtitle1">
-                    Metaverse
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-            
-            <Grid item xs={12} className={classes.gridItemMain}>
-              <Grid container>
-                <Grid item xs={12} md={4}>
-                  <Typography variant="subtitle1" color={"primary"}>
-                    OPEN SALE DATE
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} md={8}>
-                  <Typography variant="subtitle1">
-                    September 27 at 21:00 KST
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-            
-            <Grid item xs={12}>
-              <SectionHeader
-                title={
-                  <span>
-                    <Typography component="span" variant="body1" color="textSecondary">
-                      Price
-                    </Typography>{' '}
-                    <Typography component="span" variant="h6" color="textPrimary">
-                      <strong>0.6</strong>
-                    </Typography>{' '}
-                    <Typography component="span" variant="body1" color="textSecondary">
-                      ETH
-                      <span style={{paddingLeft: '10px'}}>
-                        <Image
-                            src={Eth}
-                            style={{height:'20px', width: '20px'}}
-                        />
+              <Grid item xs={12}>
+                <SectionHeader
+                    title={
+                      <span>
+                        <div>
+                          <Typography variant="caption" className={classes.tag} >
+                            Nostalgia Artist
+                          </Typography>
+                          <Typography variant="caption" className={classes.tag} >
+                            Utility NFT
+                          </Typography>
+                          <Typography variant="caption" className={classes.tag} >
+                            PAINT
+                          </Typography>
+                        </div>
                       </span>
-                    </Typography>
-                  </span>
-                }
-                align="left"
-                disableGutter
-                titleVariant="h3"
-              />
-            </Grid>
-            <Grid item xs={12}>
-                <span>
-                  <Typography id="discrete-slider-small-steps" gutterBottom>
-                    Total amount : 20
+                    }
+                    align="left"
+                    disableGutter
+                  />
+              </Grid>
+              
+              <Grid container item xs={12} spacing={1} className={classes.gridItem} alignItems="center">
+                <Grid item>
+                  <Typography component="span" variant="body1" color="textSecondary" >
+                    Price
                   </Typography>
-                </span>
-            </Grid>
-            <Grid item xs={12} align="center">
-              <br />
-              <Button variant="contained" color="primary" size="large"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        window.open("https://rarible.com/token/0x6cff6eb6c7cc2409b48e6192f98914fd05aab4ba:21", '_blank');
-                      }}
-                      fullWidth
-                      disabled={true}>
-                Sold out
-              </Button>
-            </Grid>
+                </Grid>
+                <Grid item>
+                  <Typography component="span" variant="body1" color="textPrimary" >
+                    10000000
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Image src={PaintSVG} style={{width:20, height:20}}/>
+                </Grid>
+                <Grid item>
+                  <Typography component="span" variant="caption" color="textPrimary" >
+                    PAINT
+                  </Typography>
+                </Grid>
+              </Grid>
 
-          </Grid>      
+              <Grid container item>
+              </Grid>
+            </Grid>
+          </Grid>
         </CardBase>
       </Grid> 
     </React.Fragment>

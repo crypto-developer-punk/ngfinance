@@ -1,6 +1,6 @@
 import React from 'react';
 import { inject, observer } from "mobx-react";
-import {makeStyles} from '@material-ui/core/styles';
+import {makeStyles, useTheme} from '@material-ui/core/styles';
 import {colors, Grid} from '@material-ui/core';
 import {Section} from "components/organisms";
 import WithBase from 'with/WithBase';
@@ -8,7 +8,7 @@ import {useWeb3} from '@openzeppelin/network/react';
 import {environmentConfig} from 'myconfig';
 import requestWeb3 from 'api/requestWeb3';
 
-import {ComingNextSection, NftStakingSection, LPStakingSection} from './sections';
+import {NftStakingSection, LPStakingSection} from './sections';
 
 const useStyles = makeStyles(theme => ({
   pagePaddingTop: {
@@ -30,6 +30,7 @@ const useStyles = makeStyles(theme => ({
 const StakingApp = props => {
   const classes = useStyles();
   const web3Context = useWeb3(environmentConfig.eth_network);    
+  const theme = useTheme();
 
   const { networkId, accounts } = web3Context;
   const { store } = props;
@@ -57,13 +58,9 @@ const StakingApp = props => {
           spacing={4}
         >
           <NftStakingSection  {...props} />
+          <Grid item className={classes.pagePaddingTop}/>
+          <LPStakingSection {...props}/>
         </Grid>
-      </Section>
-      <Section className={classes.sectionNoPaddingTop}>
-        <LPStakingSection className={classes.pagePaddingTop} {...props}/>
-      </Section>
-      <Section className={classes.pagePaddingTop}>
-        <ComingNextSection className={classes.pagePaddingTop} {...props}/>
       </Section>
     </div>
   );
