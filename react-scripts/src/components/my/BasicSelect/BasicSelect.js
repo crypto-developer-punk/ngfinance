@@ -4,8 +4,6 @@ import {InputLabel, FormControl, Box, Select, MenuItem, OutlinedInput} from '@ma
 
 const useStyles = makeStyles(theme => ({
   formcontrol: {
-    // borderWidth: 1,
-    // borderColor: 'red'
   }
 }))
 
@@ -39,11 +37,12 @@ const BasicSelect = props => {
       <FormControl fullWidth size="small" margin={'none'} >
         {/* <InputLabel id="demo-simple-select-helper-label">{props.title}</InputLabel> */}
         <Select
+          // style={{margin:5}}
           value={getCurrentValue()}
           label={getCurrentLabel()}
           onChange={handleChange}
         >
-          {props.data.map((e, idx) => {return (<MenuItem key={idx} value={e.value}>{e.label}</MenuItem>)})}
+          {props.data.map((e, idx) => {return (<MenuItem style={{margin:1}} key={idx} value={e.value}>{e.label}</MenuItem>)})}
         </Select>
       </FormControl>
     </Box>

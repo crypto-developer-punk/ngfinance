@@ -5,10 +5,13 @@ import PropTypes from 'prop-types';
 import {makeStyles, withStyles, useTheme} from '@material-ui/core/styles';
 import CustomizedProgressBars from 'components/molecules/CustomizedProgressBars/CustomizedProgressBars';
 import {Button, ButtonGroup, colors, Grid, Typography, Divider, Paper, useMediaQuery} from '@material-ui/core';
+import Countdown from 'react-countdown';
+
 import { Icon } from 'components/atoms';
 import {Image} from 'components/atoms';
 import {SectionHeader} from 'components/molecules';
 import {CardBase, Section} from "components/organisms";
+import {TimeProgress} from "components/my";
 import {sleep} from "myutil";
 
 import Eth from "assets/images/main/logo_eth.svg";
@@ -20,7 +23,7 @@ var _ = require('lodash');
 require('moment-timezone');
 Moment.tz.setDefault("Asia/Seoul");
 
-const SALE_DATE = '15-09-2021 21:00:00';
+const SALE_END_DATE = '15-10-2021 01:00:00';
 
 const useStyles = makeStyles(theme => ({
   image: {
@@ -47,7 +50,7 @@ const useStyles = makeStyles(theme => ({
       margin: theme.spacing(0, 1, 1, 0),
     },
   },
-  gridItem: {
+  gridRow: {
     marginTop: theme.spacing(2)
   },
   gridItemMain: {
@@ -69,26 +72,46 @@ const NextOpenSaleSection = props => {
 
   const classes = useStyles();
   
-  const [afterTokenSaleImageUrl, setAfterTokenSaleImageUrl] = React.useState("https://ngfinance.io/resources/blank.jpg");
-  const [afterTokenSaleSubject, setAfterTokenSaleSubject] = React.useState("Veiled");
-  const [afterTokenSale, setAfterTokenSale] = React.useState(false);
-
-  const checkIsAfterTokenSale = (saleDate) => {
-    const today = Moment();
-    const isAfterTokenSale = today.isAfter(Moment(saleDate, 'DD-MM-YYYY hh:mm:ss'));
-
-    console.log("Sale date: " + saleDate + ", isAfterTokenSale: " + isAfterTokenSale);
-
-    if (isAfterTokenSale) {
-      setAfterTokenSale(true);
-      setAfterTokenSaleSubject("N-Loot");
-      setAfterTokenSaleImageUrl("https://ngfinance.io/resources/nLoot.jpg");
-    }
-  };
-
   React.useEffect(() => {
-    checkIsAfterTokenSale(SALE_DATE);
-  });
+    console.log('aaa', Moment(SALE_END_DATE, 'DD-MM-YYYY hh:mm:ss').valueOf());
+  }, []);
+
+  const renderCountDown = ({hours, minutes, seconds, completed}) => {
+    // console.log('aaa', hours);
+    if (completed) {
+      return <span>You are good to go!</span>
+    } else {
+      const m = Moment(SALE_END_DATE, 'DD-MM-YYYY hh:mm:ss');
+      return (
+      <React.Fragment>
+        <Grid item>
+          <Typography component="span" variant="body1" color="textSecondary">
+            {`Sale ends ${m.format("MMMM DD, YYYY")} at ${m.format("LT")} KST`}
+          </Typography>
+        </Grid>
+        <Grid item container>
+          <Grid item>
+            <Typography component="span" variant="body1" color="textSecondary">{hours}</Typography>
+          </Grid> 
+          <Grid item>
+            <Typography component="span" variant="body1" color="textSecondary">{"Hours"}</Typography>
+          </Grid> 
+          <Grid item>
+            <Typography component="span" variant="body1" color="textSecondary">{minutes}</Typography>
+          </Grid> 
+          <Grid item>
+            <Typography component="span" variant="body1" color="textSecondary">{"Minutes"}</Typography>
+          </Grid>
+          <Grid item>
+            <Typography component="span" variant="body1" color="textSecondary">{seconds}</Typography>
+          </Grid> 
+          <Grid item>
+            <Typography component="span" variant="body1" color="textSecondary">{"Seconds"}</Typography>
+          </Grid>  
+        </Grid>
+      </React.Fragment>);
+    } 
+  };
 
   return (
     <React.Fragment>
@@ -143,16 +166,16 @@ const NextOpenSaleSection = props => {
               <Grid container item xs={12} spacing={2} alignItems="center">
                 <Grid item >
                   <SectionHeader
-                        title={
-                          <span>
-                            <Typography component="span" variant="h5" color="textPrimary" >
-                              <strong>Metaverse</strong>
-                            </Typography>
-                          </span>
-                        }
-                        align="left"
-                        disableGutter
-                    />
+                      title={
+                        <span>
+                          <Typography component="span" variant="h5" color="textPrimary" >
+                            <strong>Metaverse</strong>
+                          </Typography>
+                        </span>
+                      }
+                      align="left"
+                      disableGutter
+                  />
                 </Grid>
                 <Grid item >
                   <Image
@@ -184,8 +207,8 @@ const NextOpenSaleSection = props => {
                   />
               </Grid>
               
-              <Grid container item xs={12} spacing={1} className={classes.gridItem} alignItems="center">
-                <Grid item>
+              <Grid container item xs={12} spacing={1} className={classes.gridRow} alignItems="center">
+                <Grid item xs={3}>
                   <Typography component="span" variant="body1" color="textSecondary" >
                     Price
                   </Typography>
@@ -205,7 +228,30 @@ const NextOpenSaleSection = props => {
                 </Grid>
               </Grid>
 
-              <Grid container item>
+              <Grid container item xs={12} spacing={1} className={classes.gridRow} alignItems="center">
+                <Grid item xs={3}>
+                  <Typography component="span" variant="body1" color="primary" >
+                    Description
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography component="span" variant="body1" color="textSecondary" >
+                    Metaverse
+                  </Typography>
+                </Grid>
+              </Grid>
+              
+              <Grid container item xs={12} spacing={3} className={classes.gridRow}>
+                <Grid item xs={12}>
+                  <Divider/>
+                </Grid>
+              </Grid>
+
+              <Grid container item xs={12} className={classes.gridRow}>
+                <Grid item container xs={12}>
+                  <Countdown date={Moment(SALE_END_DATE, 'DD-MM-YYYY hh:mm:ss').valueOf()} renderer={renderCountDown}>
+                  </Countdown>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>

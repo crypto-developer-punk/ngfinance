@@ -12,7 +12,7 @@ import Rarible from "assets/images/main/logo_rarible.png";
 
 import {TOKEN_TYPE_PAINT_NFT, TOKEN_TYPE_CANVAS_NFT, TOKEN_TYPE_CANVAS_PAINT_ETH_LP} from 'myconstants';
 import {sleep, StringHelper} from "myutil";
-import BasicSelect from "components/my/BasicSelect";
+import {BasicSelect} from "components/my";
 
 import Moment from 'moment';
 require('moment-timezone');

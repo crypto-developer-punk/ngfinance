@@ -1,7 +1,7 @@
 import axios from "axios";
 import {environmentConfig} from 'myconfig';
 import {
-    assertSupportedTokenType, ERR_LIMIT_LOCKUP_NFT, ERR_UNSKAKING_INPROGRESS, ERR_BACKEND_RESPONSE, 
+    assertSupportedTokenType, ERR_LIMIT_LOCKUP_NFT, ERR_UNSKAKING_INPROGRESS, ERR_REWARD_INPROGRESS, 
     assertBackendResponseStatus, TIMEOUT_LIMIT_MS
 } from "myconstants";
 
@@ -37,7 +37,7 @@ class RequestBackend {
             const res = await this.myaxios.post(`${this.backend_url}/staking/unstaking`, data, {headers: this.#getRequestHeaders(my_address)});
             return res;
         } catch (err) {
-            console.log('asyncUnstaking', err, err.response.data.message, err.msg);
+            // console.log('asyncUnstaking', err, err.response.data.message, err.msg);
             if (err.response && err.response.data && err.response.data.message && err.response.data.message.includes("already unstaking is in progress")) {
                 throw {
                     code: ERR_UNSKAKING_INPROGRESS, 
@@ -129,12 +129,31 @@ class RequestBackend {
             "nft_chain_id": nft_chain_id,
             "token_type": token_type
         };
+        
+        try {
+            const {status, data} = await this.myaxios.post(`${this.backend_url}/reward/approve`, params, {headers: this.#getRequestHeaders(my_address)});
+            assertBackendResponseStatus(status, 'asyncApprove');
     
-        const {status, data} = await this.myaxios.post(`${this.backend_url}/reward/approve`, params, {headers: this.#getRequestHeaders(my_address)});
-        assertBackendResponseStatus(status, 'asyncApprove');
+            const {approved_token_amount} = data;
+            return approved_token_amount;
+        } catch (err) {
+            if (err.response && err.response.data && err.response.data.txId && err.response.data.hash) {
+                const {etherscan_url} = environmentConfig;
+                const transaction_url = etherscan_url + err.response.data.hash;
+                throw {
+                    code: ERR_REWARD_INPROGRESS,
+                    msg:  
+                    <div>
+                        Now Nostalgia Finance approving your reward.
+                        <br/>Please wait the operation.
+                        <br/><br/>Please check approving reward transaction on Etherscan.
+                        <br/><br/><a href={transaction_url} target={"_blank"}>View your transaction on Etherscan</a>    
+                    </div>                
+                }
+            }
 
-        const {approved_token_amount} = data;
-        return approved_token_amount;
+            throw err
+        }
     };
 
     asyncClaim = async(my_address, nft_chain_id, token_type, transactionHash) => {

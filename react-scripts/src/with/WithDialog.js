@@ -1,9 +1,9 @@
 import React from 'react';
 import MyAlertDialog from "widget/MyAlertDialog";
 import { 
-    ERR_WALLET_IS_NOT_CONNECTED, ERR_LIMIT_LOCKUP_NFT, ERR_UNSKAKING_INPROGRESS,
+    ERR_WALLET_IS_NOT_CONNECTED, ERR_LIMIT_LOCKUP_NFT, ERR_UNSKAKING_INPROGRESS, ERR_REWARD_INPROGRESS,
     ERR_UNSUPPORTED_TOKEN_TYPE, ERR_UNSUPPORTED_CONTRACT_TYPE, ERR_BACKEND_RESPONSE, 
-    ERR_RESPONSE_TIMEOUT, ERR_INVALID_WEB3_NETWORK
+    ERR_RESPONSE_TIMEOUT, ERR_INVALID_WEB3_NETWORK, ERR_REJECT_TRANSACTION,
 } from "myconstants";
 
 const WithDialog = WrappedComponent => {
@@ -18,8 +18,8 @@ const WithDialog = WrappedComponent => {
         const dialogModeStateRef = React.useRef('close');
 
         const showErrorDialog = (err) => {
+            console.log(err);
             if (!err.code) {
-                console.log(err);
                 let content = err.toString() || JSON.stringify(err);
                 setDialogOpened(true);
                 setUseCloseBtn(true);
@@ -34,7 +34,9 @@ const WithDialog = WrappedComponent => {
                 showDialog("You can't unstake your NFT.", err.msg);
             } else if (err.code === ERR_UNSKAKING_INPROGRESS) {
                 showDialog("You can't unstake your NFT.", <div>{err.msg}If problem is continued or takes long time, please contract to developer</div>);
-            } else if (err.code === 4001) {
+            } else if (err.code === ERR_REWARD_INPROGRESS) {
+                showDialog("Approve reward is in progress.", <div>{err.msg}</div>);
+            } else if (err.code === ERR_REJECT_TRANSACTION) {
                 closeDialog();
             } else if (
                 err.code === ERR_UNSUPPORTED_TOKEN_TYPE || err.code === ERR_UNSUPPORTED_CONTRACT_TYPE || err.code === ERR_BACKEND_RESPONSE ||
@@ -44,7 +46,6 @@ const WithDialog = WrappedComponent => {
                 setUseCloseBtn(true);
                 setUseConfirmBtn(false);
                 setLoading(false);
-                console.log(err.msg);
                 setDialogContent(<div>Error Content<br/>{`${err.msg}`}<br/><br/>{`If problem is continued, please contract to developer`} </div>);
                 setDialogTitle("Error occured");
                 dialogModeStateRef.current = 'error';
