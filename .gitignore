@@ -43,3 +43,5 @@ yarn-error.log*
 
 **/.eslintcache
 react-scripts/.eslintcache
+react-scripts/yarn.lock
+react-scripts/package-lock.json

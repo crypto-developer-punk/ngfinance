@@ -2,14 +2,14 @@ import axios from "axios";
 import {environmentConfig} from 'myconfig';
 import {
     assertSupportedTokenType, ERR_LIMIT_LOCKUP_NFT, ERR_UNSKAKING_INPROGRESS, ERR_REWARD_INPROGRESS, 
-    assertBackendResponseStatus, TIMEOUT_LIMIT_MS
+    assertBackendResponseStatus, BACKEND_TIMEOUT_LIMIT_MS
 } from "myconstants";
 
 class RequestBackend {
     constructor() {
         this.backend_url = environmentConfig.backend_url;
         this.myaxios = axios.create({
-            timeout: TIMEOUT_LIMIT_MS,
+            timeout: BACKEND_TIMEOUT_LIMIT_MS,
         });
     }
 

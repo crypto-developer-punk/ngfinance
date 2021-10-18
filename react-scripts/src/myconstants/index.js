@@ -16,16 +16,18 @@ const assertSupportedTokenType = (token_type) => {
     }
 };
 
-const TIMEOUT_LIMIT_MS = 1000 * 60 * 2;
+const WEBTHREE_TIMEOUT_LIMIT_MS = 1000 * 60;
+const BACKEND_TIMEOUT_LIMIT_MS = 1000 * 60 * 2;
+const TRANSACTION_TIMEOUT_LIMIT_MS = 1000 * 60 * 2;
 
-const assertTimeoutError = (elapsedms) => {
+const assertTransactionTimeoutError = (elapsedms) => {
     if (!elapsedms)
         return;
 
-    if (elapsedms > TIMEOUT_LIMIT_MS) {
+    if (elapsedms > BACKEND_TIMEOUT_LIMIT_MS) {
         throw {
             code: ERR_RESPONSE_TIMEOUT,
-            msg: `Response time is over ${(TIMEOUT_LIMIT_MS / (1000 * 60))} minute.`
+            msg: `Response time is over ${(TRANSACTION_TIMEOUT_LIMIT_MS / (1000 * 60))} minute.`
         }
     }
 };
@@ -79,9 +81,10 @@ export {
     TOKEN_TYPE_CANVAS_NFT, 
     CHAIN_ID_PAINT_ETH_LP_TOKEN, 
     CONTRACT_TYPE_PAINT_ETH_LP_TOKEN,
-    TIMEOUT_LIMIT_MS,
+    BACKEND_TIMEOUT_LIMIT_MS,
+    WEBTHREE_TIMEOUT_LIMIT_MS,
     assertSupportedTokenType,
-    assertTimeoutError,
+    assertTransactionTimeoutError,
     assertSupportedContractType,
     assertBackendResponseStatus,
     assertWalletConnect,

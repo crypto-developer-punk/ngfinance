@@ -3,7 +3,7 @@ import {timeout, ProviderHelper} from 'myutil';
 import Config, {environmentConfig} from 'myconfig';
 import {
     TOKEN_TYPE_PAINT_NFT, TOKEN_TYPE_CANVAS_NFT, TOKEN_TYPE_CANVAS_PAINT_ETH_LP, ERR_UNSUPPORTED_TOKEN_TYPE, ERR_UNSUPPORTED_CONTRACT_TYPE, 
-    assertSupportedTokenType, assertSupportedContractType
+    assertSupportedTokenType, assertSupportedContractType, WEBTHREE_TIMEOUT_LIMIT_MS
 } from 'myconstants';
 
 const Web3 = require('web3');
@@ -17,7 +17,7 @@ class RequestWeb3 {
         const provider = ProviderHelper.getProvider();
         this.providerName = ProviderHelper.getProviderName(provider);
         this.lib = new Web3(provider);
-        this.timeout = 3000;
+        this.timeout = WEBTHREE_TIMEOUT_LIMIT_MS;
     }
 
     asyncGetAccounts = async() => {

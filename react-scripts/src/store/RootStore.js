@@ -11,7 +11,7 @@ import requestWeb3 from 'api/requestWeb3';
 import Snapshot from "./model/Snapshot";
 
 import { TOKEN_TYPE_PAINT_NFT, TOKEN_TYPE_CANVAS_NFT, TOKEN_TYPE_CANVAS_PAINT_ETH_LP} from "myconstants";
-import { assertSupportedTokenType, assertTimeoutError, assertNetworkIdAndWalletConnect } from "myconstants";
+import { assertSupportedTokenType, assertTransactionTimeoutError, assertNetworkIdAndWalletConnect } from "myconstants";
 import { CHAIN_ID_PAINT_ETH_LP_TOKEN, CONTRACT_TYPE_PAINT_ETH_LP_TOKEN } from "myconstants";
 import {environmentConfig} from 'myconfig';
 import {sleep} from "myutil";
@@ -138,7 +138,7 @@ const RootStore = types.model({
                 if (backendSizeRegisterStakingFinished)
                     break;
                 accTime += 1000;
-                assertTimeoutError(accTime);    
+                assertTransactionTimeoutError(accTime);    
             } while (true);
 
             console.log(`RegisterNftStaking 1 - asyncRegisterStaking`);
@@ -183,7 +183,7 @@ const RootStore = types.model({
                 if (backendSizeRegisterStakingFinished)
                     break;
                 accTime += 1000;
-                assertTimeoutError(accTime);
+                assertTransactionTimeoutError(accTime);
             } while (true);
 
             const paintLpBalance = yield requestWeb3.asyncGetBalanceOfPaintEthLP(currentAccount);
@@ -298,7 +298,7 @@ const RootStore = types.model({
                 if (backendSizeRegisterStakingFinished)
                     break;
                 accTime += 1000;
-                assertTimeoutError(accTime);
+                assertTransactionTimeoutError(accTime);
             } while (true);
 
             const balanceOfReward = yield requestBackend.asyncGetReward(currentAccount, token_type);

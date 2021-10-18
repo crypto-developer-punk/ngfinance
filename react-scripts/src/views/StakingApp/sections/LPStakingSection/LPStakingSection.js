@@ -10,7 +10,7 @@ import PaintToken from "assets/images/main/logo_paint_token.svg";
 import CanvasToken from "assets/images/main/logo_canvas_token.svg";
 
 import {TOKEN_TYPE_PAINT_NFT, TOKEN_TYPE_CANVAS_NFT, TOKEN_TYPE_CANVAS_PAINT_ETH_LP} from 'myconstants';
-import {sleep} from "myutil";
+import {sleep, MathHelper} from "myutil";
 
 import Moment from 'moment';
 require('moment-timezone');
@@ -297,20 +297,20 @@ const LpTStakingSection = props => {
                 <Grid item xs={12}>
                   <Paper className={classes.paperSub}>
                     <Typography component="span" variant="subtitle1">
-                      Your PAINT/ETH LP : {webThreeContext.paintEthLpBalance}
+                      Your PAINT/ETH LP : {MathHelper.toFixed(webThreeContext.paintEthLpBalance)}
                     </Typography>
                     <br/>
                     <Typography component="span" variant="subtitle1">
-                      Staked PAINT/ETH LP : {paintEthLpStaking.token_amount}
+                      Staked PAINT/ETH LP : {MathHelper.toFixed(paintEthLpStaking.token_amount)}
                     </Typography>
                   </Paper>
                 </Grid>
               }
               snapShotTimeStr={lpSnapshot.snapShotTimeStr}
               totalValueLockedTitle={"Total number of LP locked"}
-              totalValueLockedNftAmount={lpSnapshot.total_value_locked_nft_amount}
+              totalValueLockedNftAmount={MathHelper.toFixed(lpSnapshot.total_value_locked_nft_amount)}
               hashAddressLabel={"CANVAS : 0x863ad391091ae0e87b850c2bb7bfc7597c79c93f"}
-              balanceOfReward={lpSnapshot.balance_of_reward}
+              balanceOfReward={MathHelper.toFixed(lpSnapshot.balance_of_reward)}
               dropTokenImage={CanvasToken}
               dropTokenName={"Canvas Token"}/>  
           </Grid>   

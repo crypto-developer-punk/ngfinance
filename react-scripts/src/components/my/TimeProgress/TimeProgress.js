@@ -4,7 +4,7 @@ import Countdown from 'react-countdown';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 
-import {sleep, MathHelper} from "myutil";
+import {sleep, DateHelper} from "myutil";
 
 require('moment-timezone');
 
@@ -38,7 +38,7 @@ const TimeProgress = props => {
   },[])
 
   const updateHoursMinutesSeconds = (diffDuration) => {
-    const t = MathHelper.msToTime(diffDuration);
+    const t = DateHelper.msToTime(diffDuration);
     setDays(t.days);
     setHours(t.hours);
     setMinutes(t.minutes);
