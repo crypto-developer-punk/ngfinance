@@ -191,7 +191,7 @@ const NextOpenSaleSection = props => {
                 </Grid>
                 <Grid item xs={12} md={8}>
                   <Typography variant="subtitle1">
-                    ATTITUDE
+                    GHARLIERA X NOSTALGIA
                   </Typography>
                 </Grid>
               </Grid>
