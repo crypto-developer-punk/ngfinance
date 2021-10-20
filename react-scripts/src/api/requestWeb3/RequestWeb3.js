@@ -1,5 +1,5 @@
 import axios from "axios";
-import {timeout, ProviderHelper} from 'myutil';
+import {timeout, ProviderHelper, MathHelper} from 'myutil';
 import Config, {environmentConfig} from 'myconfig';
 import {
     TOKEN_TYPE_PAINT_NFT, TOKEN_TYPE_CANVAS_NFT, TOKEN_TYPE_CANVAS_PAINT_ETH_LP, ERR_UNSUPPORTED_TOKEN_TYPE, ERR_UNSUPPORTED_CONTRACT_TYPE, 
@@ -124,7 +124,7 @@ class RequestWeb3 {
         } 
         // TODO aaa
         // console.log(`aaa nft_chain_id: ${nft_chain_id}, contract_type: ${contract_type}, balanceOfNft: ${balanceOfNft}`);
-        return parseFloat(balanceOfNft);
+        return MathHelper.parseFixedFloat(balanceOfNft);
     };
 
     asyncRegisterNftStaking = async(fromAddress, contract_type, nft_chain_id, amountOfNft, transactionHashCB) => {
@@ -176,7 +176,7 @@ class RequestWeb3 {
         const balanceWei = await paintEthLpContract.methods.balanceOf(connected_addr).call();
         const balanceEther = await this.lib.utils.fromWei(balanceWei, 'ether');
         console.log("Check balance of PAINT-ETH LP: " + balanceEther);
-        return parseFloat(balanceEther);
+        return MathHelper.parseFixedFloat(balanceEther);
     };
 
     asyncRegisterPaintEthLpStaking = async(connected_addr, amount, transactionHashCB) => {
