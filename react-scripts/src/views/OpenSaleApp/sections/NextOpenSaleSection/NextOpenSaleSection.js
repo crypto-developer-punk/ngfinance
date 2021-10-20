@@ -114,7 +114,7 @@ const NextOpenSaleSection = props => {
         md={6}
       >
         <Image
-            src={"https://ngfinance.io/resources/metaverse.png"}
+            src={"https://img.rarible.com/prod/image/upload/t_big/prod-itemImages/0x4dfd4f4aa74b62614597e6f5417f70a6fa7a9f45:3/753eaf16"}
             alt="next open sale NFT"
             style={{ width: '100%', height:'100%' }}
             className={classes.image}
@@ -140,19 +140,19 @@ const NextOpenSaleSection = props => {
             <Grid item xs={12}>
               <CustomizedProgressBars saleDate={SALE_DATE} isStart={true}/>
             </Grid>
-            <Grid item xs={9}>
+            <Grid item xs={12} md={9}>
               <SectionHeader
                 title={
                   <span>
                     <div>
                       <Typography variant="caption" className={classes.tag} >
-                        Nostalgia Artist
+                        GHARLIERA
                       </Typography>
                       <Typography variant="caption" className={classes.tag} >
-                        Utility NFT
+                        Governance NFT
                       </Typography>
                       <Typography variant="caption" className={classes.tag} >
-                        PAINT
+                        Canvas
                       </Typography>
                     </div>
                   </span>
@@ -161,7 +161,7 @@ const NextOpenSaleSection = props => {
                 disableGutter
               />
             </Grid>
-            <Grid item xs={3} align="right">
+            <Grid item xs={12} md={3} align="right">
               <Image
                   src={Rarible}
                   style={{ width: '40px', height:'40px' }}
@@ -173,7 +173,7 @@ const NextOpenSaleSection = props => {
                   title={
                     <span>
                       <Typography component="span" variant="h5" color="textPrimary" >
-                        <strong>Metaverse</strong>
+                        <strong>ATTITUDE</strong>
                       </Typography>
                     </span>
                   }
@@ -191,7 +191,7 @@ const NextOpenSaleSection = props => {
                 </Grid>
                 <Grid item xs={12} md={8}>
                   <Typography variant="subtitle1">
-                    Metaverse
+                    GHARLIERA X NOSTALGIA
                   </Typography>
                 </Grid>
               </Grid>
@@ -206,7 +206,7 @@ const NextOpenSaleSection = props => {
                 </Grid>
                 <Grid item xs={12} md={8}>
                   <Typography variant="subtitle1">
-                    September 27 at 21:00 KST
+                    October 23 at 21:00 KST - October 28 at 21:00 KST
                   </Typography>
                 </Grid>
               </Grid>
@@ -217,10 +217,10 @@ const NextOpenSaleSection = props => {
                 title={
                   <span>
                     <Typography component="span" variant="body1" color="textSecondary">
-                      Price
+                      Reserve price
                     </Typography>{' '}
                     <Typography component="span" variant="h6" color="textPrimary">
-                      <strong>0.6</strong>
+                      <strong>2</strong>
                     </Typography>{' '}
                     <Typography component="span" variant="body1" color="textSecondary">
                       ETH
@@ -241,7 +241,7 @@ const NextOpenSaleSection = props => {
             <Grid item xs={12}>
                 <span>
                   <Typography id="discrete-slider-small-steps" gutterBottom>
-                    Total amount : 20
+                    Total amount : 1
                   </Typography>
                 </span>
             </Grid>
@@ -250,11 +250,11 @@ const NextOpenSaleSection = props => {
               <Button variant="contained" color="primary" size="large"
                       onClick={(e) => {
                         e.preventDefault();
-                        window.open("https://rarible.com/token/0x6cff6eb6c7cc2409b48e6192f98914fd05aab4ba:21", '_blank');
+                        window.open("https://rarible.com/token/0x4dfd4f4aa74b62614597e6f5417f70a6fa7a9f45:3?tab=details", '_blank');
                       }}
                       fullWidth
-                      disabled={true}>
-                Sold out
+                      disabled={false}>
+                Place a bid
               </Button>
             </Grid>
 
