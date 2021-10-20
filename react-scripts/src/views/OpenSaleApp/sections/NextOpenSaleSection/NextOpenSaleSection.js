@@ -140,7 +140,7 @@ const NextOpenSaleSection = props => {
             <Grid item xs={12}>
               <CustomizedProgressBars saleDate={SALE_DATE} isStart={true}/>
             </Grid>
-            <Grid item xs={9}>
+            <Grid item xs={12} md={9}>
               <SectionHeader
                 title={
                   <span>
@@ -161,7 +161,7 @@ const NextOpenSaleSection = props => {
                 disableGutter
               />
             </Grid>
-            <Grid item xs={3} align="right">
+            <Grid item xs={12} md={3} align="right">
               <Image
                   src={Rarible}
                   style={{ width: '40px', height:'40px' }}
