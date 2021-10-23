@@ -291,7 +291,9 @@ const NextOpenSaleSection = props => {
         <div
             style={{ width: '100%', height:'100%' }}
           >
-          <Carousel>
+          <Carousel
+              autoPlay={true}
+          >
             <div>
               <img src="https://ngfinance.io/resources/gharliera-root-01.jpg" />
             </div>
