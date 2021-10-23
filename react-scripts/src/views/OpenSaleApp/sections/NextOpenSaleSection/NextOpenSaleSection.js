@@ -293,6 +293,7 @@ const NextOpenSaleSection = props => {
           >
           <Carousel
               autoPlay={true}
+              infiniteLoop={true}
           >
             <div>
               <img src="https://ngfinance.io/resources/gharliera-root-01.jpg" />
