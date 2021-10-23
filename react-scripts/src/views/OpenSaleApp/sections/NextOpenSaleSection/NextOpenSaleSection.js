@@ -288,38 +288,42 @@ const NextOpenSaleSection = props => {
           xs={12}
           md={12}
       >
-        <Carousel>
-          <div>
-            <img src="https://ngfinance.io/resources/gharliera-root-01.jpg" />
-          </div>
-          <div>
-            <img src="https://ngfinance.io/resources/gharliera-root-02.jpg" />
-          </div>
-          <div>
-            <img src="https://ngfinance.io/resources/gharliera-root-03.jpg" />
-          </div>
-          <div>
-            <img src="https://ngfinance.io/resources/gharliera-root-04.jpg" />
-          </div>
-          <div>
-            <img src="https://ngfinance.io/resources/gharliera-root-05.jpg" />
-          </div>
-          <div>
-            <img src="https://ngfinance.io/resources/gharliera-root-06.jpg" />
-          </div>
-          <div>
-            <img src="https://ngfinance.io/resources/gharliera-root-07.jpg" />
-          </div>
-          <div>
-            <img src="https://ngfinance.io/resources/gharliera-root-08.jpg" />
-          </div>
-          <div>
-            <img src="https://ngfinance.io/resources/gharliera-root-09.jpg" />
-          </div>
-          <div>
-            <img src="https://ngfinance.io/resources/gharliera-root-10.jpg" />
-          </div>
-        </Carousel>
+        <div
+            style={{ width: '100%', height:'100%' }}
+          >
+          <Carousel>
+            <div>
+              <img src="https://ngfinance.io/resources/gharliera-root-01.jpg" />
+            </div>
+            <div>
+              <img src="https://ngfinance.io/resources/gharliera-root-02.jpg" />
+            </div>
+            <div>
+              <img src="https://ngfinance.io/resources/gharliera-root-03.jpg" />
+            </div>
+            <div>
+              <img src="https://ngfinance.io/resources/gharliera-root-04.jpg" />
+            </div>
+            <div>
+              <img src="https://ngfinance.io/resources/gharliera-root-05.jpg" />
+            </div>
+            <div>
+              <img src="https://ngfinance.io/resources/gharliera-root-06.jpg" />
+            </div>
+            <div>
+              <img src="https://ngfinance.io/resources/gharliera-root-07.jpg" />
+            </div>
+            <div>
+              <img src="https://ngfinance.io/resources/gharliera-root-08.jpg" />
+            </div>
+            <div>
+              <img src="https://ngfinance.io/resources/gharliera-root-09.jpg" />
+            </div>
+            <div>
+              <img src="https://ngfinance.io/resources/gharliera-root-10.jpg" />
+            </div>
+          </Carousel>
+        </div>
       </Grid>
 
       {/* nft-description */}
@@ -371,7 +375,7 @@ const NextOpenSaleSection = props => {
                   title={
                     <span>
                       <Typography component="span" variant="h5" color="textPrimary" >
-                        <strong>ROOT 10 Edition</strong>
+                        <strong>ROOT Edition</strong>
                       </Typography>
                     </span>
                   }
@@ -389,7 +393,7 @@ const NextOpenSaleSection = props => {
                 </Grid>
                 <Grid item xs={12} md={8}>
                   <Typography variant="subtitle1">
-                    GHARLIERA X NOSTALGIA 10 Edition
+                    GHARLIERA X NOSTALGIA
                   </Typography>
                 </Grid>
               </Grid>
