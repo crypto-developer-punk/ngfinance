@@ -13,6 +13,9 @@ import {sleep} from "myutil";
 import Eth from "assets/images/main/logo_eth.svg";
 import Rarible from "assets/images/main/logo_rarible.png";
 
+import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
+import { Carousel } from 'react-responsive-carousel';
+
 import Moment from 'moment';
 var _ = require('lodash');
 require('moment-timezone');
@@ -95,7 +98,7 @@ const NextOpenSaleSection = props => {
         <SectionHeader
             title={
               <Typography variant="h5">
-                Next open sale
+                Next open auction
               </Typography>
             }
             align="left"
@@ -260,7 +263,195 @@ const NextOpenSaleSection = props => {
 
           </Grid>      
         </CardBase>
-      </Grid> 
+      </Grid>
+
+      {/* title */}
+      <Grid item xs={12} style={{marginBottom: '0px'}}>
+        <SectionHeader
+            title={
+              <Typography variant="h5">
+                Next open sale
+              </Typography>
+            }
+            align="left"
+            disableGutter
+        />
+        <Divider/>
+      </Grid>
+
+      {/* nft-image */}
+      <Grid
+          item
+          container
+          justify="flex-start"
+          alignItems="flex-start"
+          xs={12}
+          md={12}
+      >
+        <Carousel>
+          <div>
+            <img src="https://ngfinance.io/resources/gharliera-root-01.jpg" />
+          </div>
+          <div>
+            <img src="https://ngfinance.io/resources/gharliera-root-02.jpg" />
+          </div>
+          <div>
+            <img src="https://ngfinance.io/resources/gharliera-root-03.jpg" />
+          </div>
+          <div>
+            <img src="https://ngfinance.io/resources/gharliera-root-04.jpg" />
+          </div>
+          <div>
+            <img src="https://ngfinance.io/resources/gharliera-root-05.jpg" />
+          </div>
+          <div>
+            <img src="https://ngfinance.io/resources/gharliera-root-06.jpg" />
+          </div>
+          <div>
+            <img src="https://ngfinance.io/resources/gharliera-root-07.jpg" />
+          </div>
+          <div>
+            <img src="https://ngfinance.io/resources/gharliera-root-08.jpg" />
+          </div>
+          <div>
+            <img src="https://ngfinance.io/resources/gharliera-root-09.jpg" />
+          </div>
+          <div>
+            <img src="https://ngfinance.io/resources/gharliera-root-10.jpg" />
+          </div>
+        </Carousel>
+      </Grid>
+
+      {/* nft-description */}
+      <Grid
+          item
+          container
+          justify="flex-start"
+          alignItems="flex-start"
+          xs={12}
+          md={12}
+          data-aos={'fade-up'}
+      >
+        <CardBase liftUp variant="outlined" align="left" withShadow
+                  style={{ borderTop: `5px solid ${colors.blueGrey[500]}` }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <CustomizedProgressBars saleDate={SALE_DATE} isStart={true}/>
+            </Grid>
+            <Grid item xs={12} md={9}>
+              <SectionHeader
+                  title={
+                    <span>
+                    <div>
+                      <Typography variant="caption" className={classes.tag} >
+                        GHARLIERA
+                      </Typography>
+                      <Typography variant="caption" className={classes.tag} >
+                        Governance NFT
+                      </Typography>
+                      <Typography variant="caption" className={classes.tag} >
+                        Canvas
+                      </Typography>
+                    </div>
+                  </span>
+                  }
+                  align="left"
+                  disableGutter
+              />
+            </Grid>
+            <Grid item xs={12} md={3} align="right">
+              <Image
+                  src={Rarible}
+                  style={{ width: '40px', height:'40px' }}
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <SectionHeader
+                  title={
+                    <span>
+                      <Typography component="span" variant="h5" color="textPrimary" >
+                        <strong>ROOT 10 Edition</strong>
+                      </Typography>
+                    </span>
+                  }
+                  align="left"
+                  disableGutter
+              />
+            </Grid>
+
+            <Grid item xs={12} className={classes.gridItemMain}>
+              <Grid container>
+                <Grid item xs={12} md={4}>
+                  <Typography variant="subtitle1" color={"primary"}>
+                    DESCRIPTION
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} md={8}>
+                  <Typography variant="subtitle1">
+                    GHARLIERA X NOSTALGIA 10 Edition
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+
+            <Grid item xs={12} className={classes.gridItemMain}>
+              <Grid container>
+                <Grid item xs={12} md={4}>
+                  <Typography variant="subtitle1" color={"primary"}>
+                    RAFFLE DATE
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} md={8}>
+                  <Typography variant="subtitle1">
+                    Now - October 28 at 21:00 KST
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+
+            <Grid item xs={12}>
+              <SectionHeader
+                  title={
+                    <span>
+                    <Typography component="span" variant="body1" color="textSecondary">
+                      Price
+                    </Typography>{' '}
+                      <Typography component="span" variant="h6" color="textPrimary">
+                      <strong>520,000</strong>
+                    </Typography>{' '}
+                      <Typography component="span" variant="body1" color="textSecondary">
+                      PAINT
+                    </Typography>
+                  </span>
+                  }
+                  align="left"
+                  disableGutter
+                  titleVariant="h3"
+              />
+            </Grid>
+            <Grid item xs={12}>
+                <span>
+                  <Typography id="discrete-slider-small-steps" gutterBottom>
+                    Total amount : 10
+                  </Typography>
+                </span>
+            </Grid>
+            <Grid item xs={12} align="center">
+              <br />
+              <Button variant="contained" color="primary" size="large"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        window.open("https://forms.gle/vTfWs2jRhCZRyttU7", '_blank');
+                      }}
+                      fullWidth
+                      disabled={false}>
+                RAFFLE REGISTRATION
+              </Button>
+            </Grid>
+          </Grid>
+        </CardBase>
+      </Grid>
     </React.Fragment>
   );
 };
