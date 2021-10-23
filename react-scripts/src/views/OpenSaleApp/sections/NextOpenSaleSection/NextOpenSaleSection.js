@@ -411,7 +411,7 @@ const NextOpenSaleSection = props => {
                 </Grid>
                 <Grid item xs={12} md={8}>
                   <Typography variant="subtitle1">
-                    Now - October 28 at 21:00 KST
+                    Now - October 26 at 21:00 KST
                   </Typography>
                 </Grid>
               </Grid>
