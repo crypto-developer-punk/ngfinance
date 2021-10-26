@@ -452,7 +452,7 @@ const NextOpenSaleSection = props => {
                         window.open("https://forms.gle/vTfWs2jRhCZRyttU7", '_blank');
                       }}
                       fullWidth
-                      disabled={false}>
+                      disabled={true}>
                 RAFFLE REGISTRATION
               </Button>
             </Grid>
