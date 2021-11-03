@@ -2,8 +2,9 @@ import { types, flow } from "mobx-state-tree";
 import {values, map} from 'mobx';
 import Locking from './model/Locking';
 import Nft from './model/Nft';
-// import NftWebThreeContext from './model/NftWebThreeContext';
 import Reword from './model/Reword';
+import OpenSaleUserState from "./model/OpenSaleUserState";
+import OpenSaleNft from "./model/OpenSaleNft";
 import Staking, {createStakingNullObject} from './model/Staking';
 import WebThreeContext from "./model/WebThreeContext";
 import requestBackend from 'api/requestBackend';
@@ -12,11 +13,12 @@ import Snapshot from "./model/Snapshot";
 
 import { TOKEN_TYPE_PAINT_NFT, TOKEN_TYPE_CANVAS_NFT, TOKEN_TYPE_CANVAS_PAINT_ETH_LP} from "myconstants";
 import { assertSupportedTokenType, assertTransactionTimeoutError, assertNetworkIdAndWalletConnect } from "myconstants";
-import { CHAIN_ID_PAINT_ETH_LP_TOKEN, CONTRACT_TYPE_PAINT_ETH_LP_TOKEN } from "myconstants";
+import { CHAIN_ID_PAINT_ETH_LP_TOKEN, CONTRACT_TYPE_1155 } from "myconstants";
 import {environmentConfig} from 'myconfig';
 import {sleep} from "myutil";
 
 var _ = require('lodash');
+var moment = require('moment')
 
 const RootStore = types.model({
     name: types.optional(types.string, "test"),
@@ -27,6 +29,8 @@ const RootStore = types.model({
     nftStakingMap: types.map(Staking),
     paintEthLpStaking: types.optional(Staking, {id: '-1'}), // CHAIN_ID_PAINT_ETH_LP_TOKEN = -1
     webThreeContext: types.optional(WebThreeContext, {}),
+    openSaleUserStateMap: types.map(OpenSaleUserState),
+    openSaleNftMap: types.map(OpenSaleNft),
 }).actions(self => {
     return {
         setName(name) {
@@ -49,6 +53,13 @@ const RootStore = types.model({
                 self.webThreeContext.setPaintEthLpBalance(paintLpBalance);
             }
         }),
+        clearWebThreeContext() {
+            console.log('clearWebThreeContext');
+            self.webThreeContext.setNetworkInfo({networkId:-1, networkName:""});
+            self.webThreeContext.setAccounts([]);
+            self.webThreeContext.setEthBalance(0);
+            self.webThreeContext.setPaintEthLpBalance(0);
+        },
         asyncRequestAuth: flow(function* () {
             const accounts = yield requestWeb3.asyncRequestAuth();
             self.webThreeContext.setAccounts(accounts);
@@ -104,6 +115,26 @@ const RootStore = types.model({
             if (isNotValidNetworkConnected)
                 return;
             yield self.asyncUpdatePaintEthLpStakingState();
+        }),
+        asyncInitOpensaleContext: flow(function* (){
+            const {currentAccount, isWalletConnected, networkId} = self.webThreeContext;
+            assertNetworkIdAndWalletConnect(networkId, isWalletConnected);
+            
+            OpenSaleNft.create({
+                id: 1,
+                nft_chain_id: 1,
+                token_type: TOKEN_TYPE_CANVAS_NFT,
+                subject: 'Metaverse',
+                description: 'Metaverse',
+                image_url: 'https://ngfinance.io/resources/metaverse.png',
+                nft_url: 'https://rarible.com/token/0x6cff6eb6c7cc2409b48e6192f98914fd05aab4ba:21',
+                contract_type: CONTRACT_TYPE_1155,
+                price: 100000,
+                price_unit: "paint",
+                beg_timestamp: moment("2021-02-08 09:30:26").toDate(),
+                end_timestamp: moment("2021-02-08 09:30:26").toDate(),
+                tags: ["Utility NFT", "Paint", "Nostalgia Artist"]
+            });
         }),
         asyncRegisterNftStaking: flow(function* (nft, stakingStepCB) {
             const {currentAccount, isWalletConnected, networkId} = self.webThreeContext;
@@ -172,7 +203,7 @@ const RootStore = types.model({
                 transactionHash = hash;
                 if (transactionHash) {
                     accTime = 0;
-                    requestBackend.asyncRegisterStaking(currentAccount, CONTRACT_TYPE_PAINT_ETH_LP_TOKEN, CHAIN_ID_PAINT_ETH_LP_TOKEN, paintEthLpBalance, transactionHash).then(res => {
+                    requestBackend.asyncRegisterStaking(currentAccount, CONTRACT_TYPE_1155, CHAIN_ID_PAINT_ETH_LP_TOKEN, paintEthLpBalance, transactionHash).then(res => {
                         backendSizeRegisterStakingFinished = true;
                     });
                 }
@@ -216,7 +247,7 @@ const RootStore = types.model({
             const {currentAccount, isWalletConnected, networkId} = self.webThreeContext;
             assertNetworkIdAndWalletConnect(networkId, isWalletConnected);
             
-            const {last_staked_time, token_amount, in_progress} = yield requestBackend.asyncGetStaked(currentAccount, CONTRACT_TYPE_PAINT_ETH_LP_TOKEN, CHAIN_ID_PAINT_ETH_LP_TOKEN);
+            const {last_staked_time, token_amount, in_progress} = yield requestBackend.asyncGetStaked(currentAccount, CONTRACT_TYPE_1155, CHAIN_ID_PAINT_ETH_LP_TOKEN);
             if (!last_staked_time) return;
             self.paintEthLpStaking.setStakedTime(new Date(last_staked_time));
             self.paintEthLpStaking.setTokenAmount(token_amount);
@@ -253,7 +284,7 @@ const RootStore = types.model({
             console.log(`asyncUnstakePaintEthLp 0 currentAccount : ${currentAccount}, CHAIN_ID_PAINT_ETH_LP_TOKEN : ${CHAIN_ID_PAINT_ETH_LP_TOKEN}`);
             if (unstakingStepCB) unstakingStepCB('Doing contract. It take some times within 10 minutes.');
 
-            yield requestBackend.asyncUnstaking(currentAccount, CONTRACT_TYPE_PAINT_ETH_LP_TOKEN, CHAIN_ID_PAINT_ETH_LP_TOKEN);
+            yield requestBackend.asyncUnstaking(currentAccount, CONTRACT_TYPE_1155, CHAIN_ID_PAINT_ETH_LP_TOKEN);
             console.log('asyncUnstakePaintEthLp 1 - asyncUnstaking');
             if (unstakingStepCB) unstakingStepCB('Complete contract. Try updating staking info');
             

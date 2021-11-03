@@ -1,14 +1,16 @@
 import React from 'react';
 import { inject, observer } from "mobx-react";
-import {makeStyles, useTheme} from '@material-ui/core/styles';
-import {colors, Grid} from '@material-ui/core';
-import {Section} from "components/organisms";
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { colors, Grid } from '@material-ui/core';
+import { Section } from "components/organisms";
 import WithBase from 'with/WithBase';
-import {useWeb3} from '@openzeppelin/network/react';
-import {environmentConfig} from 'myconfig';
+
+import { environmentConfig } from 'myconfig';
 import requestWeb3 from 'api/requestWeb3';
 
-import {NftStakingSection, LPStakingSection} from './sections';
+import { NftStakingSection, LPStakingSection } from './sections';
+import { ClaimSection } from '../RewardApp/sections';
+import { useDelayedWeb3React } from 'myutil';
 
 const useStyles = makeStyles(theme => ({
   pagePaddingTop: {
@@ -29,15 +31,16 @@ const useStyles = makeStyles(theme => ({
 
 const StakingApp = props => {
   const classes = useStyles();
-  const web3Context = useWeb3(environmentConfig.eth_network);    
   const theme = useTheme();
+  const { ready, chainId, account, active, library } = useDelayedWeb3React();
 
-  const { networkId, accounts } = web3Context;
   const { store } = props;
 
-  React.useEffect(() => {
-    requestWeb3.reinitialize();
+  React.useEffect(()=>{
+    if (!ready)
+      return;
     async function initStore() {
+      requestWeb3.reinitializeWithProvider(library.provider);
       try {
         await store.asyncInitWebThreeContext();
         await store.asyncInitNftInfos();
@@ -46,8 +49,11 @@ const StakingApp = props => {
         props.showErrorDialog(err);
       }
     }
-    initStore();
-  }, [networkId, accounts]);
+    if (active)
+      initStore();
+    else
+      store.clearWebThreeContext();
+  }, [ready, chainId, account, active]);
 
   return (
     <div className={classes.shape}>
@@ -61,7 +67,7 @@ const StakingApp = props => {
           <Grid item className={classes.pagePaddingTop}/>
           <LPStakingSection {...props}/>
         </Grid>
-      </Section>
+      </Section>      
     </div>
   );
 };

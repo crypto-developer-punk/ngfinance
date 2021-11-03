@@ -1,0 +1,13 @@
+account_id="4e74d43dbf0057466aaabeb194b3bc2e"
+name = "react-scripts"
+type = "webpack"
+route = ''
+zone_id = ''
+usage_model = ''
+compatibility_flags = []
+workers_dev = true
+compatibility_date = "2021-10-30"
+
+[site]
+bucket="./build"
+entry-point="workers-site"

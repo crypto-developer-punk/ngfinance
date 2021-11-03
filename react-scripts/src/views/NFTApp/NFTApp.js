@@ -1,14 +1,14 @@
 import React from 'react';
 import { inject, observer } from "mobx-react";
-import {makeStyles} from '@material-ui/core/styles';
-import {colors, Grid} from '@material-ui/core';
-import {Section} from "components/organisms";
+import { makeStyles } from '@material-ui/core/styles';
+import { colors, Grid } from '@material-ui/core';
+import { Section } from "components/organisms";
 import WithBase from 'with/WithBase';
-import {useWeb3} from '@openzeppelin/network/react';
-import {environmentConfig} from 'myconfig';
+import { environmentConfig } from 'myconfig';
 import requestWeb3 from 'api/requestWeb3';
 
-import {OurNFTSection, ComingNextSection} from './sections';
+import { OurNFTSection, ComingNextSection } from './sections';
+import { useDelayedWeb3React } from 'myutil';
 
 const useStyles = makeStyles(theme => ({
   pagePaddingTop: {
@@ -30,24 +30,32 @@ const useStyles = makeStyles(theme => ({
 
 const NFTApp = props => {
   const classes = useStyles();
-  const web3Context = useWeb3(environmentConfig.eth_network);    
 
-  const { networkId, accounts } = web3Context;
+  const { ready, chainId, account, active, library } = useDelayedWeb3React();
   const { store } = props;
 
-  React.useEffect(() => {
-    requestWeb3.reinitialize();
+  React.useEffect(()=>{
+    if (!ready)
+      return;
     async function initStore() {
+      requestWeb3.reinitializeWithProvider(library.provider);
       try {
         await store.asyncInitWebThreeContext();
         await store.asyncInitNftInfos();
-        // await store.asyncInitSnapshots();
       } catch (err) {
         props.showErrorDialog(err);
       }
     }
-    initStore();
-  }, [networkId, accounts]);
+    async function initStoreWhenNotWalletConnected() {
+      store.clearWebThreeContext();
+      await store.asyncInitNftInfos();      
+    }
+
+    if (active)
+      initStore();
+    else 
+      initStoreWhenNotWalletConnected()
+  }, [ready, chainId, account, active]);
 
   return (
     <div className={classes.shape}>

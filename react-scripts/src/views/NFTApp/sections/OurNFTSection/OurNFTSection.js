@@ -9,6 +9,7 @@ import {Image} from 'components/atoms';
 import {SectionHeader} from 'components/molecules';
 import {CardBase, Section} from "components/organisms";
 import Rarible from "assets/images/main/logo_rarible.png";
+import { isMobile } from "react-device-detect";
 
 import {TOKEN_TYPE_PAINT_NFT, TOKEN_TYPE_CANVAS_NFT, TOKEN_TYPE_CANVAS_PAINT_ETH_LP} from 'myconstants';
 import {sleep, StringHelper} from "myutil";
@@ -90,6 +91,10 @@ const OurNFTSection = props => {
 
   const [hover, setHover] = useState(false);
 
+  const preventClickHandler = (e) => {
+    e.preventDefault();
+  }
+    
   return (
     <React.Fragment>
       <Grid
@@ -159,9 +164,7 @@ const OurNFTSection = props => {
                             <Grid item>
                               <Image
                                 src={nft.image_url}
-                                // hidden={isMp4Url(nft.image_url)}
                                 style={{maxHeight:340}}
-                                alt="Genesis NFT"
                                 className={classes.image}
                                 data-aos="flip-left"
                                 data-aos-easing="ease-out-cubic"
@@ -174,9 +177,8 @@ const OurNFTSection = props => {
                             <Grid item maxHeight={340} xs={12} style={isMp4Url(nft.image_url) ? {marginTop:'-10%', marginBottom: '2%'} : {}}>
                               <ReactPlayer
                                 url={nft.image_url}
-                                // hidden={!isMp4Url(nft.image_url)}
                                 width='100%'
-                                playing={true}
+                                playing={isMobile ? false : true}
                                 loop={true}
                                 muted={true}
                               />

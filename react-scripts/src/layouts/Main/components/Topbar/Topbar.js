@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useWeb3React } from "@web3-react/core";
+
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
@@ -17,17 +19,10 @@ import {
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Image, DarkModeToggler } from 'components/atoms';
-
-import { inject, observer } from "mobx-react";
-import { useWeb3 } from '@openzeppelin/network/react';
-
 import Logo from 'assets/images/main/logo_topbar.svg';
 
 import WithBase from 'with/WithBase';
-import { environmentConfig } from 'myconfig';
-import { StringHelper } from "myutil";
-import requestWeb3 from 'api/requestWeb3';
-import { assertNetworkId } from "myconstants";
+import { StringHelper, injectedConnector, useDelayedWeb3React } from "myutil";
 
 var _ = require('lodash');
 
@@ -140,23 +135,20 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Topbar = props => {
-  //{ themeMode, themeToggler, onSidebarOpen, pages, className, store, showDialog, showErrorDialog, getDialogModeState, closeDialog}
   const classes = useStyles();
-  const web3Context = useWeb3(environmentConfig.eth_network);    
 
+  const {ready, chainId, account, activate, active} = useDelayedWeb3React();
+  const [activePageId, setActivePageId] = useState(-1);
   const [buttonLabel, setButtonLabel] = useState(
     window.localStorage.getItem("walletButtonLabel") || 'Connect Wallet'
   );
   const [buttonDisabled, setButtonDisabled] = useState(
     window.localStorage.getItem("walletButtonDisalbed") || true
-  );
+  );  
+  // const skipFirstActiveFlagRef = React.useRef(false);
 
-  const [activePageId, setActivePageId] = useState(-1);
-  
-  const { pages, store } = props;
+  const { pages } = props;
   const { onSidebarOpen } = props;
-  const { webThreeContext } = store;
-  const { networkId, accounts } = web3Context;
 
   const toolbarCB = React.useCallback(node => {
     if (node !== null) {
@@ -174,43 +166,36 @@ const Topbar = props => {
   }, [window.location.href])
 
   React.useEffect(()=> {
-    requestWeb3.reinitialize();
-    async function initStore() {
-      await store.asyncInitWebThreeContext();
-      const buttonLabel = getWalletBtnLabel();
-      window.localStorage.setItem("walletButtonLabel", buttonLabel);
-      setButtonLabel(buttonLabel);
-      
-      const buttonDisalbed = getWalletDisalbed();
-      window.localStorage.setItem("walletButtonDisalbed", buttonDisalbed);
-      setButtonDisabled(buttonDisalbed);
+    if (!ready) {
+      return;
     }
-    initStore();
-  }, [networkId, accounts]);
-
-  const getWalletDisalbed = () => {
-    return webThreeContext.isWalletConnected || !webThreeContext.isValidNetwork;
-  };
+    const walletButtonLabel = getWalletBtnLabel();
+    const walletButtonDisalbed = getWalletDisalbed();
+    window.localStorage.setItem("walletButtonLabel", walletButtonLabel);
+    window.localStorage.setItem("walletButtonDisalbed", walletButtonDisalbed);
+    setButtonLabel(walletButtonLabel);
+    setButtonDisabled(walletButtonDisalbed);
+  }, 
+  [ready, chainId, account, active]);
 
   const getWalletBtnLabel = () => {
-    // return webThreeContext.isWalletConnected ? StringHelper.getElipsedHashAddress( webThreeContext.currentAccount) : "Connect Wallet";
-    let walletButtonLabel = '';
-    if (!webThreeContext.isWalletConnected) {
-      if (!webThreeContext.isValidNetwork) 
-      walletButtonLabel = "Change to mainnet";
-      else 
-      walletButtonLabel = "Connect Wallet";
-    } else {
-      walletButtonLabel = StringHelper.getElipsedHashAddress( webThreeContext.currentAccount);
+    if (active) {
+      if (chainId == 1 || chainId == 4) {
+        return StringHelper.getElipsedHashAddress(account);
+      }
+      return "Change to mainnet";
     }
-    return walletButtonLabel;
+    return "Connect Wallet";
+  };
+
+  const getWalletDisalbed = () => {
+    return active;
   };
   
   const connectToWallet = _.debounce(async(e) => {
     try {
       e.preventDefault();
-      assertNetworkId(webThreeContext.networkId);
-      await props.store.asyncRequestAuth();
+      activate(injectedConnector);
     } catch (err) {
       props.showErrorDialog(err);
     }
@@ -258,7 +243,6 @@ const Topbar = props => {
                 </ListItem>
               )
             })}
-
             <ListItem className={clsx(classes.listItem, 'menu-item--no-dropdown')}>
               <Button
                 variant="contained"
@@ -303,6 +287,4 @@ Topbar.propTypes = {
   themeMode: PropTypes.string.isRequired,
 };
 
-export default inject(({store}) => ({
-  store: store,
-}))(WithBase(observer(Topbar)));
+export default WithBase(Topbar);

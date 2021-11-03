@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+
 import { ThemeProvider } from '@material-ui/core/styles';
 import { Paper } from '@material-ui/core';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import getTheme from 'theme';
 
 import AOS from 'aos';
+import { useWeb3EagerConnect, useWeb3InactiveListener } from "myutil";
 
 export const useDarkMode = () => {
   const [themeMode, setTheme] = useState('light');
@@ -33,7 +35,15 @@ export const useDarkMode = () => {
   return [themeMode, themeToggler, mountedComponent];
 };
 
+const Web3HookComponent = props => {
+  const triedEager = useWeb3EagerConnect();
+  useWeb3InactiveListener(!triedEager);
+
+  return (<div />);
+};
+
 export default function WithLayout({ component: Component, layout: Layout, ...rest }) {
+
   React.useEffect(() => {
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector('#jss-server-side');
@@ -60,6 +70,7 @@ export default function WithLayout({ component: Component, layout: Layout, ...re
       <CssBaseline />
       <Paper elevation={0}>
         <Layout themeMode={themeMode} themeToggler={themeToggler}>
+          <Web3HookComponent />
           <Component themeMode={themeMode} {...rest} />
         </Layout>
       </Paper>

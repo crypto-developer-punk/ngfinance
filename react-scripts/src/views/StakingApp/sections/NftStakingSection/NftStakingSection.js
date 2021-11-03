@@ -8,7 +8,7 @@ import ReactPlayer from 'react-player'
 import {Image} from 'components/atoms';
 import {SectionHeader} from 'components/molecules';
 import {CardBase, Section} from "components/organisms";
-import CanvasToken from "assets/images/main/logo_canvas_token.svg";
+import { isMobile } from "react-device-detect";
 
 import {sleep, StringHelper} from "myutil";
 import {isDebugMode} from 'myconfig';
@@ -174,6 +174,10 @@ const NftStakingSection = props => {
 
   const isMp4Url = StringHelper.isMp4Url;
 
+  const preventClickHandler = (e) => {
+    e.preventDefault();
+  }
+
   // console.log('aaa', OwnerNFTArr.length);
   const renderNftStaking = (nftArr) => {
     if (!nftArr || nftArr.length === 0) {
@@ -204,25 +208,31 @@ const NftStakingSection = props => {
                       // xs={4}
                       data-aos={'fade-up'}
                     >
-                      <Image
-                        src={nft.image_url}
-                        hidden={isMp4Url(nft.image_url)}
-                        style={{height:'100%', width: '100%'}}
-                        alt="Genesis NFT"
-                        className={classes.image}
-                        data-aos="flip-left"
-                        data-aos-easing="ease-out-cubic"
-                        data-aos-duration="2000"
-                      />
-                        <ReactPlayer
-                          url={nft.image_url}
-                          hidden={!isMp4Url(nft.image_url)}
-                          width='100%'
-                          height='100%'
-                          playing={true}
-                          loop={true}
-                          muted={true}
-                        />
+                      {
+                        !isMp4Url(nft.image_url) &&
+                        <Grid item>
+                          <Image
+                            src={nft.image_url}
+                            style={{maxHeight:340}}
+                            className={classes.image}
+                            data-aos="flip-left"
+                            data-aos-easing="ease-out-cubic"
+                            data-aos-duration="2000"
+                          />
+                        </Grid>
+                      }
+                      {
+                        isMp4Url(nft.image_url) &&
+                        <Grid item maxHeight={340} xs={12} style={isMp4Url(nft.image_url) ? {marginTop:'-10%', marginBottom: '2%'} : {}}>
+                          <ReactPlayer
+                            url={nft.image_url}
+                            width='100%'
+                            playing={isMobile ? false : true}
+                            loop={true}
+                            muted={true}
+                          />
+                        </Grid>
+                      }
                     </Grid>
 
                     <Grid

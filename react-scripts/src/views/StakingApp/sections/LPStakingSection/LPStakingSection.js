@@ -110,7 +110,13 @@ const TokenStakingSection = props => {
             <Grid item xs={12} md={12}>
               <Paper className={classes.paper}>
                 <Typography component="span" variant="subtitle1">
+                  <div style={{
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
+                  }}>
                   {hashAddressLabel}
+                  </div>
                 </Typography>
               </Paper>
             </Grid>
@@ -269,51 +275,49 @@ const LpTStakingSection = props => {
           <Divider/>
         </Grid>
 
-        <Grid item>
-          <TokenStakingSection 
-              title={
-                <Typography component="span" variant="h5" style={{color: `${colors.deepPurple[900]}`}}>
-                  PAINT/ETH LP Staking
-                </Typography>
-              }
-              subTitle={
-                <Typography component="span" variant="overline" color="error">
-                  The mobile meta mask is currently under maintenance.
+        <TokenStakingSection 
+            title={
+              <Typography component="span" variant="h5" style={{color: `${colors.deepPurple[900]}`}}>
+                PAINT/ETH LP Staking
+              </Typography>
+            }
+            subTitle={
+              <Typography component="span" variant="overline" color="error">
+                The mobile meta mask is currently under maintenance.
+                <br/>
+                Currently, only desktop meta mask is available.
+              </Typography>
+            }
+            stakingButtonComponents={
+              <Grid item xs={12}>
+                <Button style={{borderBottomLeftRadius: 5, borderBottomRightRadius: 0, borderTopLeftRadius: 5, borderTopRightRadius: 0}} variant="outlined" color="primary" size={buttonSize()} onClick={registerPaintEthLpStaking} disabled={isDisalbedLpStake()}>
+                  Stake
+                </Button>
+                <Button style={{borderBottomLeftRadius: 0, borderBottomRightRadius: 5, borderTopLeftRadius: 0, borderTopRightRadius: 5, marginLeft: -1}} variant="outlined" color="primary" size={buttonSize()} onClick={requestUnstaking} disabled={isDisabledLpUnstake()}>
+                  Unstake
+                </Button>
+              </Grid>
+            }
+            lpTokenBalanceComponents={
+              <Grid item xs={12}>
+                <Paper className={classes.paperSub}>
+                  <Typography component="span" variant="subtitle1">
+                    Your PAINT/ETH LP : {MathHelper.toFixed(webThreeContext.paintEthLpBalance)}
+                  </Typography>
                   <br/>
-                  Currently, only desktop meta mask is available.
-                </Typography>
-              }
-              stakingButtonComponents={
-                <Grid item xs={12}>
-                  <Button style={{borderBottomLeftRadius: 5, borderBottomRightRadius: 0, borderTopLeftRadius: 5, borderTopRightRadius: 0}} variant="outlined" color="primary" size={buttonSize()} onClick={registerPaintEthLpStaking} disabled={isDisalbedLpStake()}>
-                    Stake
-                  </Button>
-                  <Button style={{borderBottomLeftRadius: 0, borderBottomRightRadius: 5, borderTopLeftRadius: 0, borderTopRightRadius: 5, marginLeft: -1}} variant="outlined" color="primary" size={buttonSize()} onClick={requestUnstaking} disabled={isDisabledLpUnstake()}>
-                    Unstake
-                  </Button>
-                </Grid>
-              }
-              lpTokenBalanceComponents={
-                <Grid item xs={12}>
-                  <Paper className={classes.paperSub}>
-                    <Typography component="span" variant="subtitle1">
-                      Your PAINT/ETH LP : {MathHelper.toFixed(webThreeContext.paintEthLpBalance)}
-                    </Typography>
-                    <br/>
-                    <Typography component="span" variant="subtitle1">
-                      Staked PAINT/ETH LP : {MathHelper.toFixed(paintEthLpStaking.token_amount)}
-                    </Typography>
-                  </Paper>
-                </Grid>
-              }
-              snapShotTimeStr={lpSnapshot.snapShotTimeStr}
-              totalValueLockedTitle={"Total number of LP locked"}
-              totalValueLockedNftAmount={MathHelper.toFixed(lpSnapshot.total_value_locked_nft_amount)}
-              hashAddressLabel={"CANVAS : 0x863ad391091ae0e87b850c2bb7bfc7597c79c93f"}
-              balanceOfReward={MathHelper.toFixed(lpSnapshot.balance_of_reward)}
-              dropTokenImage={CanvasToken}
-              dropTokenName={"Canvas Token"}/>  
-          </Grid>   
+                  <Typography component="span" variant="subtitle1">
+                    Staked PAINT/ETH LP : {MathHelper.toFixed(paintEthLpStaking.token_amount)}
+                  </Typography>
+                </Paper>
+              </Grid>
+            }
+            snapShotTimeStr={lpSnapshot.snapShotTimeStr}
+            totalValueLockedTitle={"Total number of LP locked"}
+            totalValueLockedNftAmount={MathHelper.toFixed(lpSnapshot.total_value_locked_nft_amount)}
+            hashAddressLabel={"CANVAS : 0x863ad391091ae0e87b850c2bb7bfc7597c79c93f"}
+            balanceOfReward={MathHelper.toFixed(lpSnapshot.balance_of_reward)}
+            dropTokenImage={CanvasToken}
+            dropTokenName={"Canvas Token"}/>  
       </Grid>
     </React.Fragment>
   );

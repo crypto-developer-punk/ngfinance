@@ -11,6 +11,7 @@ import {Main as MainLayout, Minimal as MinimalLayout} from './layouts';
 import {StakingApp, NostalgiaIndex, NotFoundCover as NotFoundCoverView, RewardApp, OpenSaleApp, NFTApp} from './views';
 
 const Routes = () => {
+
   return (
     <Switch>
       <Route

@@ -36,7 +36,7 @@ const TestApp = props => {
   const { store } = props;
 
   React.useEffect(() => {
-    requestWeb3.reinitialize();
+    // requestWeb3.reinitialize();
     async function initStore() {
       try {
         await store.asyncInitWebThreeContext();

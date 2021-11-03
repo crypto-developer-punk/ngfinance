@@ -10,15 +10,15 @@ const Web3 = require('web3');
 
 class RequestWeb3 {
     constructor() {
-        this.reinitialize();
+        const provider = ProviderHelper.getProvider();
+        this.reinitializeWithProvider(provider);
     }
 
-    reinitialize() {
-        const provider = ProviderHelper.getProvider();
+    reinitializeWithProvider = (provider) => {
         this.providerName = ProviderHelper.getProviderName(provider);
         this.lib = new Web3(provider);
         this.timeout = WEBTHREE_TIMEOUT_LIMIT_MS;
-    }
+    };
 
     asyncGetAccounts = async() => {
         const accounts = await timeout(this.lib.eth.getAccounts(), this.timeout);

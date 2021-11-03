@@ -101,7 +101,13 @@ const TokenClaimSection = props => {
             <Grid item xs={12} md={12}>
               <Paper className={classes.paper}>
                 <Typography component="span" variant="subtitle1">
+                  <div style={{
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
+                  }}>
                   {hashAddressLabel}
+                  </div>
                 </Typography>
               </Paper>
             </Grid>
