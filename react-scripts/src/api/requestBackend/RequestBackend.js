@@ -13,24 +13,26 @@ class RequestBackend {
         });
     }
 
-    asyncRegisterStaking = async(my_address, contract_type, nft_chain_id, nft_amount, transactionHash) => {
+    asyncRegisterStaking = async(my_address, contract_type, nft_chain_id, nft_amount, token_type, transactionHash) => {
         const data = {
             "address": my_address,
             "contract_type": contract_type,
             "nft_chain_id": nft_chain_id,
             "nft_amount": nft_amount,
-            "staking_transaction_hash": transactionHash
+            "token_type": token_type,
+            "staking_transaction_hash": transactionHash,
         };
     
         const res = await this.myaxios.post(`${this.backend_url}/staking/register`, data, {headers: this.#getRequestHeaders(my_address)});
         return res;
     };
 
-    asyncUnstaking = async(my_address, contract_type, nft_chain_id) => {
+    asyncUnstaking = async(my_address, contract_type, nft_chain_id, token_type) => {
         const data = {
             "address": my_address,
             "contract_type": contract_type,
-            "nft_chain_id": nft_chain_id
+            "nft_chain_id": nft_chain_id,
+            "token_type": token_type,
         };
         
         try {
@@ -64,11 +66,12 @@ class RequestBackend {
         }
     };
 
-    asyncGetStaked = async(my_address, contract_type, nft_chain_id) => {
+    asyncGetStaked = async(my_address, contract_type, nft_chain_id, token_type) => {
         const params = {
             "address": my_address,
             "contract_type": contract_type,
-            "nft_chain_id": nft_chain_id
+            "nft_chain_id": nft_chain_id,
+            "token_type": token_type
         };
         
         // console.log('aaa', `${this.backend_url}/staking`, my_address, contract_type, nft_chain_id);

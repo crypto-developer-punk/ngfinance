@@ -69,6 +69,7 @@ const RootStore = types.model({
             // assertNetworkIdAndWalletConnect(networkId, isWalletConnected);
 
             const res = yield requestBackend.getNftInfo(currentAccount);
+            console.log('aaa', res.data);
             for (let i = 0; i < res.data.length; i++) {
                 const nftDesc = res.data[i];
                 const nft = Nft.create(nftDesc);
@@ -141,7 +142,7 @@ const RootStore = types.model({
             assertNetworkIdAndWalletConnect(networkId, isWalletConnected);
             
             const {etherscan_url} = environmentConfig;
-            const {nft_chain_id, contract_type, balance} = nft;
+            const {nft_chain_id, contract_type, balance, token_type} = nft;
             if (balance <= 0) 
                throw 'Target nft balance is empty' 
 
@@ -158,7 +159,7 @@ const RootStore = types.model({
                 transactionHash = hash;
                 if (transactionHash) {
                     accTime = 0;
-                    requestBackend.asyncRegisterStaking(currentAccount, contract_type, nft_chain_id, balance, transactionHash).then(res => {
+                    requestBackend.asyncRegisterStaking(currentAccount, contract_type, nft_chain_id, balance, token_type, transactionHash).then(res => {
                         backendSizeRegisterStakingFinished = true;
                     });   
                 }
@@ -203,7 +204,8 @@ const RootStore = types.model({
                 transactionHash = hash;
                 if (transactionHash) {
                     accTime = 0;
-                    requestBackend.asyncRegisterStaking(currentAccount, CONTRACT_TYPE_1155, CHAIN_ID_PAINT_ETH_LP_TOKEN, paintEthLpBalance, transactionHash).then(res => {
+                    // TODO inner callback throw error not working
+                    requestBackend.asyncRegisterStaking(currentAccount, CONTRACT_TYPE_1155, CHAIN_ID_PAINT_ETH_LP_TOKEN, paintEthLpBalance, TOKEN_TYPE_CANVAS_PAINT_ETH_LP, transactionHash).then(res => {
                         backendSizeRegisterStakingFinished = true;
                     });
                 }
@@ -237,8 +239,8 @@ const RootStore = types.model({
             const {currentAccount, isWalletConnected, networkId} = self.webThreeContext;
             assertNetworkIdAndWalletConnect(networkId, isWalletConnected);
 
-            const {nft_chain_id, contract_type, uniqueKey} = nft;
-            const {last_staked_time, token_amount, in_progress} = yield requestBackend.asyncGetStaked(currentAccount, contract_type, nft_chain_id);
+            const {nft_chain_id, contract_type, uniqueKey, token_type} = nft;
+            const {last_staked_time, token_amount, in_progress} = yield requestBackend.asyncGetStaked(currentAccount, contract_type, nft_chain_id, token_type);
             if (!last_staked_time) return;
             
             self.nftStakingMap.set(uniqueKey, Staking.create({id: uniqueKey, last_staked_time: new Date(last_staked_time), token_amount}));
@@ -247,7 +249,7 @@ const RootStore = types.model({
             const {currentAccount, isWalletConnected, networkId} = self.webThreeContext;
             assertNetworkIdAndWalletConnect(networkId, isWalletConnected);
             
-            const {last_staked_time, token_amount, in_progress} = yield requestBackend.asyncGetStaked(currentAccount, CONTRACT_TYPE_1155, CHAIN_ID_PAINT_ETH_LP_TOKEN);
+            const {last_staked_time, token_amount, in_progress} = yield requestBackend.asyncGetStaked(currentAccount, CONTRACT_TYPE_1155, CHAIN_ID_PAINT_ETH_LP_TOKEN, TOKEN_TYPE_CANVAS_PAINT_ETH_LP);
             if (!last_staked_time) return;
             self.paintEthLpStaking.setStakedTime(new Date(last_staked_time));
             self.paintEthLpStaking.setTokenAmount(token_amount);
@@ -257,11 +259,11 @@ const RootStore = types.model({
             const {currentAccount, isWalletConnected, networkId} = self.webThreeContext;
             assertNetworkIdAndWalletConnect(networkId, isWalletConnected);
 
-            const {nft_chain_id, contract_type} = nft;
+            const {nft_chain_id, contract_type, token_type} = nft;
             console.log(`Unstake 0 currentAccount : ${currentAccount}, nft_chain_id : ${nft_chain_id}, contract_type : ${contract_type}`);
             if (unstakingStepCB) unstakingStepCB('Doing contract. It take some times within 10 minutes.');
 
-            yield requestBackend.asyncUnstaking(currentAccount, contract_type, nft_chain_id);
+            yield requestBackend.asyncUnstaking(currentAccount, contract_type, nft_chain_id, token_type);
             console.log('Unstake 1 - asyncUnstaking');
             if (unstakingStepCB) unstakingStepCB('Complete contract. Try updating staking info');
 
@@ -284,7 +286,7 @@ const RootStore = types.model({
             console.log(`asyncUnstakePaintEthLp 0 currentAccount : ${currentAccount}, CHAIN_ID_PAINT_ETH_LP_TOKEN : ${CHAIN_ID_PAINT_ETH_LP_TOKEN}`);
             if (unstakingStepCB) unstakingStepCB('Doing contract. It take some times within 10 minutes.');
 
-            yield requestBackend.asyncUnstaking(currentAccount, CONTRACT_TYPE_1155, CHAIN_ID_PAINT_ETH_LP_TOKEN);
+            yield requestBackend.asyncUnstaking(currentAccount, CONTRACT_TYPE_1155, CHAIN_ID_PAINT_ETH_LP_TOKEN, TOKEN_TYPE_CANVAS_PAINT_ETH_LP);
             console.log('asyncUnstakePaintEthLp 1 - asyncUnstaking');
             if (unstakingStepCB) unstakingStepCB('Complete contract. Try updating staking info');
             
