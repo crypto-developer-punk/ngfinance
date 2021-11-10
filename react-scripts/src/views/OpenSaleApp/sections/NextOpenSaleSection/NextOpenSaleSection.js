@@ -379,7 +379,7 @@ const NextOpenSaleSection = props => {
                 </Grid>
                 <Grid item xs={12} md={8}>
                   <Typography variant="subtitle1">
-                    November 11 at 21:00 KST
+                    November 10 at 21:00 KST
                   </Typography>
                 </Grid>
               </Grid>
@@ -393,7 +393,7 @@ const NextOpenSaleSection = props => {
                       Price
                     </Typography>{' '}
                       <Typography component="span" variant="h6" color="textPrimary">
-                      <strong>TBA</strong>
+                      <strong>0.68</strong>
                     </Typography>{' '}
                       <Typography component="span" variant="body1" color="textSecondary">
                       ETH
@@ -550,7 +550,7 @@ const NextOpenSaleSection = props => {
                       Price
                     </Typography>{' '}
                       <Typography component="span" variant="h6" color="textPrimary">
-                      <strong>TBA</strong>
+                      <strong>0.65</strong>
                     </Typography>{' '}
                       <Typography component="span" variant="body1" color="textSecondary">
                       ETH
