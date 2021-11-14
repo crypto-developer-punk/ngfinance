@@ -9,7 +9,7 @@ import {CardBase, Section} from "components/organisms";
 import PaintToken from "assets/images/main/logo_paint_token.svg";
 import CanvasToken from "assets/images/main/logo_canvas_token.svg";
 
-import {TOKEN_TYPE_PAINT_NFT, TOKEN_TYPE_CANVAS_NFT, TOKEN_TYPE_CANVAS_PAINT_ETH_LP} from 'myconstants';
+import {TOKEN_TYPE_PAINT_NFT, TOKEN_TYPE_CANVAS_NFT, TOKEN_TYPE_CANVAS_PAINT_ETH_LP, TOKEN_TYPE_PAINT_POOL} from 'myconstants';
 import {sleep, MathHelper} from "myutil";
 
 import Moment from 'moment';
@@ -60,13 +60,13 @@ const TokenClaimSection = props => {
     defaultMatches: true,
   });
 
-  const {title, subTitle, stakingButtonComponents, lpTokenBalanceComponents, snapShotTimeStr, totalValueLockedTitle, totalValueLockedNftAmount, hashAddressLabel, balanceOfReward, dropTokenImage, dropTokenName} = props;
+  const {title, subTitle, stakingButtonComponents, lpTokenBalanceComponents, snapShotTimeStr, totalValueLockedTitle, totalValueLockedNftAmount, hashAddressLabel, balanceOfReward, dropTokenImage, dropTokenName, boarderTopColor} = props;
 
   return (
     <React.Fragment>
       <Grid item xs={12} style={{marginBottom: '30px'}}>
         <CardBase liftUp variant="outlined" align="left" withShadow
-                  style={{ borderTop: `5px solid ${colors.deepOrange[900]}` }}>
+                  style={{ borderTop: `5px solid ${boarderTopColor}` }}>
           <Grid container spacing={isMd ? 5 : 2}>
             <Grid item container xs={12} justify="center" alignItems="center">
             <Grid item xs={6} md={6} align={"left"}>
@@ -162,7 +162,7 @@ const ClaimSection = props => {
     });
   
     const {store} = props; 
-    const {webThreeContext, paintNftSnapshot, canvasNftSnapshot, lpSnapshot, paintEthLpStaking} = store;
+    const {webThreeContext, paintNftSnapshot, canvasNftSnapshot, lpSnapshot, paintEthLpStaking, paintPoolStaking, paintPoolSnapshot} = store;
     
     const claim = _.debounce(async (token_type) => {
       let ended = false;
@@ -244,6 +244,7 @@ const ClaimSection = props => {
 
           {/*  NFT Claim (PAINT) */}
           <TokenClaimSection 
+            boarderTopColor={colors.deepOrange[900]}
             title={
               <Typography component="span" variant="h6" style={{color: `${colors.deepOrange[900]}`}}>
                 NFT Staking (PAINT)
@@ -267,6 +268,7 @@ const ClaimSection = props => {
 
           {/*  NFT Claim (PAINT) */}
           <TokenClaimSection 
+            boarderTopColor={colors.green[900]}
             title={
               <Typography component="span" variant="h6" style={{color: `${colors.green[900]}`}}>
                 NFT Staking (CANVAS)
@@ -287,6 +289,7 @@ const ClaimSection = props => {
 
           {/*  PAINT/ETH LP Claim (PAINT) */}
           <TokenClaimSection 
+            boarderTopColor={colors.deepPurple[900]}
             title={
               <Typography component="span" variant="h6" style={{color: `${colors.deepPurple[900]}`}}>
                 PAINT/ETH LP Staking
@@ -326,6 +329,49 @@ const ClaimSection = props => {
             balanceOfReward={MathHelper.toFixed(lpSnapshot.balance_of_reward)}
             dropTokenImage={CanvasToken}
             dropTokenName={"Canvas Token"}/>            
+
+          {/*  PAINT/ETH LP Claim (PAINT) */}
+          <TokenClaimSection 
+            boarderTopColor={colors.deepPurple[900]}
+            title={
+              <Typography component="span" variant="h6" style={{color: `${colors.deepPurple[900]}`}}>
+                Paint Token Staking
+              </Typography>
+            }
+            subTitle={
+              <Typography component="span" variant="overline" color="error">
+                The mobile meta mask is currently under maintenance.
+                <br/>
+                Currently, only desktop meta mask is available.
+              </Typography>
+            }
+            stakingButtonComponents={
+              <Grid item xs={12}>
+                <Button style={{borderBottomLeftRadius: 5, borderBottomRightRadius: 5, borderTopLeftRadius: 5, borderTopRightRadius: 5, marginLeft: -1}} variant="outlined" color="primary" size={buttonSize()} onClick={() => claim(TOKEN_TYPE_PAINT_POOL)} disabled={isDisabledLpClaim()}>
+                  Claim
+                </Button>
+              </Grid>
+            }
+            lpTokenBalanceComponents={
+              <Grid item xs={12}>
+                <Paper className={classes.paperSub}>
+                  <Typography component="span" variant="subtitle1">
+                    Your PAINT/ETH LP : {MathHelper.toFixed(webThreeContext.paintPoolBalance)}
+                  </Typography>
+                  <br/>
+                  <Typography component="span" variant="subtitle1">
+                    Staked Paint Token : {MathHelper.toFixed(paintPoolStaking.token_amount)}
+                  </Typography>
+                </Paper>
+              </Grid>
+            }
+            snapShotTimeStr={paintPoolSnapshot.snapShotTimeStr}
+            totalValueLockedTitle={"Total number of LP locked"}
+            totalValueLockedNftAmount={ MathHelper.toFixed(paintPoolSnapshot.total_value_locked_nft_amount)}
+            hashAddressLabel={"CANVAS : 0x863ad391091ae0e87b850c2bb7bfc7597c79c93f"}
+            balanceOfReward={MathHelper.toFixed(paintPoolSnapshot.balance_of_reward)}
+            dropTokenImage={PaintToken}
+            dropTokenName={"Paint Token"}/> 
         </Grid>
       </React.Fragment>)
 };

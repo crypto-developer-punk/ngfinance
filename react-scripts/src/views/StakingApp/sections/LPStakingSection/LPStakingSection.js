@@ -75,7 +75,7 @@ const TokenStakingSection = props => {
         >
         <Grid item xs={12} style={{marginBottom: '30px'}}>
           <CardBase liftUp variant="outlined" align="left" withShadow
-                    style={{ borderTop: `5px solid ${colors.deepOrange[900]}` }}>
+                    style={{ borderTop: `5px solid ${colors.deepPurple[900]}` }}>
             <Grid container spacing={isMd ? 5 : 2}>
               <Grid item container xs={12} justify="center" alignItems="center">
               <Grid item xs={6} md={6} align={"left"}>
