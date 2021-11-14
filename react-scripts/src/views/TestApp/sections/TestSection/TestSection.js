@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { inject, observer } from "mobx-react";
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import {
   useMediaQuery,
@@ -65,7 +66,7 @@ const TestSection = props => {
   });
 
   const {store} = props; 
-  const {webThreeContext, canvasSnapshot, paintEthLpStaking} = store;
+  const {webThreeContext, canvasNftSnapshot, paintEthLpStaking} = store;
 
   return (
     <React.Fragment>

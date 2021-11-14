@@ -162,7 +162,7 @@ const ClaimSection = props => {
     });
   
     const {store} = props; 
-    const {webThreeContext, paintSnapshot, canvasSnapshot, lpSnapshot, paintEthLpStaking} = store;
+    const {webThreeContext, paintNftSnapshot, canvasNftSnapshot, lpSnapshot, paintEthLpStaking} = store;
     
     const claim = _.debounce(async (token_type) => {
       let ended = false;
@@ -202,11 +202,11 @@ const ClaimSection = props => {
     })
 
     const isDisabledPaintClaim = () => {
-      return paintSnapshot.balance_of_reward === 0 || !webThreeContext.isWalletConnected;
+      return paintNftSnapshot.balance_of_reward === 0 || !webThreeContext.isWalletConnected;
     };  
 
     const isDisabledCanvasClaim = () => {
-      return canvasSnapshot.balance_of_reward === 0 || !webThreeContext.isWalletConnected;
+      return canvasNftSnapshot.balance_of_reward === 0 || !webThreeContext.isWalletConnected;
     };  
 
     const isDisabledLpClaim = () => {
@@ -254,11 +254,11 @@ const ClaimSection = props => {
                 Claim
               </Button>
             }
-            snapShotTimeStr={paintSnapshot.snapShotTimeStr}
+            snapShotTimeStr={paintNftSnapshot.snapShotTimeStr}
             totalValueLockedTitle={"Total number of NFT locked"}
-            totalValueLockedNftAmount={MathHelper.toFixed(paintSnapshot.total_value_locked_nft_amount)}
+            totalValueLockedNftAmount={MathHelper.toFixed(paintNftSnapshot.total_value_locked_nft_amount)}
             hashAddressLabel={"PAINT : 0x83e031005ecb771b7ff900b3c7b0bdde7f521c08"}
-            balanceOfReward={MathHelper.toFixed(paintSnapshot.balance_of_reward)}
+            balanceOfReward={MathHelper.toFixed(paintNftSnapshot.balance_of_reward)}
             dropTokenImage={PaintToken}
             dropTokenName={"Paint Token"}/>
           
@@ -277,11 +277,11 @@ const ClaimSection = props => {
                 Claim
               </Button>
             }
-            snapShotTimeStr={canvasSnapshot.snapShotTimeStr}
+            snapShotTimeStr={canvasNftSnapshot.snapShotTimeStr}
             totalValueLockedTitle={"Total number of NFT locked"}
-            totalValueLockedNftAmount={MathHelper.toFixed(canvasSnapshot.total_value_locked_nft_amount)}
+            totalValueLockedNftAmount={MathHelper.toFixed(canvasNftSnapshot.total_value_locked_nft_amount)}
             hashAddressLabel={"CANVAS : 0x863ad391091ae0e87b850c2bb7bfc7597c79c93f"}
-            balanceOfReward={MathHelper.toFixed(canvasSnapshot.balance_of_reward)}
+            balanceOfReward={MathHelper.toFixed(canvasNftSnapshot.balance_of_reward)}
             dropTokenImage={CanvasToken}
             dropTokenName={"Canvas Token"}/>
 

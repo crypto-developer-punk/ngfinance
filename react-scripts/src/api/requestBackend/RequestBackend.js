@@ -1,9 +1,9 @@
 import axios from "axios";
 import {environmentConfig} from 'myconfig';
 import {
-    assertSupportedTokenType, ERR_LIMIT_LOCKUP_NFT, ERR_UNSKAKING_INPROGRESS, ERR_REWARD_INPROGRESS, 
-    assertBackendResponseStatus, BACKEND_TIMEOUT_LIMIT_MS
+    ERR_LIMIT_LOCKUP_NFT, ERR_UNSKAKING_INPROGRESS, ERR_REWARD_INPROGRESS, BACKEND_TIMEOUT_LIMIT_MS
 } from "myconstants";
+import {assertSupportedTokenType, assertBackendResponseStatus} from "assertion";
 
 class RequestBackend {
     constructor() {

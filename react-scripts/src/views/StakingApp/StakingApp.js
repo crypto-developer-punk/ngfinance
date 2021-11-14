@@ -8,7 +8,7 @@ import WithBase from 'with/WithBase';
 import { environmentConfig } from 'myconfig';
 import requestWeb3 from 'api/requestWeb3';
 
-import { NftStakingSection, LPStakingSection } from './sections';
+import { NftStakingSection, LPStakingSection, SingleStakingSection } from './sections';
 import { ClaimSection } from '../RewardApp/sections';
 import { useDelayedWeb3React } from 'myutil';
 
@@ -65,7 +65,9 @@ const StakingApp = props => {
         >
           <NftStakingSection  {...props} />
           <Grid item className={classes.pagePaddingTop}/>
-          <LPStakingSection {...props}/>
+          <LPStakingSection {...props} />
+          <Grid item className={classes.pagePaddingTop}/>
+          <SingleStakingSection {...props} />
         </Grid>
       </Section>      
     </div>

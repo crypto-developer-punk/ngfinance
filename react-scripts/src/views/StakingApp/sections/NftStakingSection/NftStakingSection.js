@@ -205,6 +205,7 @@ const NftStakingSection = props => {
                       justify="center"
                       alignItems="flex-start"
                       xs={12} md={4}
+                      style={{marginTop:isMp4Url(nft.image_url) && isMobile ? 32 : 0}}
                       // xs={4}
                       data-aos={'fade-up'}
                     >

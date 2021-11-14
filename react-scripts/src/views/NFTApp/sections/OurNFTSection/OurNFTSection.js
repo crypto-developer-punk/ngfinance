@@ -151,6 +151,7 @@ const OurNFTSection = props => {
                         justify="center"
                         alignItems="center"
                         data-aos={'fade-up'}
+                        style={{marginTop:isMp4Url(nft.image_url) && isMobile ? 32 : 0}}
                       >
                         <Grid container item alignItems="center" justify="center"
                           className={classes.nftImageContainer}

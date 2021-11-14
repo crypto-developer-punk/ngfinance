@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { inject, observer } from "mobx-react";
+import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles, withStyles, useTheme } from '@material-ui/core/styles';
+import { inject, observer } from "mobx-react";
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { Button, ButtonGroup, colors, Grid, Typography, Divider, Paper, useMediaQuery } from '@material-ui/core';
-import { Image} from 'components/atoms';
+import { Image, Icon } from 'components/atoms';
 import { SectionHeader } from 'components/molecules';
 import { CardBase, Section } from "components/organisms";
+import ComingSoon from "../../../../assets/images/main/coming_soon.svg";
 import PaintToken from "assets/images/main/logo_paint_token.svg";
-import CanvasToken from "assets/images/main/logo_canvas_token.svg";
 
 import {TOKEN_TYPE_PAINT_NFT, TOKEN_TYPE_CANVAS_NFT, TOKEN_TYPE_CANVAS_PAINT_ETH_LP} from 'myconstants';
 import {sleep, MathHelper} from "myutil";
@@ -159,7 +159,7 @@ const TokenStakingSection = props => {
   );
 };
 
-const LpTStakingSection = props => {
+const SingleStakingSection = props => {
   const { className, ...rest } = props;
   
   const theme = useTheme();
@@ -171,19 +171,31 @@ const LpTStakingSection = props => {
     defaultMatches: true,
   });
 
-  const {store} = props; 
-  const {webThreeContext, paintEthLpStaking, lpSnapshot} = store;
+  const { store } = props; 
+  const { webThreeContext, paintPoolSnapshot, paintPoolStaking } = store;
 
-  const registerPaintEthLpStaking = _.debounce(async () => {
+  const buttonSize = () => {
+    return isMd ? "large" : (isSm ? "medium" : "small")
+  };
+
+  const isDisalbedStake = () => {
+    return webThreeContext.paintPoolBalance === 0 || !webThreeContext.isWalletConnected;
+  };
+
+  const isDisabledUnstake = () => {
+    return paintPoolStaking.token_amount === 0 || !webThreeContext.isWalletConnected;
+  };
+
+  const registerPaintTokenStaking = _.debounce(async () => {
     let ended = false;
     try {
       props.showLoadingDialog("Staking", 
-        <div>Your PAINT-ETH LP staking is in progress</div>);
+        <div>Your Pain token staking is in progress</div>);
       
-      await store.asyncRegisterPaintEthLpStaking((step, hashUrl)=>{
+      await store.asyncRegisterPaintTokenStaking((step, hashUrl)=>{
         if (!ended)
           props.showLoadingDialog("Staking", 
-          <div>Your PAINT-ETH LP staking is in progress
+          <div>Your Paint token staking is in progress
             <br/>
             {step}
             <br/>
@@ -197,8 +209,6 @@ const LpTStakingSection = props => {
       });
       props.closeDialog();
       ended = true;
-      // window.location.reload();
-      // }
     } catch (err) {
       props.showErrorDialog(err);
     }
@@ -208,19 +218,19 @@ const LpTStakingSection = props => {
   })
 
   const requestUnstaking = _.debounce(async() => {
-    props.showConfirmDialog("Confirm unstaking your LP Token ", <div>Are you sure you want to unstaking?</div>, 
+    props.showConfirmDialog("Confirm unstaking your Paint token ", <div>Are you sure you want to unstaking?</div>, 
       async ()=>{
-        props.showLoadingDialog("Unstaking LP Token", 
+        props.showLoadingDialog("Unstaking Paint token", 
         <div>
-          Your NFT unstaking is in progress
+          Your paint token unstaking is in progress
           <br/>
           <br/>
         </div>);
         try {
-          await store.asyncUnstakePaintEthLp((step)=> {
-            props.showLoadingDialog("Unstaking LP Token", 
+          await store.asyncUnstakePaintToken((step)=> {
+            props.showLoadingDialog("Unstaking NFT", 
             <div>
-              Your LP Token unstaking is in progress
+              Your NFT unstaking is in progress
               <br/>
               {step}
               <br/>
@@ -238,18 +248,6 @@ const LpTStakingSection = props => {
     trailing: false
   });
 
-  const isDisalbedLpStake = () => {
-    return webThreeContext.paintEthLpBalance === 0 || !webThreeContext.isWalletConnected;
-  };
-
-  const isDisabledLpUnstake = () => {
-    return paintEthLpStaking.token_amount === 0 || !webThreeContext.isWalletConnected;
-  };
-
-  const buttonSize = () => {
-    return isMd ? "large" : (isSm ? "medium" : "small")
-  };
-
   return (
     <React.Fragment>
       <Grid
@@ -266,7 +264,7 @@ const LpTStakingSection = props => {
           <SectionHeader
               title={
                 <Typography variant="h5">
-                  LP Staking
+                  Single Staking
                 </Typography>
               }
               align="left"
@@ -278,7 +276,7 @@ const LpTStakingSection = props => {
         <TokenStakingSection 
             title={
               <Typography component="span" variant="h5" style={{color: `${colors.deepPurple[900]}`}}>
-                PAINT/ETH LP Staking
+                Paint Token Staking
               </Typography>
             }
             subTitle={
@@ -290,10 +288,10 @@ const LpTStakingSection = props => {
             }
             stakingButtonComponents={
               <Grid item xs={12}>
-                <Button style={{borderBottomLeftRadius: 5, borderBottomRightRadius: 0, borderTopLeftRadius: 5, borderTopRightRadius: 0}} variant="outlined" color="primary" size={buttonSize()} onClick={registerPaintEthLpStaking} disabled={isDisalbedLpStake()}>
+                <Button style={{borderBottomLeftRadius: 5, borderBottomRightRadius: 0, borderTopLeftRadius: 5, borderTopRightRadius: 0}} variant="outlined" color="primary" size={buttonSize()} onClick={registerPaintTokenStaking} disabled={isDisalbedStake()}>
                   Stake
                 </Button>
-                <Button style={{borderBottomLeftRadius: 0, borderBottomRightRadius: 5, borderTopLeftRadius: 0, borderTopRightRadius: 5, marginLeft: -1}} variant="outlined" color="primary" size={buttonSize()} onClick={requestUnstaking} disabled={isDisabledLpUnstake()}>
+                <Button style={{borderBottomLeftRadius: 0, borderBottomRightRadius: 5, borderTopLeftRadius: 0, borderTopRightRadius: 5, marginLeft: -1}} variant="outlined" color="primary" size={buttonSize()} onClick={requestUnstaking} disabled={isDisabledUnstake()}>
                   Unstake
                 </Button>
               </Grid>
@@ -302,31 +300,31 @@ const LpTStakingSection = props => {
               <Grid item xs={12}>
                 <Paper className={classes.paperSub}>
                   <Typography component="span" variant="subtitle1">
-                    Your PAINT/ETH LP : {MathHelper.toFixed(webThreeContext.paintEthLpBalance)}
+                    Your PAINT/ETH LP : {MathHelper.toFixed(webThreeContext.paintPoolBalance)}
                   </Typography>
                   <br/>
                   <Typography component="span" variant="subtitle1">
-                    Staked PAINT/ETH LP : {MathHelper.toFixed(paintEthLpStaking.token_amount)}
+                    Staked Paint Token : {MathHelper.toFixed(paintPoolStaking.token_amount)}
                   </Typography>
                 </Paper>
               </Grid>
             }
-            snapShotTimeStr={lpSnapshot.snapShotTimeStr}
-            totalValueLockedTitle={"Total number of LP locked"}
-            totalValueLockedNftAmount={MathHelper.toFixed(lpSnapshot.total_value_locked_nft_amount)}
+            snapShotTimeStr={paintPoolSnapshot.snapShotTimeStr}
+            totalValueLockedTitle={"Total number of Paint locked"}
+            totalValueLockedNftAmount={MathHelper.toFixed(paintPoolSnapshot.total_value_locked_nft_amount)}
             hashAddressLabel={"CANVAS : 0x863ad391091ae0e87b850c2bb7bfc7597c79c93f"}
-            balanceOfReward={MathHelper.toFixed(lpSnapshot.balance_of_reward)}
-            dropTokenImage={CanvasToken}
-            dropTokenName={"Canvas Token"}/>  
+            balanceOfReward={MathHelper.toFixed(paintPoolSnapshot.balance_of_reward)}
+            dropTokenImage={PaintToken}
+            dropTokenName={"Paint Token"}/>  
       </Grid>
     </React.Fragment>
   );
 };
 
-LpTStakingSection.propTypes = {
+SingleStakingSection.propTypes = {
   className: PropTypes.string,
 };
 
 export default inject(({store}) => ({
   store: store,
-}))(observer(LpTStakingSection));
+}))(observer(SingleStakingSection));
