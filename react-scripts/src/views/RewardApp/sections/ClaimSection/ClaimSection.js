@@ -213,6 +213,10 @@ const ClaimSection = props => {
       return lpSnapshot.balance_of_reward === 0 || !webThreeContext.isWalletConnected;
     };
 
+    const isDisalbedPaintClaim = () => {
+      return paintPoolSnapshot.balance_of_reward === 0 || !webThreeContext.isWalletConnected;
+    };
+
     const buttonSize = () => {
       return isMd ? "large" : (isSm ? "medium" : "small")
     };
@@ -347,7 +351,7 @@ const ClaimSection = props => {
             }
             stakingButtonComponents={
               <Grid item xs={12}>
-                <Button style={{borderBottomLeftRadius: 5, borderBottomRightRadius: 5, borderTopLeftRadius: 5, borderTopRightRadius: 5, marginLeft: -1}} variant="outlined" color="primary" size={buttonSize()} onClick={() => claim(TOKEN_TYPE_PAINT_POOL)} disabled={isDisabledLpClaim()}>
+                <Button style={{borderBottomLeftRadius: 5, borderBottomRightRadius: 5, borderTopLeftRadius: 5, borderTopRightRadius: 5, marginLeft: -1}} variant="outlined" color="primary" size={buttonSize()} onClick={() => claim(TOKEN_TYPE_PAINT_POOL)} disabled={isDisalbedPaintClaim()}>
                   Claim
                 </Button>
               </Grid>
