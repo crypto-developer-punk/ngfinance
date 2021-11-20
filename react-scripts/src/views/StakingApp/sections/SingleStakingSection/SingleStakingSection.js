@@ -179,7 +179,7 @@ const SingleStakingSection = props => {
   };
 
   const isDisalbedStake = () => {
-    return webThreeContext.paintPoolBalance === 0 || !webThreeContext.isWalletConnected;
+    return parseInt(webThreeContext.paintPoolBalanceStr) === 0 || !webThreeContext.isWalletConnected;
   };
 
   const isDisabledUnstake = () => {
@@ -300,7 +300,7 @@ const SingleStakingSection = props => {
               <Grid item xs={12}>
                 <Paper className={classes.paperSub}>
                   <Typography component="span" variant="subtitle1">
-                    Your PAINT/ETH LP : {MathHelper.toFixed(webThreeContext.paintPoolBalance)}
+                    Your Paint Token : {MathHelper.parseFixedFloat(webThreeContext.paintPoolBalanceStr)}
                   </Typography>
                   <br/>
                   <Typography component="span" variant="subtitle1">

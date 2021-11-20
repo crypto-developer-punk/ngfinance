@@ -13,12 +13,12 @@ class RequestBackend {
         });
     }
 
-    asyncRegisterStaking = async(my_address, contract_type, nft_chain_id, nft_amount, token_type, transactionHash) => {
+    asyncRegisterStaking = async(my_address, contract_type, nft_chain_id, nft_amount_str, token_type, transactionHash) => {
         const data = {
             "address": my_address,
             "contract_type": contract_type,
             "nft_chain_id": nft_chain_id,
-            "nft_amount": nft_amount,
+            "nft_amount": nft_amount_str,
             "token_type": token_type,
             "staking_transaction_hash": transactionHash,
         };

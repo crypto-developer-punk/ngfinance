@@ -239,7 +239,7 @@ const LpTStakingSection = props => {
   });
 
   const isDisalbedLpStake = () => {
-    return webThreeContext.paintEthLpBalance === 0 || !webThreeContext.isWalletConnected;
+    return parseInt(webThreeContext.paintEthLpBalanceStr) === 0 || !webThreeContext.isWalletConnected;
   };
 
   const isDisabledLpUnstake = () => {
@@ -302,7 +302,7 @@ const LpTStakingSection = props => {
               <Grid item xs={12}>
                 <Paper className={classes.paperSub}>
                   <Typography component="span" variant="subtitle1">
-                    Your PAINT/ETH LP : {MathHelper.toFixed(webThreeContext.paintEthLpBalance)}
+                    Your PAINT/ETH LP : {MathHelper.parseFixedFloat(webThreeContext.paintEthLpBalanceStr)}
                   </Typography>
                   <br/>
                   <Typography component="span" variant="subtitle1">

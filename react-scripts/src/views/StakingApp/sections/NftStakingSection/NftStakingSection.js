@@ -91,8 +91,7 @@ const NftStakingSection = props => {
       props.showInfoDialog("Please connect wallet to ethereum mainet.");
       return;
     }
-    const nftBalance = nft.balance;//parseInt(props.store.findNftWebThreeContext(nft).balance);
-    if (nftBalance <= 0) {
+    if (parseFloat(nft.balanceStr) <= 0) {
       props.showInfoDialog("Must have 1 more NFT for staking");
       return;
     }
@@ -189,7 +188,7 @@ const NftStakingSection = props => {
       <Grid item xs={12}>
         {nftArr.map(nft => {
           const staking = store.findNftStaking(nft);
-          const nftBalance = nft.balance;
+          const nftBalance = parseFloat(nft.balanceStr);
           return (
             <Grid container spacing={3}>
               <Grid item xs={12}>

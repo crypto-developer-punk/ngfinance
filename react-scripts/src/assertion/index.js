@@ -71,8 +71,8 @@ const assertSupportedTokenType = (token_type) => {
   }
 };
 
-const assertBalanceEmtpy = (balance) => {
-  if (balance <= 0) {
+const assertBalanceStrEmtpy = (balanceStr) => {
+  if (parseFloat(balanceStr) <= 0) {
     throw {code : ERR_BALANCE_EMPTY, msg: `Balance is empty`}
   }
 };
@@ -85,5 +85,5 @@ export {
   assertWalletConnect,
   assertNetworkId,
   assertNetworkIdAndWalletConnect,
-  assertBalanceEmtpy
+  assertBalanceStrEmtpy
 }

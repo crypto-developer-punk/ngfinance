@@ -2,7 +2,7 @@ import axios from "axios";
 import {timeout, ProviderHelper, MathHelper} from 'myutil';
 import Config, {environmentConfig} from 'myconfig';
 import {
-    TOKEN_TYPE_PAINT_NFT, TOKEN_TYPE_CANVAS_NFT, TOKEN_TYPE_CANVAS_PAINT_ETH_LP, ERR_UNSUPPORTED_TOKEN_TYPE, ERR_UNSUPPORTED_CONTRACT_TYPE, WEBTHREE_TIMEOUT_LIMIT_MS
+    TOKEN_TYPE_PAINT_NFT, TOKEN_TYPE_CANVAS_NFT, TOKEN_TYPE_CANVAS_PAINT_ETH_LP, TOKEN_TYPE_PAINT_POOL, ERR_UNSUPPORTED_TOKEN_TYPE, ERR_UNSUPPORTED_CONTRACT_TYPE, WEBTHREE_TIMEOUT_LIMIT_MS
 } from 'myconstants';
 import { assertSupportedTokenType, assertSupportedContractType } from 'assertion';
 import { async } from "validate.js";
@@ -26,9 +26,9 @@ class RequestWeb3 {
         return accounts;
     };
 
-    asyncGetEthBalance = async(connected_addr) => {
-        const balance = this.lib.utils.fromWei(await this.lib.eth.getBalance(connected_addr), 'ether');
-        return parseFloat(balance);
+    asyncGetEthBalanceStr = async(connected_addr) => {
+        const balanceStr = this.lib.utils.fromWei(await this.lib.eth.getBalance(connected_addr), 'ether');
+        return balanceStr;
     };
 
     asyncGetNetworkId = async() => {
@@ -72,6 +72,7 @@ class RequestWeb3 {
         let contractAddress = null;
         switch (token_type) {
             case TOKEN_TYPE_PAINT_NFT:
+            case TOKEN_TYPE_PAINT_POOL:
                 contractAbi = PAINT_TOKEN_CONTRACT_ABI;
                 contractAddress = PAINT_TOKEN_CONTRACT_ADDRESS;
             break;
@@ -107,28 +108,28 @@ class RequestWeb3 {
         return receipt;
     };
 
-    asyncGetBalanceOfNft = async(contract_type, nft_chain_id, connected_addr) => {
+    asyncGetBalanceStrOfNft = async(contract_type, nft_chain_id, connected_addr) => {
         assertSupportedContractType(contract_type);
 
         const nftContract = await this.#asyncGetNftContract(connected_addr, contract_type, false);
 
-        let balanceOfNft = 0;
+        let balanceStrOfNft = "0";
         if (contract_type === 721) {
             let addressOfOwner = await nftContract.methods.ownerOf(nft_chain_id).call();
 
             // owner와 연결된 지갑 주소가 일치하면 소유한 것으로 판단한다.
             if (addressOfOwner.trim() === connected_addr.trim()) {
-                balanceOfNft = 1;
+                balanceStrOfNft = "1";
             }
         } else if (contract_type === 1155){
-            balanceOfNft = await nftContract.methods.balanceOf(connected_addr, nft_chain_id).call();
+            balanceStrOfNft = await nftContract.methods.balanceOf(connected_addr, nft_chain_id).call();
         } 
         // TODO aaa
         // console.log(`aaa nft_chain_id: ${nft_chain_id}, contract_type: ${contract_type}, balanceOfNft: ${balanceOfNft}`);
-        return MathHelper.parseFixedFloat(balanceOfNft);
+        return balanceStrOfNft;
     };
 
-    asyncRegisterNftStaking = async(fromAddress, contract_type, nft_chain_id, amountOfNft, transactionHashCB) => {
+    asyncRegisterNftStaking = async(fromAddress, contract_type, nft_chain_id, amount_str, transactionHashCB) => {
         assertSupportedContractType(contract_type);
         
         const {toStakingAddress} = environmentConfig;
@@ -137,7 +138,7 @@ class RequestWeb3 {
                 if (transactionHashCB) transactionHashCB(hash);
             });
         } else if (contract_type === 1155){
-            return await this.asyncSafeTransferFrom1155(fromAddress, toStakingAddress, nft_chain_id, amountOfNft, (hash)=>{
+            return await this.asyncSafeTransferFrom1155(fromAddress, toStakingAddress, nft_chain_id, amount_str, (hash)=>{
                 if (transactionHashCB) transactionHashCB(hash);
             });
         } 
@@ -160,11 +161,11 @@ class RequestWeb3 {
     };    
 
     // https://web3js.readthedocs.io/en/v1.2.2/web3-eth-contract.html#methods-mymethod-send
-    asyncSafeTransferFrom1155 = async(connected_addr, toAddress, nft_chain_id, amountOfNft, transactionHashCB) => {
+    asyncSafeTransferFrom1155 = async(connected_addr, toAddress, nft_chain_id, amount_str, transactionHashCB) => {
         // console.log('aaa 4', connected_addr, toAddress, nft_chain_id, amountOfNft, transactionHashCB);
         const nftContract = await this.#asyncGetNftContract(connected_addr, 1155, true);
         // console.log('aaa 2', nftContract.methods);
-        const receipt = await nftContract.methods.safeTransferFrom(connected_addr, toAddress, nft_chain_id, amountOfNft, "0x00").send()
+        const receipt = await nftContract.methods.safeTransferFrom(connected_addr, toAddress, nft_chain_id, amount_str, "0x00").send()
             .on('transactionHash', (hash)=>{
                 if (transactionHashCB) transactionHashCB(hash);                
             });
@@ -172,27 +173,27 @@ class RequestWeb3 {
         return receipt;
     };
     
-    asyncGetBalanceOfPaintEthLP = async(connected_addr) => {
+    asyncGetBalanceStrOfPaintEthLP = async(connected_addr) => {
         const paintEthLpContract = await this.#asyncGetPaintEthLpContract(connected_addr);
         const balanceWei = await paintEthLpContract.methods.balanceOf(connected_addr).call();
-        const balanceEther = await this.lib.utils.fromWei(balanceWei, 'ether');
-        console.log("Check balance of PAINT-ETH LP: " + balanceEther);
-        return MathHelper.parseFixedFloat(balanceEther);
+        const balanceStr = await this.lib.utils.fromWei(balanceWei, 'ether');
+        console.log("Check balance of PAINT-ETH LP: " + balanceStr);
+        return balanceStr;
     };
 
-    asyncGetBalanceOfPaintToken = async(connected_addr) => {
+    asyncGetBalanceStrOfPaintToken = async(connected_addr) => {
         const paintTokenContract = await this.#asyncGetPaintTokenContract(connected_addr);
         const balanceWei = await paintTokenContract.methods.balanceOf(connected_addr).call();
-        const balanceEther = await this.lib.utils.fromWei(balanceWei, 'ether');
-        console.log("Check balance of PAINT TOKEN: " + balanceEther);
-        return MathHelper.parseFixedFloat(balanceEther);
+        const balanceStr = await this.lib.utils.fromWei(balanceWei, 'ether');
+        console.log("Check balance of PAINT TOKEN: " + balanceStr);
+        return balanceStr;
     };
 
-    asyncRegisterPaintEthLpStaking = async(connected_addr, amount, transactionHashCB) => {
+    asyncRegisterPaintEthLpStaking = async(connected_addr, amountStr, transactionHashCB) => {
         const {toStakingAddress} = environmentConfig;
         
         const paintEthLpContract = await this.#asyncGetPaintEthLpContract(connected_addr, true);
-        let amountStr = typeof amount === 'number' ? amount.toString() : amount;
+        // let amountStr = typeof amount === 'number' ? amount.toString() : amount;
         const balanceWei = await this.lib.utils.toWei(amountStr, 'ether');
 
         // console.log("balanceWei", balanceWei);
@@ -203,11 +204,10 @@ class RequestWeb3 {
         return receipt;
     };
 
-    asyncRegisterPaintPoolStaking = async(connected_addr, amount, transactionHashCB) => {
+    asyncRegisterPaintPoolStaking = async(connected_addr, amountStr, transactionHashCB) => {
         const {toStakingAddress} = environmentConfig;
 
         const paintPoolContract = await this.#asyncGetPaintTokenContract(connected_addr, true);
-        let amountStr = typeof amount == 'number' ? amount.toString() : amount;
         const balanceWei = await this.lib.utils.toWei(amountStr, 'ether');
 
         const receipt = await paintPoolContract.methods.transfer(toStakingAddress, balanceWei).send()
