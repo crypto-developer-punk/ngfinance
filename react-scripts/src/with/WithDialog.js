@@ -1,5 +1,6 @@
 import React from 'react';
 import MyAlertDialog from "widget/MyAlertDialog";
+import { TelegramHelper } from "myutil";
 import { 
     ERR_WALLET_IS_NOT_CONNECTED, ERR_LIMIT_LOCKUP_NFT, ERR_UNSKAKING_INPROGRESS, ERR_REWARD_INPROGRESS,
     ERR_UNSUPPORTED_TOKEN_TYPE, ERR_UNSUPPORTED_CONTRACT_TYPE, ERR_BACKEND_RESPONSE, 
@@ -18,14 +19,17 @@ const WithDialog = WrappedComponent => {
         const dialogModeStateRef = React.useRef('close');
 
         const showErrorDialog = (err) => {
-            console.log(err);
+            const errorContent = err.toString() || JSON.stringify(err);
+            TelegramHelper.getInstance().sendMessage(errorContent);
+            console.log(errorContent);
+
             if (!err.code) {
-                let content = err.toString() || JSON.stringify(err);
+                // let content = err.toString() || JSON.stringify(err);
                 setDialogOpened(true);
                 setUseCloseBtn(true);
                 setUseConfirmBtn(false);
                 setLoading(false);
-                setDialogContent(<div>Error Content<br/>{`${content}`}<br/><br/>{`If problem is continued, please contract to developer`} </div>);
+                setDialogContent(<div>Error Content<br/>{`${errorContent}`}<br/><br/>{`If problem is continued, please contract to developer`} </div>);
                 setDialogTitle("Error occured");
                 dialogModeStateRef.current = 'error';
             } else if (err.code === ERR_WALLET_IS_NOT_CONNECTED || err.code === ERR_INVALID_WEB3_NETWORK){
