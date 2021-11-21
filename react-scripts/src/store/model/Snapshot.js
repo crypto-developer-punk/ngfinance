@@ -15,7 +15,7 @@ const Snapshot = types.model('Snapshot', {
 .views(self => ({
   get snapShotTimeStr() {
     return self.snapshot_time ? 
-    moment(self.snapshot_time).format("YYYY-MM-DD hh:mm:ss") : "";
+    moment(self.snapshot_time).format("YYYY-MM-DD hh:mm:ss") : "N/A";
   }
 }));;
 
