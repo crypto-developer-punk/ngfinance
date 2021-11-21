@@ -17,7 +17,7 @@
     "PAINT_ETH_LP_CONTRACT_ADDRESS": "0xEB773432a4f26d4c5aC95Fb34020291649751ED7",
     "ETHERSCAN_IO_GAS_PRICE_URL":  "https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=NNSF1R3Z5G24VWG6XB7QW65ZHGJU4RKUMT",
     "TELE_TOKEN": "2102927651:AAFe4z6Hh-eFHrPNVBXSfeHKm-fTTRFv6G0",
-    "TELE_CHAT_ID": "1176850387"
+    "TELE_CHAT_ID": "-777685973"
   },
   "development": {
     "backend_url": "https://ngfinance.io:11443",
@@ -36,7 +36,7 @@
     "PAINT_ETH_LP_CONTRACT_ADDRESS": "0xEB773432a4f26d4c5aC95Fb34020291649751ED7",
     "ETHERSCAN_IO_GAS_PRICE_URL":  "https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=NNSF1R3Z5G24VWG6XB7QW65ZHGJU4RKUMT",
     "TELE_TOKEN": "2102927651:AAFe4z6Hh-eFHrPNVBXSfeHKm-fTTRFv6G0",
-    "TELE_CHAT_ID": "1176850387"
+    "TELE_CHAT_ID": "-777685973"
   },
   "staging": {
     "backend_url": "https://ngfinance.io:21443",
@@ -55,7 +55,7 @@
     "PAINT_ETH_LP_CONTRACT_ADDRESS": "0xa09579ea6112dcf1df138cb0c26fe39a250ce3e3",
     "ETHERSCAN_IO_GAS_PRICE_URL":  "https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=NNSF1R3Z5G24VWG6XB7QW65ZHGJU4RKUMT",
     "TELE_TOKEN": "2102927651:AAFe4z6Hh-eFHrPNVBXSfeHKm-fTTRFv6G0",
-    "TELE_CHAT_ID": "1176850387"
+    "TELE_CHAT_ID": "-777685973"
   },
   "production": {
     "backend_url": "https://ngfinance.io:21443",
@@ -74,6 +74,6 @@
     "PAINT_ETH_LP_CONTRACT_ADDRESS": "0xa09579ea6112dcf1df138cb0c26fe39a250ce3e3",
     "ETHERSCAN_IO_GAS_PRICE_URL":  "https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=NNSF1R3Z5G24VWG6XB7QW65ZHGJU4RKUMT",
     "TELE_TOKEN": "2102927651:AAFe4z6Hh-eFHrPNVBXSfeHKm-fTTRFv6G0",
-    "TELE_CHAT_ID": "1176850387"
+    "TELE_CHAT_ID": "-777685973"
   }
 }
