@@ -191,6 +191,7 @@ const ClaimSection = props => {
                 </div>);
           });
         props.closeDialog();
+        window.location.reload();
       } catch(err) {
         props.showErrorDialog(err);
       } finally {

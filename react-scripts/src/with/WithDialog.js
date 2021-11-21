@@ -4,7 +4,7 @@ import { TelegramHelper } from "myutil";
 import { 
     ERR_WALLET_IS_NOT_CONNECTED, ERR_LIMIT_LOCKUP_NFT, ERR_UNSKAKING_INPROGRESS, ERR_REWARD_INPROGRESS,
     ERR_UNSUPPORTED_TOKEN_TYPE, ERR_UNSUPPORTED_CONTRACT_TYPE, ERR_BACKEND_RESPONSE, 
-    ERR_RESPONSE_TIMEOUT, ERR_INVALID_WEB3_NETWORK, ERR_REJECT_TRANSACTION, ERR_BALANCE_EMPTY
+    ERR_RESPONSE_TIMEOUT, ERR_INVALID_WEB3_NETWORK, ERR_REJECT_TRANSACTION, ERR_BALANCE_EMPTY, ERR_AXIOS_TIMEOUT
 } from "myconstants";
 
 const WithDialog = WrappedComponent => {
@@ -42,6 +42,8 @@ const WithDialog = WrappedComponent => {
                 showDialog("Approve reward is in progress.", <div>{err.msg}</div>);
             } else if (err.code === ERR_REJECT_TRANSACTION) {
                 closeDialog();
+            } else if (err.code === ERR_AXIOS_TIMEOUT) {
+                showDialog("Backend request is timeouted.", <div>{errorContent}\nIf problem is continued or takes long time, please contract to developer</div>);
             } else if (
                 err.code === ERR_UNSUPPORTED_TOKEN_TYPE || err.code === ERR_UNSUPPORTED_CONTRACT_TYPE || err.code === ERR_BACKEND_RESPONSE ||
                 err.code === ERR_RESPONSE_TIMEOUT
