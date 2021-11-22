@@ -312,7 +312,7 @@ const SingleStakingSection = props => {
             snapShotTimeStr={paintPoolSnapshot.snapShotTimeStr}
             totalValueLockedTitle={"Total number of Paint locked"}
             totalValueLockedNftAmount={MathHelper.toFixed(paintPoolSnapshot.total_value_locked_nft_amount)}
-            hashAddressLabel={"CANVAS : 0x863ad391091ae0e87b850c2bb7bfc7597c79c93f"}
+            hashAddressLabel={"PAINT : 0x83e031005ecb771b7ff900b3c7b0bdde7f521c08"}
             balanceOfReward={MathHelper.toFixed(paintPoolSnapshot.balance_of_reward)}
             dropTokenImage={PaintToken}
             dropTokenName={"Paint Token"}/>  
