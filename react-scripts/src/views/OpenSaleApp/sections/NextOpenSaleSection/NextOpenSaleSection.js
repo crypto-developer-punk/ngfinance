@@ -117,7 +117,7 @@ const NextOpenSaleSection = props => {
         md={6}
       >
         <Image
-            src={"https://img.rarible.com/prod/image/upload/t_big/prod-itemImages/0x4dfd4f4aa74b62614597e6f5417f70a6fa7a9f45:4/7e5e6fdd"}
+            src={"https://img.rarible.com/prod/image/upload/t_big/prod-itemImages/0x4dfd4f4aa74b62614597e6f5417f70a6fa7a9f45:5/c3ed695f"}
             alt="next open sale NFT"
             style={{ width: '100%', height:'100%' }}
             className={classes.image}
@@ -152,10 +152,10 @@ const NextOpenSaleSection = props => {
                         Nostalgia Finance
                       </Typography>
                       <Typography variant="caption" className={classes.tag} >
-                        Utility NFT
+                        Governance NFT
                       </Typography>
                       <Typography variant="caption" className={classes.tag} >
-                        Paint
+                        Canvas
                       </Typography>
                     </div>
                   </span>
@@ -176,7 +176,7 @@ const NextOpenSaleSection = props => {
                   title={
                     <span>
                       <Typography component="span" variant="h5" color="textPrimary" >
-                        <strong>Nostalgia Grand Cuvee NV</strong>
+                        <strong>Forest</strong>
                       </Typography>
                     </span>
                   }
@@ -194,7 +194,7 @@ const NextOpenSaleSection = props => {
                 </Grid>
                 <Grid item xs={12} md={8}>
                   <Typography variant="subtitle1">
-                    The elegant taste and flavor this one bottle of beauty possesses is intense. Ripe apple, lemon, grapefruit flavor along with the scent of brioche, biscuit, and coffee makes the tasting experience balanced with a long attractive finishing taste.
+                    Under the clear blue sky, the emotions that the forest, trees, rocks, and grasses give were portrayed with plenty of colors to embrace the most amount of feeling a real forest could give.
                   </Typography>
                 </Grid>
               </Grid>
@@ -209,7 +209,7 @@ const NextOpenSaleSection = props => {
                 </Grid>
                 <Grid item xs={12} md={8}>
                   <Typography variant="subtitle1">
-                    November 9 at 21:00 KST - November 12 at 21:00 KST
+                    November 26 at 21:00 KST - December 01 at 21:00 KST
                   </Typography>
                 </Grid>
               </Grid>
@@ -223,7 +223,7 @@ const NextOpenSaleSection = props => {
                       Reserve price
                     </Typography>{' '}
                     <Typography component="span" variant="h6" color="textPrimary">
-                      <strong>0.7</strong>
+                      <strong>0.125</strong>
                     </Typography>{' '}
                     <Typography component="span" variant="body1" color="textSecondary">
                       ETH
@@ -253,338 +253,11 @@ const NextOpenSaleSection = props => {
               <Button variant="contained" color="primary" size="large"
                       onClick={(e) => {
                         e.preventDefault();
-                        window.open("https://rarible.com/token/0x4dfd4f4aa74b62614597e6f5417f70a6fa7a9f45:4?tab=bids", '_blank');
+                        window.open("https://rarible.com/token/0x4dfd4f4aa74b62614597e6f5417f70a6fa7a9f45:5?tab=bids", '_blank');
                       }}
                       fullWidth
                       disabled={false}>
                 Place a bid
-              </Button>
-            </Grid>
-          </Grid>
-        </CardBase>
-      </Grid>
-      {/* title */}
-      <Grid item xs={12} style={{marginBottom: '0px'}}>
-        <SectionHeader
-            title={
-              <Typography variant="h5">
-                Next open sale
-              </Typography>
-            }
-            align="left"
-            disableGutter
-        />
-        <Divider/>
-      </Grid>
-
-      {/* nft-image */}
-      <Grid
-          item
-          container
-          justify="flex-start"
-          alignItems="flex-start"
-          xs={12}
-          md={6}
-      >
-        <Image
-            src={"https://img.rarible.com/prod/image/upload/t_big/prod-itemImages/0x6cff6eb6c7cc2409b48e6192f98914fd05aab4ba:32/671ff4eb"}
-            alt="next open sale NFT"
-            style={{ width: '100%', height:'100%' }}
-            className={classes.image}
-            data-aos="flip-left"
-            data-aos-easing="ease-out-cubic"
-            data-aos-duration="2000"
-        />
-      </Grid>
-
-      {/* nft-description */}
-      <Grid
-          item
-          container
-          justify="flex-start"
-          alignItems="flex-start"
-          xs={12}
-          md={6}
-          data-aos={'fade-up'}
-      >
-        <CardBase liftUp variant="outlined" align="left" withShadow
-                  style={{ borderTop: `5px solid ${colors.blueGrey[500]}` }}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <CustomizedProgressBars saleDate={SALE_DATE} isStart={true}/>
-            </Grid>
-            <Grid item xs={12} md={9}>
-              <SectionHeader
-                  title={
-                    <span>
-                    <div>
-                      <Typography variant="caption" className={classes.tag} >
-                        Nostalgia Finance
-                      </Typography>
-                      <Typography variant="caption" className={classes.tag} >
-                        Utility NFT
-                      </Typography>
-                      <Typography variant="caption" className={classes.tag} >
-                        Paint
-                      </Typography>
-                    </div>
-                  </span>
-                  }
-                  align="left"
-                  disableGutter
-              />
-            </Grid>
-            <Grid item xs={12} md={3} align="right">
-              <Image
-                  src={Rarible}
-                  style={{ width: '40px', height:'40px' }}
-              />
-            </Grid>
-
-            <Grid item xs={12}>
-              <SectionHeader
-                  title={
-                    <span>
-                      <Typography component="span" variant="h5" color="textPrimary" >
-                        <strong>Nostal-Gia MONOPOLE 2021</strong>
-                      </Typography>
-                    </span>
-                  }
-                  align="left"
-                  disableGutter
-              />
-            </Grid>
-
-            <Grid item xs={12} className={classes.gridItemMain}>
-              <Grid container>
-                <Grid item xs={12} md={4}>
-                  <Typography variant="subtitle1" color={"primary"}>
-                    DESCRIPTION
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} md={8}>
-                  <Typography variant="subtitle1">
-                    At the pinnacle among Burgundy wine, it shows its true virtue as a noble wine with various scents of spices and fruits such as berries, roses, grapefruits and many more. Appealing tannins blended with delicate taste of fruits show astounding continuity and concentration but is also ironic in a way that it is as light as if it’s in zero-gravity.
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-
-            <Grid item xs={12} className={classes.gridItemMain}>
-              <Grid container>
-                <Grid item xs={12} md={4}>
-                  <Typography variant="subtitle1" color={"primary"}>
-                    OPEN SALE DATE
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} md={8}>
-                  <Typography variant="subtitle1">
-                    November 10 at 21:00 KST
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-
-            <Grid item xs={12}>
-              <SectionHeader
-                  title={
-                    <span>
-                    <Typography component="span" variant="body1" color="textSecondary">
-                      Price
-                    </Typography>{' '}
-                      <Typography component="span" variant="h6" color="textPrimary">
-                      <strong>0.68</strong>
-                    </Typography>{' '}
-                      <Typography component="span" variant="body1" color="textSecondary">
-                      ETH
-                      <span style={{paddingLeft: '10px'}}>
-                        <Image
-                            src={Eth}
-                            style={{height:'20px', width: '20px'}}
-                        />
-                      </span>
-                    </Typography>
-                  </span>
-                  }
-                  align="left"
-                  disableGutter
-                  titleVariant="h3"
-              />
-            </Grid>
-            <Grid item xs={12}>
-                <span>
-                  <Typography id="discrete-slider-small-steps" gutterBottom>
-                    Total amount : 9
-                  </Typography>
-                </span>
-            </Grid>
-            <Grid item xs={12} align="center">
-              <br />
-              <Button variant="contained" color="primary" size="large"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        window.open("https://rarible.com/token/0x6cff6eb6c7cc2409b48e6192f98914fd05aab4ba:32", '_blank');
-                      }}
-                      fullWidth
-                      disabled={false}>
-                Buy NFT
-              </Button>
-            </Grid>
-          </Grid>
-        </CardBase>
-      </Grid>
-
-      {/* nft-image */}
-      <Grid
-          item
-          container
-          justify="flex-start"
-          alignItems="flex-start"
-          xs={12}
-          md={6}
-      >
-        <Image
-            src={"https://img.rarible.com/prod/image/upload/t_big/prod-itemImages/0x6cff6eb6c7cc2409b48e6192f98914fd05aab4ba:33/8d75651e"}
-            alt="next open sale NFT"
-            style={{ width: '100%', height:'100%' }}
-            className={classes.image}
-            data-aos="flip-left"
-            data-aos-easing="ease-out-cubic"
-            data-aos-duration="2000"
-        />
-      </Grid>
-
-      {/* nft-description */}
-      <Grid
-          item
-          container
-          justify="flex-start"
-          alignItems="flex-start"
-          xs={12}
-          md={6}
-          data-aos={'fade-up'}
-      >
-        <CardBase liftUp variant="outlined" align="left" withShadow
-                  style={{ borderTop: `5px solid ${colors.blueGrey[500]}` }}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <CustomizedProgressBars saleDate={SALE_DATE} isStart={true}/>
-            </Grid>
-            <Grid item xs={12} md={9}>
-              <SectionHeader
-                  title={
-                    <span>
-                    <div>
-                      <Typography variant="caption" className={classes.tag} >
-                        Nostalgia Finance
-                      </Typography>
-                      <Typography variant="caption" className={classes.tag} >
-                        Utility NFT
-                      </Typography>
-                      <Typography variant="caption" className={classes.tag} >
-                        Paint
-                      </Typography>
-                    </div>
-                  </span>
-                  }
-                  align="left"
-                  disableGutter
-              />
-            </Grid>
-            <Grid item xs={12} md={3} align="right">
-              <Image
-                  src={Rarible}
-                  style={{ width: '40px', height:'40px' }}
-              />
-            </Grid>
-
-            <Grid item xs={12}>
-              <SectionHeader
-                  title={
-                    <span>
-                      <Typography component="span" variant="h5" color="textPrimary" >
-                        <strong>Chateau Nostalgia 2021</strong>
-                      </Typography>
-                    </span>
-                  }
-                  align="left"
-                  disableGutter
-              />
-            </Grid>
-
-            <Grid item xs={12} className={classes.gridItemMain}>
-              <Grid container>
-                <Grid item xs={12} md={4}>
-                  <Typography variant="subtitle1" color={"primary"}>
-                    DESCRIPTION
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} md={8}>
-                  <Typography variant="subtitle1">
-                    Literally translated, noble rot is a well known means of creating a fabulous dessert wine. Boteytis Cinerea, the precise fungus in action here will willfully destroy the grape skin and form pores to evaporate moisture. Thus, the sugar becomes concentrated as much as honey and this blended with mango, pineapple, and lychee scent along with honey and butter scotch scent creates a tasteful experience.
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-
-            <Grid item xs={12} className={classes.gridItemMain}>
-              <Grid container>
-                <Grid item xs={12} md={4}>
-                  <Typography variant="subtitle1" color={"primary"}>
-                    OPEN SALE DATE
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} md={8}>
-                  <Typography variant="subtitle1">
-                    November 11 at 21:00 KST
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-
-            <Grid item xs={12}>
-              <SectionHeader
-                  title={
-                    <span>
-                    <Typography component="span" variant="body1" color="textSecondary">
-                      Price
-                    </Typography>{' '}
-                      <Typography component="span" variant="h6" color="textPrimary">
-                      <strong>0.65</strong>
-                    </Typography>{' '}
-                      <Typography component="span" variant="body1" color="textSecondary">
-                      ETH
-                      <span style={{paddingLeft: '10px'}}>
-                        <Image
-                            src={Eth}
-                            style={{height:'20px', width: '20px'}}
-                        />
-                      </span>
-                    </Typography>
-                  </span>
-                  }
-                  align="left"
-                  disableGutter
-                  titleVariant="h3"
-              />
-            </Grid>
-            <Grid item xs={12}>
-                <span>
-                  <Typography id="discrete-slider-small-steps" gutterBottom>
-                    Total amount : 11
-                  </Typography>
-                </span>
-            </Grid>
-            <Grid item xs={12} align="center">
-              <br />
-              <Button variant="contained" color="primary" size="large"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        window.open("https://rarible.com/token/0x6cff6eb6c7cc2409b48e6192f98914fd05aab4ba:33", '_blank');
-                      }}
-                      fullWidth
-                      disabled={false}>
-                Buy NFT
               </Button>
             </Grid>
           </Grid>
