@@ -371,7 +371,7 @@ const ClaimSection = props => {
               </Grid>
             }
             snapShotTimeStr={paintPoolSnapshot.snapShotTimeStr}
-            totalValueLockedTitle={"Total number of LP locked"}
+            totalValueLockedTitle={"Total number of Paint locked"}
             totalValueLockedNftAmount={ MathHelper.toFixed(paintPoolSnapshot.total_value_locked_nft_amount)}
             hashAddressLabel={"PAINT : 0x83e031005ecb771b7ff900b3c7b0bdde7f521c08"}
             balanceOfReward={MathHelper.toFixed(paintPoolSnapshot.balance_of_reward)}
