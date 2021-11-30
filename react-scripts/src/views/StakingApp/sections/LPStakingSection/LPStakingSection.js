@@ -3,11 +3,12 @@ import { inject, observer } from "mobx-react";
 import PropTypes from 'prop-types';
 import { makeStyles, withStyles, useTheme } from '@material-ui/core/styles';
 import { Button, ButtonGroup, colors, Grid, Typography, Divider, Paper, useMediaQuery } from '@material-ui/core';
-import { Image} from 'components/atoms';
+import { Image } from 'components/atoms';
 import { SectionHeader } from 'components/molecules';
 import { CardBase, Section } from "components/organisms";
 import PaintToken from "assets/images/main/logo_paint_token.svg";
 import CanvasToken from "assets/images/main/logo_canvas_token.svg";
+import { TokenBoard } from "components/my"
 
 import {TOKEN_TYPE_PAINT_NFT, TOKEN_TYPE_CANVAS_NFT, TOKEN_TYPE_CANVAS_PAINT_ETH_LP} from 'myconstants';
 import {sleep, MathHelper} from "myutil";
@@ -52,112 +53,6 @@ const useStyles = makeStyles(theme => ({
     background: '#2E3348CC'
   },
 }));
-
-const TokenStakingSection = props => {
-  const classes = useStyles();
-  const theme = useTheme();
-  const isMd = useMediaQuery(theme.breakpoints.up('md'), {
-    defaultMatches: true,
-  });
-
-  const {title, subTitle, stakingButtonComponents, lpTokenBalanceComponents, snapShotTimeStr, totalValueLockedTitle, totalValueLockedNftAmount, hashAddressLabel, balanceOfReward, dropTokenImage, dropTokenName} = props;
-
-  return (
-    <React.Fragment>
-       <Grid
-          item
-          container
-          justify="flex-start"
-          alignItems="flex-start"
-          xs={12}
-          md={12}
-          data-aos={'fade-up'}
-        >
-        <Grid item xs={12} style={{marginBottom: '30px'}}>
-          <CardBase liftUp variant="outlined" align="left" withShadow
-                    style={{ borderTop: `5px solid ${colors.deepPurple[900]}` }}>
-            <Grid container spacing={isMd ? 5 : 2}>
-              <Grid item container xs={12} justify="center" alignItems="center">
-              <Grid item xs={6} md={6} align={"left"}>
-                {title}
-              </Grid>
-              <Grid item xs={6} md={6} align={"right"}>
-                {stakingButtonComponents}
-              </Grid>
-              </Grid>
-              { subTitle && 
-                <Grid item xs={12} md={12} align={"left"}>
-                    {subTitle}
-                </Grid>
-              }
-              <Grid item xs={12}>
-                <Divider />
-              </Grid>
-              <Grid item xs={12} md={6} align="left">
-                <Paper className={classes.paper}>
-                  <Typography component="span" variant="subtitle1">
-                    Next snapshot date : { snapShotTimeStr }
-                  </Typography>
-                </Paper>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Paper className={classes.paper}>
-                  <Typography component="span" variant="subtitle1">
-                    {totalValueLockedTitle} : { totalValueLockedNftAmount }
-                  </Typography>
-                </Paper>
-              </Grid>
-              <Grid item xs={12} md={12}>
-                <Paper className={classes.paper}>
-                  <Typography component="span" variant="subtitle1">
-                    <div style={{
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis'
-                    }}>
-                    {hashAddressLabel}
-                    </div>
-                  </Typography>
-                </Paper>
-              </Grid>
-              <Grid item xs={12}>
-                <Divider />
-              </Grid>
-              {lpTokenBalanceComponents}
-              <Grid item xs={12}>
-                <Typography component="span" variant="h6">
-                  Token Drop Balance
-                </Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <Grid
-                    container
-                    xs={12}
-                    alignContent="flex-start"
-                    justify="flex-start"
-                    alignItems="center"
-                    spacing={2}
-                >
-                  <Grid item>
-                    <Image src={dropTokenImage}
-                          style={{ width: '120px', height:'120px' }}/>
-                  </Grid>
-                  <Grid item
-                      alignItems=""
-                      justify="center">
-                    <Typography component="span" variant="subtitle1">
-                      {dropTokenName} : { balanceOfReward }
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-          </CardBase>
-        </Grid>
-      </Grid>
-    </React.Fragment>
-  );
-};
 
 const LpTStakingSection = props => {
   const { className, ...rest } = props;
@@ -275,7 +170,7 @@ const LpTStakingSection = props => {
           <Divider/>
         </Grid>
 
-        <TokenStakingSection 
+        <TokenBoard 
             title={
               <Typography component="span" variant="h5" style={{color: `${colors.deepPurple[900]}`}}>
                 PAINT/ETH LP Staking
@@ -311,6 +206,7 @@ const LpTStakingSection = props => {
                 </Paper>
               </Grid>
             }
+            apyLabel={`CANVAS reward amount per week (APW) : ${lpSnapshot.reward_amount_per_week} CANVAS`}
             snapShotTimeStr={lpSnapshot.snapShotTimeStr}
             totalValueLockedTitle={"Total number of LP locked"}
             totalValueLockedNftAmount={MathHelper.toFixed(lpSnapshot.total_value_locked_nft_amount)}

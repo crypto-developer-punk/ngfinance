@@ -45,10 +45,20 @@ const RewardApp = props => {
           props.showErrorDialog(err);
         }
       }
+      async function initStoreWhenNotConnected() {
+        try {
+          await store.asyncInitSnapshots();
+        } catch (err) {
+          props.showErrorDialog(err);
+        }
+      }
+
       if (active)
         initStore();
-      else
+      else {
         store.clearWebThreeContext();
+        initStoreWhenNotConnected();
+      }
     }, [ready, chainId, account, active]);
 
     return (

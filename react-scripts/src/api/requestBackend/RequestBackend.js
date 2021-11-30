@@ -180,6 +180,10 @@ class RequestBackend {
     
         const {status, data} = await this.myaxios.get(`${this.backend_url}/snapshot/latest`, { params : params , headers: this.#getRequestHeaders(my_address)});
         assertBackendResponseStatus(status, 'asyncGetSnapshotTime');
+        
+        if (!data || data.length < 1) {
+            return null;
+        }
 
         const {snapshot_time} = data[0]; 
         return snapshot_time;
@@ -189,6 +193,12 @@ class RequestBackend {
         return this.myaxios.get(`${this.backend_url}/nft/all`, {headers: this.#getRequestHeaders(my_address)});
     };
 
+    asyncGetRewardInfoAll = async(my_address) => {
+        const {status, data} = await this.myaxios.get(`${this.backend_url}/reward/info/all`, {headers: this.#getRequestHeaders(my_address)});
+        assertBackendResponseStatus(status, 'asyncGetRewardInfoAll');
+        return {nft_paint_apw: data["NFT_PAINT"], paint_eth_apw: data["PAINT-ETH"], nft_canvas_apw: data["NFT_CANVAS"]};
+    };
+    
     // private methods
 
     #getRequestHeaders = (address) => {

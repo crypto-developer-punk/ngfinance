@@ -5,11 +5,15 @@ var moment = require('moment'); // require
 const Snapshot = types.model('Snapshot', {
     snapshot_time: types.maybeNull(types.Date),
     total_value_locked_nft_amount: types.optional(types.number, 0),
-    balance_of_reward: types.optional(types.number, 0)
+    balance_of_reward: types.optional(types.number, 0),
+    reward_amount_per_week: types.optional(types.number, 0)
 })
 .actions(self => ({
   setBalanceOfReward(reward) {
     self.balance_of_reward = reward;
+  },
+  setRewardAmountPerWeek(amount) {
+    self.reward_amount_per_week = amount;
   }
 }))
 .views(self => ({

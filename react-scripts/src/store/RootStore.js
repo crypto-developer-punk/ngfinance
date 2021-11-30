@@ -88,6 +88,8 @@ const RootStore = types.model({
         asyncInitSnapshots: flow(function* (){ 
             const {currentAccount, isWalletConnected, isValidNetwork, networkId} = self.webThreeContext;
             const isNotValidNetworkConnected = !isWalletConnected || !isValidNetwork;
+            
+            const {nft_paint_apw, paint_eth_apw, nft_canvas_apw} = yield requestBackend.asyncGetRewardInfoAll(currentAccount);
 
             const paint_nft_snapshot_time = yield requestBackend.asyncGetSnapshotTime(currentAccount, TOKEN_TYPE_PAINT_NFT); 
             const paint_total_value_locked_nft_amount = yield requestBackend.asyncGetTotalValueLockedNftAmount(currentAccount, TOKEN_TYPE_PAINT_NFT);
@@ -97,6 +99,7 @@ const RootStore = types.model({
                 snapshot_time: new Date(paint_nft_snapshot_time),
                 total_value_locked_nft_amount: paint_total_value_locked_nft_amount,
                 balance_of_reward: paint_balance_of_reward,
+                reward_amount_per_week: nft_paint_apw
             }));
 
             const canvas_snapshot_time = yield requestBackend.asyncGetSnapshotTime(currentAccount, TOKEN_TYPE_CANVAS_NFT); 
@@ -106,6 +109,7 @@ const RootStore = types.model({
                 snapshot_time: new Date(canvas_snapshot_time),
                 total_value_locked_nft_amount: canvas_total_value_locked_nft_amount,
                 balance_of_reward: canvas_balance_of_reward,
+                reward_amount_per_week: nft_canvas_apw
             }));
 
             const lp_snapshot_time = yield requestBackend.asyncGetSnapshotTime(currentAccount, TOKEN_TYPE_CANVAS_PAINT_ETH_LP);
@@ -115,6 +119,7 @@ const RootStore = types.model({
                 snapshot_time: new Date(lp_snapshot_time),
                 total_value_locked_nft_amount: lp_total_value_locked_nft_amount,
                 balance_of_reward: lp_balance_of_reward,
+                reward_amount_per_week: paint_eth_apw
             }));
             
             const paint_pool_snapshot_time = yield requestBackend.asyncGetSnapshotTime(currentAccount, TOKEN_TYPE_PAINT_POOL);
@@ -427,15 +432,11 @@ const RootStore = types.model({
             self.findSnapshot(token_type).setBalanceOfReward(balanceOfReward);
             if (claimStepCB) claimStepCB('Complete.', etherscan_url + transactionHash);
         }),
-        // asyncTest1: flow(function* () {
-        //     yield sleep(5000);
-        //     console.log('asyncTest1');
-        //     yield sleep(1000);
-        // }),
-        // asyncTest2: flow(function* () {
-        //     yield sleep(1000);
-        //     console.log('asyncTest2');
-        // }),
+        asyncTest: flow(function* () {
+            const {currentAccount, isWalletConnected, networkId} = self.webThreeContext;
+            const res = yield requestBackend.asyncGetRewardInfoAll();
+            console.log('aaa', res);
+        }),
     };
 }).views(self => ({
     findNftStaking(nft) {

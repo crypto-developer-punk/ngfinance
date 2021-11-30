@@ -1,7 +1,7 @@
 import React from 'react';
 import { inject, observer } from "mobx-react";
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { colors, Grid } from '@material-ui/core';
+import { colors, Grid, Button } from '@material-ui/core';
 import { Section } from "components/organisms";
 import WithBase from 'with/WithBase';
 
@@ -49,10 +49,20 @@ const StakingApp = props => {
         props.showErrorDialog(err);
       }
     }
+    async function initStoreWhenNotConnected() {
+      try {
+        await store.asyncInitSnapshots();
+      } catch (err) {
+        props.showErrorDialog(err);
+      }
+    }
+
     if (active)
       initStore();
-    else
+    else {
       store.clearWebThreeContext();
+      initStoreWhenNotConnected();
+    }
   }, [ready, chainId, account, active]);
 
   return (

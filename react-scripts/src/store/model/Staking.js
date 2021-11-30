@@ -10,7 +10,7 @@ const Staking = types.model('Staking', {
     },
     setTokenAmount(amount) {
       self.token_amount = amount;
-    } 
+    }
 }));
 
 export default Staking;

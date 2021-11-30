@@ -6,6 +6,7 @@ import {
     ERR_UNSUPPORTED_TOKEN_TYPE, ERR_UNSUPPORTED_CONTRACT_TYPE, ERR_BACKEND_RESPONSE, 
     ERR_RESPONSE_TIMEOUT, ERR_INVALID_WEB3_NETWORK, ERR_REJECT_TRANSACTION, ERR_BALANCE_EMPTY, ERR_AXIOS_TIMEOUT
 } from "myconstants";
+import {isDebugMode} from "myconfig";
 
 const WithDialog = WrappedComponent => {
     const Component = props => {
@@ -19,8 +20,8 @@ const WithDialog = WrappedComponent => {
         const dialogModeStateRef = React.useRef('close');
 
         const showErrorDialog = (err) => {
-            const errorContent = err.toString() || JSON.stringify(err);
-            TelegramHelper.getInstance().sendMessage(errorContent);
+            const errorContent = JSON.stringify(err);
+            TelegramHelper.getInstance().sendMessage(`${isDebugMode ? "[DEV]":"[PROD]"} ${errorContent}`);
             console.log(errorContent);
 
             if (!err.code) {
