@@ -171,6 +171,8 @@ const LpTStakingSection = props => {
         </Grid>
 
         <TokenBoard 
+            apyLabel={`CANVAS reward amount per week (APW) : ${lpSnapshot.apw} CANVAS`}
+            apyTooltip={`CANVAS reward amount per week : ${lpSnapshot.reward_amount_per_week} CANVAS`}
             title={
               <Typography component="span" variant="h5" style={{color: `${colors.deepPurple[900]}`}}>
                 PAINT/ETH LP Staking
@@ -206,7 +208,6 @@ const LpTStakingSection = props => {
                 </Paper>
               </Grid>
             }
-            apyLabel={`CANVAS reward amount per week (APW) : ${lpSnapshot.reward_amount_per_week} CANVAS`}
             snapShotTimeStr={lpSnapshot.snapShotTimeStr}
             totalValueLockedTitle={"Total number of LP locked"}
             totalValueLockedNftAmount={MathHelper.toFixed(lpSnapshot.total_value_locked_nft_amount)}

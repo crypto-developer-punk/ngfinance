@@ -195,8 +195,9 @@ class RequestBackend {
 
     asyncGetRewardInfoAll = async(my_address) => {
         const {status, data} = await this.myaxios.get(`${this.backend_url}/reward/info/all`, {headers: this.#getRequestHeaders(my_address)});
+        console.log('aaa', data);
         assertBackendResponseStatus(status, 'asyncGetRewardInfoAll');
-        return {nft_paint_apw: data["NFT_PAINT"], paint_eth_apw: data["PAINT-ETH"], nft_canvas_apw: data["NFT_CANVAS"]};
+        return {nft_paint_apw: data["NFT_PAINT"], paint_eth_apw: data["PAINT-ETH"], nft_canvas_apw: data["NFT_CANVAS"], paint_singple_apw: data["PAINT-SINGLE"]};
     };
     
     // private methods

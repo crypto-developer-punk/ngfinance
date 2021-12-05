@@ -165,7 +165,8 @@ const ClaimSection = props => {
                 Claim
               </Button>
             }
-            apyLabel={`CANVAS reward amount per week (APW) : ${paintNftSnapshot.reward_amount_per_week} CANVAS`}
+            apyLabel={`Your CANVAS reward amount per week (APW) : ${paintNftSnapshot.apw} CANVAS`}
+            apyTooltip={`CANVAS reward amount per week : ${paintNftSnapshot.reward_amount_per_week} CANVAS`}
             snapShotTimeStr={paintNftSnapshot.snapShotTimeStr}
             totalValueLockedTitle={"Total number of NFT locked"}
             totalValueLockedNftAmount={MathHelper.toFixed(paintNftSnapshot.total_value_locked_nft_amount)}
@@ -180,6 +181,8 @@ const ClaimSection = props => {
           {/*  NFT Claim (PAINT) */}
           <TokenBoard 
             boarderTopColor={colors.green[900]}
+            apyLabel={`CANVAS reward amount per week (APW) : ${canvasNftSnapshot.apw} CANVAS`}
+            apyTooltip={`CANVAS reward amount per week : ${canvasNftSnapshot.reward_amount_per_week} CANVAS`}
             title={
               <Typography component="span" variant="h6" style={{color: `${colors.green[900]}`}}>
                 NFT Staking (CANVAS)
@@ -190,7 +193,6 @@ const ClaimSection = props => {
                 Claim
               </Button>
             }
-            apyLabel={`CANVAS reward amount per week (APW) : ${canvasNftSnapshot.reward_amount_per_week} CANVAS`}
             snapShotTimeStr={canvasNftSnapshot.snapShotTimeStr}
             totalValueLockedTitle={"Total number of NFT locked"}
             totalValueLockedNftAmount={MathHelper.toFixed(canvasNftSnapshot.total_value_locked_nft_amount)}
@@ -202,6 +204,8 @@ const ClaimSection = props => {
           {/*  PAINT/ETH LP Claim (PAINT) */}
           <TokenBoard 
             boarderTopColor={colors.deepPurple[900]}
+            apyLabel={`CANVAS reward amount per week (APW) : ${lpSnapshot.apw} CANVAS`}
+            apyTooltip={`CANVAS reward amount per week : ${lpSnapshot.reward_amount_per_week} CANVAS`}
             title={
               <Typography component="span" variant="h6" style={{color: `${colors.deepPurple[900]}`}}>
                 PAINT/ETH LP Staking
@@ -234,7 +238,6 @@ const ClaimSection = props => {
                 </Paper>
               </Grid>
             }
-            apyLabel={`CANVAS reward amount per week (APW) : ${lpSnapshot.reward_amount_per_week} CANVAS`}
             snapShotTimeStr={lpSnapshot.snapShotTimeStr}
             totalValueLockedTitle={"Total number of LP locked"}
             totalValueLockedNftAmount={ MathHelper.toFixed(lpSnapshot.total_value_locked_nft_amount)}
@@ -245,6 +248,8 @@ const ClaimSection = props => {
 
           {/*  PAINT/ETH LP Claim (PAINT) */}
           <TokenBoard 
+            apyLabel={`CANVAS reward amount per week (APW) : ${paintPoolSnapshot.apw} CANVAS`}
+            apyTooltip={`CANVAS reward amount per week : ${paintPoolSnapshot.reward_amount_per_week} CANVAS`}
             boarderTopColor={colors.deepPurple[900]}
             title={
               <Typography component="span" variant="h6" style={{color: `${colors.deepPurple[900]}`}}>
@@ -278,7 +283,6 @@ const ClaimSection = props => {
                 </Paper>
               </Grid>
             }
-            apyLabel={`CANVAS reward amount per week (APW) : ${paintPoolSnapshot.reward_amount_per_week} CANVAS`}
             snapShotTimeStr={paintPoolSnapshot.snapShotTimeStr}
             totalValueLockedTitle={"Total number of Paint locked"}
             totalValueLockedNftAmount={ MathHelper.toFixed(paintPoolSnapshot.total_value_locked_nft_amount)}

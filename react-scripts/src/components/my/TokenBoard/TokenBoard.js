@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import ReactTooltip from 'react-tooltip';
 import { makeStyles, withStyles, useTheme } from '@material-ui/core/styles';
 import { CardBase, Section } from "components/organisms";
 import { Button, ButtonGroup, colors, Grid, Typography, Divider, Paper, useMediaQuery } from '@material-ui/core';
+import { StringHelper } from 'myutil';
 import { Image } from 'components/atoms';
 
 const useStyles = makeStyles(theme => ({
@@ -59,8 +61,11 @@ const TokenBoard = props => {
     hashAddressLabel, 
     balanceOfReward, 
     dropTokenImage, 
-    dropTokenName
+    dropTokenName,
+    apyTooltip
   } = props;
+
+  const uuid = StringHelper.uuidv4();
 
   return (
     <React.Fragment>
@@ -109,17 +114,22 @@ const TokenBoard = props => {
               </Grid>
               {
                 <Grid item xs={12} md={12}>
-                  <Paper className={classes.paper}>
+                  <a data-tip data-for={uuid}>
+                    <Paper className={classes.paper}>
                     <Typography component="span" variant="subtitle1">
                       <div style={{
                         whiteSpace: 'nowrap',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis'
                       }}>
-                      {apyLabel}
+                        {apyLabel}
+                      <ReactTooltip id={uuid} type="warning" effect="solid">
+                        <span>{apyTooltip}</span>
+                      </ReactTooltip>
                       </div>
                     </Typography>
-                  </Paper>
+                    </Paper>
+                  </a>
                 </Grid>
               }
               <Grid item xs={12} md={12}>

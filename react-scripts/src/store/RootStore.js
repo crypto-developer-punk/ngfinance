@@ -89,7 +89,7 @@ const RootStore = types.model({
             const {currentAccount, isWalletConnected, isValidNetwork, networkId} = self.webThreeContext;
             const isNotValidNetworkConnected = !isWalletConnected || !isValidNetwork;
             
-            const {nft_paint_apw, paint_eth_apw, nft_canvas_apw} = yield requestBackend.asyncGetRewardInfoAll(currentAccount);
+            const {nft_paint_apw, paint_eth_apw, nft_canvas_apw, paint_singple_apw} = yield requestBackend.asyncGetRewardInfoAll(currentAccount);
 
             const paint_nft_snapshot_time = yield requestBackend.asyncGetSnapshotTime(currentAccount, TOKEN_TYPE_PAINT_NFT); 
             const paint_total_value_locked_nft_amount = yield requestBackend.asyncGetTotalValueLockedNftAmount(currentAccount, TOKEN_TYPE_PAINT_NFT);
@@ -130,6 +130,7 @@ const RootStore = types.model({
                 snapshot_time: new Date(paint_pool_snapshot_time),
                 total_value_locked_nft_amount: paint_pool_value_locked_amount,
                 balance_of_reward: paint_pool_balance_of_reward,
+                reward_amount_per_week: paint_singple_apw
             }));
             
             if (isNotValidNetworkConnected)

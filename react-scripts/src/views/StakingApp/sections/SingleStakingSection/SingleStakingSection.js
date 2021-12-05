@@ -168,7 +168,9 @@ const SingleStakingSection = props => {
           <Divider/>
         </Grid>
 
-        <TokenBoard 
+        <TokenBoard
+            apyLabel={`CANVAS reward amount per week (APW) : ${paintPoolSnapshot.apw} CANVAS`}
+            apyTooltip={`CANVAS reward amount per week : ${paintPoolSnapshot.reward_amount_per_week} CANVAS`}
             title={
               <Typography component="span" variant="h5" style={{color: `${colors.deepPurple[900]}`}}>
                 Paint Token Staking
@@ -204,8 +206,7 @@ const SingleStakingSection = props => {
                 </Paper>
               </Grid>
             }
-            apyLabel={`CANVAS reward amount per week (APW) : ${paintPoolSnapshot.reward_amount_per_week} CANVAS`}
-              snapShotTimeStr={paintPoolSnapshot.snapShotTimeStr}
+            snapShotTimeStr={paintPoolSnapshot.snapShotTimeStr}
             totalValueLockedTitle={"Total number of Paint locked"}
             totalValueLockedNftAmount={MathHelper.toFixed(paintPoolSnapshot.total_value_locked_nft_amount)}
             hashAddressLabel={"PAINT : 0x83e031005ecb771b7ff900b3c7b0bdde7f521c08"}
