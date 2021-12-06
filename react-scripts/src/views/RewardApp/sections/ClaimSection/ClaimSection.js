@@ -156,8 +156,8 @@ const ClaimSection = props => {
 
           {/*  NFT Claim (PAINT) */}
           <TokenBoard 
-            apyLabel={`Your CANVAS reward amount per week (APW) : ${paintNftSnapshot.reward_amount_per_week * StakedPaintNftCount} CANVAS`}
-            apyTooltip={`CANVAS reward amount per week : ${paintNftSnapshot.reward_amount_per_week} CANVAS`}
+            apyLabel={`Your PAINT reward amount per week (APW) : ${paintNftSnapshot.reward_amount_per_week * StakedPaintNftCount} PAINT`}
+            apyTooltip={`PAINT reward amount per week : ${paintNftSnapshot.reward_amount_per_week} PAINT`}
             boarderTopColor={colors.deepOrange[900]}
             title={
               <Typography component="span" variant="h6" style={{color: `${colors.deepOrange[900]}`}}>
@@ -274,10 +274,10 @@ const ClaimSection = props => {
             dropTokenImage={CanvasToken}
             dropTokenName={"Canvas Token"}/>            
 
-          {/*  PAINT/ETH LP Claim (PAINT) */}
-          <TokenBoard 
-            apyLabel={`CANVAS reward amount per week (APW) : ${MathHelper.toFixed(paintPoolSnapshot.reward_amount_per_week * paintPoolStaking.token_amount)} CANVAS`}
-            apyTooltip={`CANVAS reward amount per week : ${paintPoolSnapshot.reward_amount_per_week} CANVAS`}
+          {/*  PAINTP Single Claim (PAINT) */}
+          <TokenBoard  
+            apyLabel={`PAINT reward amount per week (APW) : ${MathHelper.toFixed(paintPoolSnapshot.reward_amount_per_week * paintPoolStaking.token_amount)} PAINT`}
+            apyTooltip={`PAINT reward amount per week : ${paintPoolSnapshot.reward_amount_per_week} PAINT`}
             boarderTopColor={colors.deepPurple[900]}
             title={
               <Typography component="span" variant="h6" style={{color: `${colors.deepPurple[900]}`}}>

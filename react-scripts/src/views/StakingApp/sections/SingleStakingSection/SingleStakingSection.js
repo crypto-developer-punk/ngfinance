@@ -169,8 +169,8 @@ const SingleStakingSection = props => {
         </Grid>
 
         <TokenBoard
-            apyLabel={`CANVAS reward amount per week (APW) : ${MathHelper.toFixed(paintPoolSnapshot.reward_amount_per_week * paintPoolStaking.token_amount)} CANVAS`}
-            apyTooltip={`CANVAS reward amount per week : ${paintPoolSnapshot.reward_amount_per_week} CANVAS`}
+            apyLabel={`PAINT reward amount per week (APW) : ${MathHelper.toFixed(paintPoolSnapshot.reward_amount_per_week * paintPoolStaking.token_amount)} PAINT`}
+            apyTooltip={`PAINT reward amount per week : ${paintPoolSnapshot.reward_amount_per_week} PAINT`}
             title={
               <Typography component="span" variant="h5" style={{color: `${colors.deepPurple[900]}`}}>
                 Paint Token Staking
