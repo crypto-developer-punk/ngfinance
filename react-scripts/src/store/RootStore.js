@@ -494,6 +494,48 @@ const RootStore = types.model({
             const {token_amount} = nftStaking;
             return token_amount > 0;
         });
+    },
+    getOwnedNftArr(targetTokenType) {
+        return values(self.nftMap).filter(nft => {
+            const {uniqueKey, balanceStr, token_type} = nft;
+            if (token_type !== targetTokenType) {
+                return false;
+            }
+            if (parseFloat(balanceStr) > 0)
+                return true;
+            if (!self.nftStakingMap.has(uniqueKey)) {
+                return false;
+            }            
+            const nftStaking = self.nftStakingMap.get(uniqueKey);
+            const {token_amount} = nftStaking;
+            return token_amount > 0;
+        });
+    },
+    getStakedNftCount(targetTokenType) {
+        return values(self.nftMap).filter(nft => {
+            const {uniqueKey, token_type} = nft;
+            if (token_type !== targetTokenType) {
+                return false;
+            }
+            if (!self.nftStakingMap.has(uniqueKey)) {
+                return false;
+            }            
+            const nftStaking = self.nftStakingMap.get(uniqueKey);
+            const {token_amount} = nftStaking;
+            return token_amount > 0;
+        }).length;
+    },
+    get NonStakedCanvasNftCount() {
+        return self.getOwnedNftArr(TOKEN_TYPE_CANVAS_NFT).length - self.StakedCanvasNftCount;
+    },
+    get NonStakedPaintNftCount() {
+        return self.getOwnedNftArr(TOKEN_TYPE_PAINT_NFT).length - self.StakedPaintNftCount;
+    },
+    get StakedCanvasNftCount() {
+        return self.getStakedNftCount(TOKEN_TYPE_CANVAS_NFT);
+    },
+    get StakedPaintNftCount() {
+        return self.getStakedNftCount(TOKEN_TYPE_PAINT_NFT);
     }
 }));
 

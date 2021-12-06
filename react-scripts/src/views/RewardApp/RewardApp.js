@@ -40,6 +40,7 @@ const RewardApp = props => {
         requestWeb3.reinitializeWithProvider(library.provider);
         try {
           await store.asyncInitWebThreeContext();
+          await store.asyncInitNftInfos();
           await store.asyncInitSnapshots();
         } catch (err) {
           props.showErrorDialog(err);
