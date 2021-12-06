@@ -256,7 +256,7 @@ const NextOpenSaleSection = props => {
                         window.open("https://rarible.com/token/0x4dfd4f4aa74b62614597e6f5417f70a6fa7a9f45:5?tab=bids", '_blank');
                       }}
                       fullWidth
-                      disabled={false}>
+                      disabled={true}>
                 Place a bid
               </Button>
             </Grid>
