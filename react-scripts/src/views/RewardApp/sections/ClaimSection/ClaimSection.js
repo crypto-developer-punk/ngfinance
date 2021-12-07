@@ -69,8 +69,6 @@ const ClaimSection = props => {
     const {store} = props; 
     const {webThreeContext, paintNftSnapshot, canvasNftSnapshot, lpSnapshot, paintEthLpStaking, paintPoolStaking, paintPoolSnapshot, StakedCanvasNftCount, StakedPaintNftCount, NonStakedCanvasNftCount, NonStakedPaintNftCount} = store;
     
-    // console.log('aaa', StakedCanvasNftCount, StakedPaintNftCount);
-
     const claim = _.debounce(async (token_type) => {
       let ended = false;
       try {
@@ -212,11 +210,11 @@ const ClaimSection = props => {
               <Grid item xs={12}>
                 <Paper className={classes.paperSub}>
                   <Typography component="span" variant="subtitle1">
-                    Your Remained Utility NFT : {NonStakedCanvasNftCount}
+                    Your Remained Goverance NFT : {NonStakedCanvasNftCount}
                   </Typography>
                   <br/>
                   <Typography component="span" variant="subtitle1">
-                    Your Staked Utility NFT : {StakedCanvasNftCount}
+                    Your Staked Goverance NFT : {StakedCanvasNftCount}
                   </Typography>
                 </Paper>
               </Grid>

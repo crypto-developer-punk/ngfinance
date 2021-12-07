@@ -495,8 +495,8 @@ const RootStore = types.model({
             return token_amount > 0;
         });
     },
-    getOwnedNftArr(targetTokenType) {
-        return values(self.nftMap).filter(nft => {
+    getOwnedNftCount(targetTokenType) {
+        const filtered = values(self.nftMap).filter(nft => {
             const {uniqueKey, balanceStr, token_type} = nft;
             if (token_type !== targetTokenType) {
                 return false;
@@ -510,9 +510,21 @@ const RootStore = types.model({
             const {token_amount} = nftStaking;
             return token_amount > 0;
         });
+        let res = 0;
+        for (var i = 0; i < filtered.length; i++) {
+            const nft = filtered[i];
+            const {uniqueKey, balanceStr} = nft;
+            const nftStaking = self.nftStakingMap.get(uniqueKey);
+            if (nftStaking && nftStaking.token_amount)
+                res += nftStaking.token_amount;
+            const balance = parseFloat(balanceStr);
+            if (balance > 0) 
+                res += balance;   
+        }
+        return res;
     },
     getStakedNftCount(targetTokenType) {
-        return values(self.nftMap).filter(nft => {
+        const filtered = values(self.nftMap).filter(nft => {
             const {uniqueKey, token_type} = nft;
             if (token_type !== targetTokenType) {
                 return false;
@@ -523,13 +535,21 @@ const RootStore = types.model({
             const nftStaking = self.nftStakingMap.get(uniqueKey);
             const {token_amount} = nftStaking;
             return token_amount > 0;
-        }).length;
+        });
+        let res = 0;
+        for (var i = 0; i < filtered.length; i++) {
+            const nft = filtered[i];
+            const {uniqueKey} = nft;
+            const nftStaking = self.nftStakingMap.get(uniqueKey);
+            res += nftStaking.token_amount;
+        }
+        return res;
     },
     get NonStakedCanvasNftCount() {
-        return self.getOwnedNftArr(TOKEN_TYPE_CANVAS_NFT).length - self.StakedCanvasNftCount;
+        return self.getOwnedNftCount(TOKEN_TYPE_CANVAS_NFT) - self.StakedCanvasNftCount;
     },
     get NonStakedPaintNftCount() {
-        return self.getOwnedNftArr(TOKEN_TYPE_PAINT_NFT).length - self.StakedPaintNftCount;
+        return self.getOwnedNftCount(TOKEN_TYPE_PAINT_NFT) - self.StakedPaintNftCount;
     },
     get StakedCanvasNftCount() {
         return self.getStakedNftCount(TOKEN_TYPE_CANVAS_NFT);
